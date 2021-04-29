@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<BorderPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WeanWatch.controller.rootCtrl">
+   <top>
+      <BorderPane BorderPane.alignment="CENTER">
+         <right>
+            <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER_RIGHT">
+               <children>
+                  <Button mnemonicParsing="false" text="Logout">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+            </HBox>
+         </right>
+         <left>
+            <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
+               <children>
+                  <VBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Karsten the clinician">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Poul the patient">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </VBox>
+                  <Button mnemonicParsing="false" text="Select patient">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" text="Screen cases">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </left>
+         <padding>
+            <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+         </padding>
+      </BorderPane>
+   </top>
+   <center>
+      <StackPane fx:id="rootSubAnchorPane" minHeight="400.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <padding>
+            <Insets top="10.0" />
+         </padding>
+      </StackPane>
+   </center>
+</BorderPane>
