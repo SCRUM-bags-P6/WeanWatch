@@ -1,18 +1,35 @@
 package WeanWatch.model;
 
+import java.io.FileReader;
+
 import org.apache.spark.sql.Column;
 import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.JSONObject;
 
 public class PDMSConn extends Server {
     // Store an instance of the object, that can be shared
     private static PDMSConn instance = null;
 
+    // For development purposes, the patient data is loaded from CSV files
+    // Store the spark session
+    private static SparkSession session;
+    // Store the data frame reader
+    private static DataFrameReader dataFrameReader;
+
     // Set the constructor private
     private PDMSConn() {
         // Call the super constructor
+
+        // For development purposes, the patient data is loaded from CSV files
+        // Create the spark session
+        //session = SparkSession.builder().appName("PDMSConn").config("spark.master", "local").getOrCreate();
+        // Create a data frame reader
+        //dataFrameReader = session.read();
 
     }
 
@@ -40,17 +57,41 @@ public class PDMSConn extends Server {
     //public Patient[] getPatients() {
     public void getPatients() {
 
-        SparkSession session = SparkSession.builder().appName("PDMSConn").getOrCreate();
+        // For development purposes, the patient data is loaded from CSV files
+        // Prepare a JSON parser
+        JSONParser jsonParser = new JSONParser();
+        // Try reading the patients.json file
+        try (
+            // Try getting the patients.json file
+            FileReader fileReader = new FileReader("data/patients.json");
+        ) {
+            // Try parsing the json file
+            JSONObject parsedJSON = (JSONObject) jsonParser.parse(fileReader);
+
+            JSONArray parsedPatients = (JSONArray) parsedJSON.get("patients");
+
+            parsedPatients.forEach(patient -> {
+                System.out.println(patient);
+            });
+
+            // Try reading the JSON from the parsed file
+            //JSONArray parsedJSON = (JSONArray) parsedObj;
 
 
+            //System.out.println(parsedJSON);
 
-        DataFrameReader dataFrameReader = session.read();
+        } catch (Exception e) {
+            //TODO: handle exception
+            System.err.println(e);
+        }
 
-        Dataset<Row> data = dataFrameReader.option("header", true).csv("data/stud1.csv");
+        
 
-        Column column = data.col("UnitId");
+        // Dataset<Row> data = PDMSConn.dataFrameReader.option("header", true).csv("data/stud1.csv");
 
-        System.out.println( data.select(column).count() );
+        // Column column = data.col("UnitId");
+
+        // System.out.println( data.select(column).count() );
 
         //data.select(col("UnitId"))
 

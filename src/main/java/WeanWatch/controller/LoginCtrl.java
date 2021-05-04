@@ -30,7 +30,7 @@ public class LoginCtrl {
         System.out.println(userPassField.getText());
 
         if (userNameField.getText().isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, owner, "Form Error", "Please enter username");
+            //showAlert(Alert.AlertType.ERROR, owner, "Form Error", "Please enter username");
             
         }
     }    
