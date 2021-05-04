@@ -5,7 +5,8 @@ package WeanWatch;
 
 import java.awt.Dimension;
 
-import WeanWatch.controller.rootCtrl;
+import WeanWatch.controller.RootCtrl;
+import WeanWatch.model.PDMSConn;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -19,7 +20,11 @@ public class App extends Application {
 
     public static void main(String[] args) {
         // Launch JavaFX
-        launch(args); 
+        //launch(args); 
+
+        PDMSConn pdmsConn = PDMSConn.getInstance();
+
+        pdmsConn.getPatients();
     }
 
     @Override
@@ -35,7 +40,7 @@ public class App extends Application {
 		double height = screenSize.getHeight();
 		
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(App.class.getClassLoader().getResource("view/loginView.fxml"));
+        loader.setLocation(App.class.getClassLoader().getResource("view/LoginView.fxml"));
         BorderPane view = (BorderPane) loader.load();
         
         // FXMLLoader loader = new FXMLLoader();
