@@ -48,3 +48,6 @@ bin
 
 # Ignore patient data file
 data/*.csv
+
+# Ignore settings
+.settings

@@ -2,7 +2,6 @@ package WeanWatch.model;
 
 import java.io.FileReader;
 
-import org.apache.spark.sql.Column;
 import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -20,6 +19,8 @@ public class PDMSConn extends Server {
     private static SparkSession session;
     // Store the data frame reader
     private static DataFrameReader dataFrameReader;
+    // Data folder
+    private static final String dataFolder = "data/";
 
     // Set the constructor private
     private PDMSConn() {
@@ -27,9 +28,9 @@ public class PDMSConn extends Server {
 
         // For development purposes, the patient data is loaded from CSV files
         // Create the spark session
-        //session = SparkSession.builder().appName("PDMSConn").config("spark.master", "local").getOrCreate();
+        session = SparkSession.builder().appName("PDMSConn").config("spark.master", "local").getOrCreate();
         // Create a data frame reader
-        //dataFrameReader = session.read();
+        dataFrameReader = session.read();
 
     }
 
@@ -55,50 +56,51 @@ public class PDMSConn extends Server {
 
     // Get patients
     //public Patient[] getPatients() {
-    public void getPatients() {
-
+    public Patient[] getPatients() {
         // For development purposes, the patient data is loaded from CSV files
         // Prepare a JSON parser
         JSONParser jsonParser = new JSONParser();
         // Try reading the patients.json file
         try (
             // Try getting the patients.json file
-            FileReader fileReader = new FileReader("data/patients.json");
+            FileReader fileReader = new FileReader(PDMSConn.dataFolder + "patients.json");
         ) {
             // Try parsing the json file
             JSONObject parsedJSON = (JSONObject) jsonParser.parse(fileReader);
-
+            // Get the patients entry
             JSONArray parsedPatients = (JSONArray) parsedJSON.get("patients");
-
-            parsedPatients.forEach(patient -> {
-                System.out.println(patient);
-            });
-
-            // Try reading the JSON from the parsed file
-            //JSONArray parsedJSON = (JSONArray) parsedObj;
-
-
-            //System.out.println(parsedJSON);
-
+            // Prepare an array of patients
+            Patient[] patients = new Patient[parsedPatients.size()];
+            // Create a patient instance for each patient in the JSON
+            for (int num = 0; num < parsedPatients.size(); num++) {
+                // Get the patient as a JSONObject
+                JSONObject patient = (JSONObject) parsedPatients.get(num);
+                // Prepare a dataset to store the patient data
+                Dataset<Row> patientData;
+                // Load the patient dataset, if it is set
+                if (patient.get("filename") != null) {
+                    patientData = PDMSConn.dataFrameReader.option("header", true).csv(PDMSConn.dataFolder + patient.get("filename"));
+                } else {
+                    patientData = null;
+                }
+                // Create the patient instance and store the cpr, name and age, as well as the dataset
+                patients[num] = new Patient(
+                    patient.get("cpr").toString(),
+                    patient.get("name").toString(),
+                    Integer.parseInt(patient.get("age").toString()),
+                    patientData
+                );
+            }
+            // Return the patients
+            return patients;
         } catch (Exception e) {
+
             //TODO: handle exception
-            System.err.println(e);
+            System.err.println("Failed to load patients from the json file with error:" + e);
+            e.printStackTrace();
+
+            return null;
         }
-
-        
-
-        // Dataset<Row> data = PDMSConn.dataFrameReader.option("header", true).csv("data/stud1.csv");
-
-        // Column column = data.col("UnitId");
-
-        // System.out.println( data.select(column).count() );
-
-        //data.select(col("UnitId"))
-
-        // Patient[] patients = {
-        //     new Patient("123456-1122", "John Johnson", 69,)
-        // };
-
     }
 
 }

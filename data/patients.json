@@ -5,6 +5,42 @@
             "age": 65,
             "name": "John Johnsen",
             "filename": "stud1.csv"
+        },
+        {
+            "cpr": "112233-4455",
+            "age": 88,
+            "name": "David Davidsen",
+            "filename": null
+        },
+        {
+            "cpr": "654321-9988",
+            "age": 100,
+            "name": "Mikkel Mikkelsen",
+            "filename": null
+        },
+        {
+            "cpr": "667788-2211",
+            "age": 33,
+            "name": "Karsen Karstesen",
+            "filename": null
+        },
+        {
+            "cpr": "212121-1212",
+            "age": 100,
+            "name": "Lars Larssen",
+            "filename": null
+        },
+        {
+            "cpr": "454545-6767",
+            "age": 76,
+            "name": "Paul Paulsen",
+            "filename": null
+        },
+        {
+            "cpr": "345345-3456",
+            "age": 76,
+            "name": "Bent Bentsen",
+            "filename": null
         }
     ]
 }
