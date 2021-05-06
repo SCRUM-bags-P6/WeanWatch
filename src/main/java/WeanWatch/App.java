@@ -3,18 +3,26 @@
  */
 package WeanWatch;
 
+import java.awt.Color;
 import java.awt.Dimension;
 
 import WeanWatch.controller.RootCtrl;
 import WeanWatch.model.PDMSConn;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
+
+import javafx.scene.paint.*;
+
+import WeanWatch.model.*;
+
 
 public class App extends Application {
 
@@ -46,17 +54,36 @@ public class App extends Application {
         // FXMLLoader loader = new FXMLLoader();
         // loader.setLocation(App.class.getClassLoader().getResource("view/rootView.fxml"));
         // BorderPane view = (BorderPane) loader.load();
+
+		DetectedCase detectedcase = new DetectedCase();
+
+		TriangleMetaphoricCtrl MCtrl = new TriangleMetaphoricCtrl(detectedcase);
+
+		Polygon firstTriangle = MCtrl.drawFigure(0, 300.0, 100.0, 150.0, 200.0, 400.0, 500.0);
+		Polygon secondTriangle = MCtrl.drawFigure(1, 800.0, 600.0, 400.0, 450.0, 900.0, 1000.0);
+		Polygon thirdTriangle = MCtrl.drawFigure(2, 1000.0, 1200.0, 800.0, 900.0, 1300.0, 1400.0);
+
+
+		firstTriangle.setFill(javafx.scene.paint.Color.RED);
+		
+
+		Group root = new Group(firstTriangle, secondTriangle, thirdTriangle);
+	
+		
+
         
 
 		try {
-			primaryStage.setScene(new Scene(view, width, height));
+			primaryStage.setScene(new Scene(root, width, height));			
+			//primaryStage.setScene(new Scene(view, width, height));
+			//primaryStage.getScene().getStylesheets().add("view/Stylesheet.css");
 			primaryStage.show();
-
             
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+		System.out.println(firstTriangle.getPoints());
         // TODO Auto-generated method stub
         
     }
