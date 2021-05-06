@@ -20,5 +20,4 @@ public Label caseNameLabel;
 
 @FXML
 public Label timeLabel;
-
 }
