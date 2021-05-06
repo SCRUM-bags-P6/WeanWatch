@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox alignment="TOP_CENTER" maxWidth="500.0" spacing="10.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WeanWatch.controller.PatientSelectCtrl">
+   <children>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Select a patient">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <HBox alignment="CENTER_LEFT" spacing="15.0">
+         <children>
+            <Label minWidth="150.0" text="CPR number">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label minWidth="50.0" text="Age">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label minWidth="250.0" text="Name">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <ListView fx:id="patientListView" fixedCellSize="50.0" maxHeight="1.7976931348623157E308" minHeight="600.0" minWidth="400.0" />
+   </children>
+</VBox>

@@ -39,6 +39,8 @@ dependencies {
     // Include Apache Spark
     compile "org.apache.spark:spark-core_2.12:3.1.1"
     compile "org.apache.spark:spark-sql_2.12:3.1.1"
+
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
 }
 
 application {
