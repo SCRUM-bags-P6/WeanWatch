@@ -1,10 +1,11 @@
 package WeanWatch.model;
 
 import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 
 public class Patient {
     // Parameters
-    private Dataset<PatientData> patientData; // Patient dataset
+    private Dataset<Row> patientData; // Patient dataset
     private DetectedCaseHandler patientCaseHandler; // Case handler
     
     // Patient information
@@ -13,7 +14,7 @@ public class Patient {
     private String name;
 
     // Constructor
-    public Patient(String cpr, String name, int age, Dataset<PatientData> patientData) {
+    public Patient(String cpr, String name, int age, Dataset<Row> patientData) {
         // Store the input
         this.cpr = cpr;
         this.name = name;
@@ -38,7 +39,7 @@ public class Patient {
         return this.patientCaseHandler;
     }
 
-    public Dataset<PatientData> getPatientData() {
+    public Dataset<Row> getPatientData() {
         return this.patientData;
     }
     
