@@ -33,6 +33,15 @@ public class PatientSelectCtrl {
             patientListView.setItems(patientList);
             // Add a cell factory for each cell to create a custome using the controller
             patientListView.setCellFactory(listView -> new PatientSelectListCell());
+            // Define the on click handler
+            patientListView.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Patient>() {
+                    public void changed(ObservableValue<? extends Patient> ov, final Patient oldPatient, final Patient newPatient) {
+                        handlePatientClick(ov, oldPatient, newPatient);
+                    }
+                }
+            );
+
         } catch (Exception e) {
             
             //TODO: handle exception
@@ -40,6 +49,15 @@ public class PatientSelectCtrl {
             e.printStackTrace();
 
         }
+    }
+
+    public void handlePatientClick(ObservableValue<? extends Patient> ov, Patient oldPatient, Patient newPatient) {
+
+        // TODO: Set the patient, and navigate to overview screen
+        System.out.println(oldPatient);
+
+        System.out.println(newPatient);
+
     }
 
 

@@ -25,7 +25,7 @@ public class PatientSelectListCell extends ListCell<Patient> {
     protected void updateItem(Patient patient, boolean empty) {
         // Call super constructor
         super.updateItem(patient, empty);
-
+        // If create the cell if a patient was passed
         if (empty || patient == null) {
             setText(null);
             setGraphic(null);
@@ -50,9 +50,6 @@ public class PatientSelectListCell extends ListCell<Patient> {
             cprLabel.setText(patient.getCPR());
             ageLabel.setText(String.valueOf(patient.getAge()));
             nameLabel.setText(patient.getName());
-
-            System.out.println(patient.getCPR());
-
             setText(null);
             setGraphic(cellBox);
         }
