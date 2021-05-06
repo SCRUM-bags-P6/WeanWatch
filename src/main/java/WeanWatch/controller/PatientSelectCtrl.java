@@ -6,7 +6,7 @@ import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 
-public class patientSelectCtrl {
+public class PatientSelectCtrl {
     
     @FXML
     private ListView<String> patientListView;

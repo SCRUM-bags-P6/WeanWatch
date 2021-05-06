@@ -45,3 +45,6 @@ build
 
 # Ignore bin folder
 bin
+
+# Ignore patient data file
+data/*.csv

@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<VBox alignment="TOP_CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WeanWatch.controller.patientSelectCtrl">
+<VBox alignment="TOP_CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WeanWatch.controller.PatientSelectCtrl">
    <children>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Select a patient">
          <font>

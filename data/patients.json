@@ -1,0 +1,10 @@
+{
+    "patients": [
+        {
+            "cpr": "123456-1122",
+            "age": 65,
+            "name": "John Johnsen",
+            "filename": "stud1.csv"
+        }
+    ]
+}

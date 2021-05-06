@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<BorderPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WeanWatch.controller.rootCtrl">
+<BorderPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WeanWatch.controller.RootCtrl">
    <top>
       <BorderPane BorderPane.alignment="CENTER">
          <right>
