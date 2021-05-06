@@ -6,14 +6,14 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
-public class PDMSConn extends Server {
+public class PDMSConn {
     // Store an instance of the object, that can be shared
     private static PDMSConn instance = null;
 
     // Set the constructor private
     private PDMSConn() {
         // Call the super constructor
-
+        
     }
 
     // Create the method to get the shared instance
@@ -40,17 +40,17 @@ public class PDMSConn extends Server {
     //public Patient[] getPatients() {
     public void getPatients() {
 
-        SparkSession session = SparkSession.builder().appName("PDMSConn").getOrCreate();
+        // SparkSession session = SparkSession.builder().appName("PDMSConn").getOrCreate();
 
 
 
-        DataFrameReader dataFrameReader = session.read();
+        // DataFrameReader dataFrameReader = session.read();
 
-        Dataset<Row> data = dataFrameReader.option("header", true).csv("data/stud1.csv");
+        // Dataset<Row> data = dataFrameReader.option("header", true).csv("data/stud1.csv");
 
-        Column column = data.col("UnitId");
+        // Column column = data.col("UnitId");
 
-        System.out.println( data.select(column).count() );
+        // System.out.println( data.select(column).count() );
 
         //data.select(col("UnitId"))
 
