@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Window;
+import WeanWatch.model.Personnel;
 
 
 public class LoginCtrl {
@@ -33,9 +34,10 @@ public class LoginCtrl {
         String password = this.passwordField.getText();
 
         if(LoginServerConn.getInstance().authenticateUser(userid, password)) {
-            this.
+            //TODO: Skift til næste pane
+            Personnel(userid, password);
         } else {
-            invalidLogin();
+            
         }
     }
 
