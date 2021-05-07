@@ -100,8 +100,7 @@ public class App extends Application {
 			e.printStackTrace();
 		}
 
-		//System.out.println(firstTriangle.getPoints());
-        // TODO Auto-generated method stub
+		//System.out.println(firstTriangle.getPoints());        // TODO Auto-generated method stub
         
     }
 }
