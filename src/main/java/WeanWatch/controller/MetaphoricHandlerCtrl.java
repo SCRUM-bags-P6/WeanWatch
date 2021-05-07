@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import WeanWatch.controller.*;
 
@@ -46,4 +47,10 @@ this.metaphoricCtrl = metaphoricCtrl;
 
 
 
+figureHBox.setPadding(new Insets(100, 100, 100, 100));
+figureHBox.setSpacing(20);
+
+*/
 }
+
+
