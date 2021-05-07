@@ -15,6 +15,7 @@ import WeanWatch.model.Personnel;
 
 
 public class LoginCtrl {
+   /*
     @FXML
     private TextField useridField;
 
@@ -85,4 +86,5 @@ public class LoginCtrl {
     //     alert.initOwner(owner);
     //     alert.show();
     // }
+	*/
 }
