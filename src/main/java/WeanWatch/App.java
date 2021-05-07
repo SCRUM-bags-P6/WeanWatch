@@ -64,13 +64,15 @@ public class App extends Application {
 
 
 		//Kun til test af figurer
-		DetectedCase detectedcase = new DetectedCase();
+		DetectedCase detectedCase = new DetectedCase();
+		DetectedCase detectedCase2 = new DetectedCase();
 
-		TriangleMetaphoricCtrl MCtrl = new TriangleMetaphoricCtrl(detectedcase);
+		TriangleMetaphoricCtrl MCtrl = new TriangleMetaphoricCtrl(detectedCase);
+		TriangleMetaphoricCtrl MCtrl2 = new TriangleMetaphoricCtrl(detectedCase2);
 
-		//Group root = MCtrl.drawFigure(0, 300.0, 100.0, 150.0, 200.0, 400.0, 500.0, 1, 800.0, 600.0, 400.0, 450.0, 900.0, 1000.0);
+
 		Group root = MCtrl.drawFigure(0, 960.00, 590.00, 1080.00, 590.00, 1020.00, 800.00, 1, 960.00, 500.00, 1080.00, 500.00, 1020.0, 400.00);
-
+		Group root2 = MCtrl2.drawFigure(0, 300.0, 100.0, 150.0, 200.0, 400.0, 500.0, 1, 800.0, 600.0, 400.0, 450.0, 900.0, 1000.0);
 		//MetaphoricHandlerCtrl MHCtrl = new MetaphoricHandlerCtrl();
 
 		
@@ -86,10 +88,10 @@ public class App extends Application {
 		MetaphoricHandlerCtrl MHCtrl = loader.getController();
 		MHCtrl.setMetaphoricCtrl(MCtrl);
 		MHCtrl.insertMetaphoricFigure(root);
+		MHCtrl.setMetaphoricCtrl(MCtrl2);
+		MHCtrl.insertMetaphoricFigure(root2);
 		
-		
-
-		MHCtrl.setMetaphoricCtrl(MCtrl);
+	
 		
 		//String print = loader.getController().getClass().getName();
 		//System.out.println(print);

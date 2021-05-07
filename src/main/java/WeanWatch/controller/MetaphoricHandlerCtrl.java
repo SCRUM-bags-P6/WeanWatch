@@ -28,6 +28,8 @@ private Label label;
 
 private TriangleMetaphoricCtrl metaphoricCtrl;
 
+private boolean add;
+
 
 
 public void insertMetaphoricFigure(Group metaphoricFigure){
@@ -37,6 +39,7 @@ pane.getChildren().add(metaphoricFigure);
 
 //this.FigureVBox.autosize();
 this.FigureVBox.getChildren().add(pane);
+this.FigureVBox.autosize();
 }
 
 public void setMetaphoricCtrl(TriangleMetaphoricCtrl metaphoricCtrl){
@@ -44,13 +47,8 @@ this.metaphoricCtrl = metaphoricCtrl;
 
 }
 
-
-
-/*
-figureHBox.setPadding(new Insets(100, 100, 100, 100));
-figureHBox.setSpacing(20);
-
-*/
 }
 
 
+//FigureVBox.setPadding(new Insets(100, 100, 100, 100));
+//FigureVBox.setSpacing(20);
