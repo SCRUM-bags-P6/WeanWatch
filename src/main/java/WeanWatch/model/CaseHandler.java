@@ -7,10 +7,10 @@ public class CaseHandler {
 
 	private ArrayList<Case> cases = new ArrayList<Case>();
 
-	private CaseHandler(){
+	private CaseHandler() {
 	}
 
-	public static CaseHandler getInstance(){
+	public static CaseHandler getInstance() {
 		if (CaseHandler.instance == null) {
             // Create an instance and store it
             CaseHandler.instance = new CaseHandler();
@@ -19,7 +19,7 @@ public class CaseHandler {
         return CaseHandler.instance;
 	}
 
-	public void addCase(String name, String description, Indicator[] characteristics){
+	public void addCase(String name, String description, ArrayList<Indicator> characteristics) {
 		Case patientCase = new Case(name, description, characteristics);
 		this.cases.add(patientCase);
 	}
@@ -28,9 +28,9 @@ public class CaseHandler {
 		this.cases.removeIf(x -> x.getName().equals(caseName));
 	}
 
-	public Case getCase(String caseName){
-		for(Case tempCase : this.cases){
-			if(tempCase.getName().equals(caseName)){
+	public Case getCase(String caseName) {
+		for (Case tempCase : this.cases) {
+			if (tempCase.getName().equals(caseName)) {
 				return tempCase;
 			}
 		}
@@ -39,10 +39,5 @@ public class CaseHandler {
 
 	public ArrayList<Case> getCases() {
 		return this.cases;
-	}
-
-
-
-
-	
+	}	
 }

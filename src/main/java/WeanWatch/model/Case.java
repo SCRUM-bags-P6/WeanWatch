@@ -1,6 +1,6 @@
 package WeanWatch.model;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Case {
     // Store the case name and description
@@ -8,16 +8,13 @@ public class Case {
     private String description;
 
     // Store the case indicators
-    private List<Indicator> characteristics;
+    private ArrayList<Indicator> characteristics;
 
     // Constructor
-    public Case(String name, String description, Indicator[] characteristics) {
+    public Case(String name, String description, ArrayList<Indicator> characteristics) {
         this.name = name;
         this.description = description;
-        // Add the characteristics
-        for (Indicator characteristic : characteristics) {
-            this.characteristics.add(characteristic);
-        }
+		this.characteristics = characteristics;
     }
 
     // Getters
@@ -29,14 +26,8 @@ public class Case {
         return this.description;
     }
 
-    public Indicator[] getCharacteristics() {
-        // Prepare an array of Indicators with the size of the list of predicators
-        Indicator[] indicators = new Indicator[this.characteristics.size()];
-        // Fill the array with the indicators
-        for (int num = 0; num < this.characteristics.size(); num++) {
-            indicators[num] = this.characteristics.get(num);
-        }
+    public ArrayList<Indicator> getCharacteristics() {
         // Return the array of indicators
-        return indicators;
+        return this.characteristics;
     }
 }
