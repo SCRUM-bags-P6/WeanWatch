@@ -10,7 +10,7 @@ public class CaseHandler {
 	private CaseHandler(){
 	}
 
-	public CaseHandler getInstance(){
+	public static CaseHandler getInstance(){
 		if (CaseHandler.instance == null) {
             // Create an instance and store it
             CaseHandler.instance = new CaseHandler();
