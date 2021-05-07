@@ -37,7 +37,7 @@ public MetaphoricCaptionCtrl() {
 }
 // Constructor
 public void setCaption(String caseName, String timeStamp, Integer numOccurrences, Integer lastOccurrence) {
-	this.
+	
 
 }
 
