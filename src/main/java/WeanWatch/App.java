@@ -65,16 +65,21 @@ public class App extends Application {
 
 		//Kun til test af figurer
 		DetectedCase detectedCase = new DetectedCase();
-		DetectedCase detectedCase2 = new DetectedCase();
+		//DetectedCase detectedCase2 = new DetectedCase();
 
 		TriangleMetaphoricCtrl MCtrl = new TriangleMetaphoricCtrl(detectedCase);
-		TriangleMetaphoricCtrl MCtrl2 = new TriangleMetaphoricCtrl(detectedCase2);
+		//TriangleMetaphoricCtrl MCtrl2 = new TriangleMetaphoricCtrl(detectedCase2);
 
 
-		Group root = MCtrl.drawFigure(0, 960.00, 590.00, 1080.00, 590.00, 1020.00, 800.00, 1, 960.00, 500.00, 1080.00, 500.00, 1020.0, 400.00);
-		Group root2 = MCtrl2.drawFigure(0, 300.0, 100.0, 150.0, 200.0, 400.0, 500.0, 1, 800.0, 600.0, 400.0, 450.0, 900.0, 1000.0);
-		//MetaphoricHandlerCtrl MHCtrl = new MetaphoricHandlerCtrl();
-
+		TriangleFigure root = MCtrl.drawFigure(0, 31.00, 250.00, 151.00, 250.00, 91.00, 350.00, 3, 31.00, 260.00, 151.00, 260.00, 91.00, 160.00);
+		TriangleFigure root2 = MCtrl.drawFigure(0, 31.00, 250.00, 151.00, 250.00, 91.00, 350.00, 3, 31.00, 260.00, 151.00, 260.00, 91.00, 160.00);
+		TriangleFigure root3 = MCtrl.drawFigure(0, 31.00, 250.00, 151.00, 250.00, 91.00, 350.00, 3, 31.00, 260.00, 151.00, 260.00, 91.00, 160.00);
+		
+		/*
+		Group rootBottom = MCtrl.drawFigure(0, 1.00, 200.00, 121.00, 200.00, 61.00, 300.00, 1, 1.00, 210.00, 121.00, 210.00, 61.00, 110.00);
+		Group rootBottom2 = MCtrl.drawFigure(0, 1.00, 200.00, 121.00, 200.00, 61.00, 300.00, 1, 1.00, 210.00, 121.00, 210.00, 61.00, 110.00);
+		Group rootBottom3 = MCtrl.drawFigure(0, 1.00, 200.00, 121.00, 200.00, 61.00, 300.00, 1, 1.00, 210.00, 121.00, 210.00, 61.00, 110.00);
+		*/
 		
 
 		//MHCtrl.insertMetaphoricFigure(root);
@@ -87,9 +92,17 @@ public class App extends Application {
 		
 		MetaphoricHandlerCtrl MHCtrl = loader.getController();
 		MHCtrl.setMetaphoricCtrl(MCtrl);
-		MHCtrl.insertMetaphoricFigure(root);
-		MHCtrl.setMetaphoricCtrl(MCtrl2);
-		MHCtrl.insertMetaphoricFigure(root2);
+
+		//Indsæt figur i top
+		MHCtrl.insertMetaphoricFigureTop(root.getFigureTop());
+		MHCtrl.insertMetaphoricFigureTop(root2.getFigureTop());
+		MHCtrl.insertMetaphoricFigureTop(root3.getFigureTop());
+
+		//Indsæt figur i bottom
+		MHCtrl.insertMetaphoricFigureBottom(root.getFigureBottom());
+		MHCtrl.insertMetaphoricFigureBottom(root2.getFigureBottom());
+		MHCtrl.insertMetaphoricFigureBottom(root3.getFigureBottom());
+		
 		
 	
 		

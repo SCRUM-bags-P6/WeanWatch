@@ -18,29 +18,41 @@ import WeanWatch.controller.*;
 public class MetaphoricHandlerCtrl {
 
 @FXML
-private HBox FigureHBox;
-
-@FXML
 private VBox FigureVBox;
 
 @FXML
-private Label label;
+private HBox FigureHBoxTop;
+
+@FXML
+private HBox FigureHBoxBottom;
 
 private TriangleMetaphoricCtrl metaphoricCtrl;
 
-private boolean add;
 
 
 
-public void insertMetaphoricFigure(Group metaphoricFigure){
+
+/**
+ * Sætter den metaforiske figur i øverste HBox
+ */
+public void insertMetaphoricFigureTop(Group metaphoricFigure){
 BorderPane pane = new BorderPane();
 pane.getChildren().add(metaphoricFigure);
 
-
-//this.FigureVBox.autosize();
-this.FigureVBox.getChildren().add(pane);
-this.FigureVBox.autosize();
+this.FigureHBoxTop.setSpacing(700.0);
+this.FigureHBoxTop.getChildren().add(pane);
 }
+
+/**
+ * Sætter den metaforiske figur i nederste HBox
+ */
+public void insertMetaphoricFigureBottom(Group metaphoricFigure){
+	BorderPane pane = new BorderPane();
+	pane.getChildren().add(metaphoricFigure);
+	
+	this.FigureHBoxBottom.setSpacing(700.0);
+	this.FigureHBoxBottom.getChildren().add(pane);
+	}
 
 public void setMetaphoricCtrl(TriangleMetaphoricCtrl metaphoricCtrl){
 this.metaphoricCtrl = metaphoricCtrl;
@@ -48,7 +60,3 @@ this.metaphoricCtrl = metaphoricCtrl;
 }
 
 }
-
-
-//FigureVBox.setPadding(new Insets(100, 100, 100, 100));
-//FigureVBox.setSpacing(20);
