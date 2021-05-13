@@ -12,7 +12,7 @@ import javafx.scene.control.ListView;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
-public class PatientSelectCtrl {
+public class PatientSelectCtrl extends NavigatableCtrl {
     
     @FXML
     private ListView<Patient> patientListView;
@@ -41,13 +41,9 @@ public class PatientSelectCtrl {
                     }
                 }
             );
-
         } catch (Exception e) {
-            
-            //TODO: handle exception
-            System.err.println("Failed to display patients in list view with error:" + e);
+            System.err.println("Failed to display patients in list view with error:");
             e.printStackTrace();
-
         }
     }
 
@@ -60,5 +56,9 @@ public class PatientSelectCtrl {
 
     }
 
+    // Implement the update method
+    public void update(Patient context) {
+
+    }
 
 }
