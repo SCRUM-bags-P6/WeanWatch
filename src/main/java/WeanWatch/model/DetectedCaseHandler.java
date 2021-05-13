@@ -12,6 +12,11 @@ public class DetectedCaseHandler {
         this.detectedCases = new ArrayList<DetectedCase>();
     }
 
+	public ArrayList<DetectedCase> getDetectedCases() {
+		// Return the matching cases
+        return this.detectedCases;
+	}
+
 	public ArrayList<DetectedCase> getDetectedCases(String caseName) {
 		// Return the matching cases
         return this.getDetectedCases(detectedCase -> detectedCase.getCase().getName().equals(caseName));

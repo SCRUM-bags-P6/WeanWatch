@@ -14,7 +14,7 @@ public class DailyOccurrence {
         // Set the number of occurrences to one
         this.occurrences = 1;
         // Get the difference in time
-        this.cumulativeMilliseconds = DailyOccurrence.getOccurrenceTime(this.detectedCase.getTimeInterval());
+        this.cumulativeMilliseconds = DailyOccurrence.getOccurrenceTime(this.caseToDisplay.getCaseInterval());
     }
 
     public void addOccurrence(DetectedCase detectedCase) throws InvalidParameterException {
@@ -25,7 +25,7 @@ public class DailyOccurrence {
         // Increment number of occurrences
         this.occurrences++;
         // Get the time interval of the newly added detected case
-        TimeInterval occurrenceTimeInterval = caseToDisplay.getTimeInterval();
+        TimeInterval occurrenceTimeInterval = caseToDisplay.getCaseInterval();
         // Add the occurrence time to the cumulative time
         this.cumulativeMilliseconds = DailyOccurrence.getOccurrenceTime(occurrenceTimeInterval);
         // Compare the recency of the caseToDisplay with that of the detectedCase
