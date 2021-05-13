@@ -19,51 +19,53 @@ import WeanWatch.controller.*;
 
 
 public class MetaphoricHandlerCtrl {
+	@FXML
+	private VBox FigureVBox;
 
-@FXML
-private VBox FigureVBox;
+	@FXML
+	private HBox FigureHBoxTop;
 
-@FXML
-private HBox FigureHBoxTop;
+	@FXML
+	private HBox FigureHBoxBottom;
 
-@FXML
-private HBox FigureHBoxBottom;
+	private TriangleMetaphoricCtrl metaphoricCtrl;
 
-private TriangleMetaphoricCtrl metaphoricCtrl;
-
-public MetaphoricCaptionCtrl() {
-	
-}
-
-
-public void handleFigureClick() {
-
-}
-
-
-
-public void dispFigures(ArrayList<DetectedCase> casesToDisplay, ArrayList<MetaphoricCaptionCtrl> captionsToDisplay) {
-	for (int i = 0; i < casesToDisplay.size(); i++) { //tæl hvor mange cases vi har der skal displayes 
-		// Find ud af om der er plads i HBox
-			// Er i % 3
-				// Hvis ja, lav ny HBox
-				// Hvis nej, indsæt i den nuværende HBox
-		if (i % 3 == 0) {
-			HBox hbox = new HBox ();
-		}
-		hbox.getChildren().add(metaphoricFigure);
-			
+	public MetaphoricCaptionCtrl() {
 	}
-}
+
+
+	public void handleFigureClick() {
+	
+	}
+
+
+
+	public void dispFigures(ArrayList<DetectedCase> casesToDisplay, ArrayList<MetaphoricCaptionCtrl> captionsToDisplay) {
+		// Lav HBox
+		HBox hbox;
+
+		for (int i = 0; i < casesToDisplay.size(); i++) { //tæl hvor mange cases vi har der skal displayes 
+			// Find ud af om der er plads i HBox
+				// Er i % 3
+					// Hvis ja, lav ny HBox
+					// Hvis nej, indsæt i den nuværende HBox
+			if (i % 3 == 0) {
+				hbox = new HBox();
+			}
+			GenericMetaphoricCtrl figure = new TriangleMetaphoricCtrl(casesToDisplay.get(i));
+			hbox.getChildren().add(figure);			
+		}
+		// Tilføj til VBox
+	}
 
 
 
 /**
  * Sætter den metaforiske figur i øverste HBox
  */
-public void insertMetaphoricFigureTop(Group metaphoricFigure){
-	BorderPane pane = new BorderPane();
-	pane.getChildren().add(metaphoricFigure);
+	public void insertMetaphoricFigureTop(Group metaphoricFigure){
+		BorderPane pane = new BorderPane();
+		pane.getChildren().add(metaphoricFigure);
 
 	/*
 	DEN HER DEL HØRER TIL "DET GAMLE" KODE, HVOR DER BLEV HARDCODED EN TOP OG EN BUND
@@ -77,11 +79,11 @@ public void insertMetaphoricFigureTop(Group metaphoricFigure){
 	//PRøv at lave counter der tæller antallet af metaphoricFigures der bliver lavet
 	//Udfra counteren kan der laves if eller for loop, der laver ny HBox for hver tredje figur der bliver lavet
 
-	HBox HBox = createHBox(metaphoricFigure);
+		HBox HBox = createHBox(metaphoricFigure);
 
-	this.FigureVBox.getChildren().add(HBox);
+		this.FigureVBox.getChildren().add(HBox);
 
-}
+	}
 
 /**
  * Sætter den metaforiske figur i nederste HBox
