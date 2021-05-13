@@ -1,15 +1,9 @@
 package WeanWatch.model;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.stage.Stage;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.canvas.*;
-import javafx.scene.web.*;
-import javafx.scene.Group;
+import javafx.geometry.Insets;
 
 
 public class TriangleMetaphoricFactory extends MetaphoricFactory {
@@ -19,40 +13,59 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
 
     }
 
-    public Pane create(DetectedCase detectedCase) {
-        Pane figureRoot = new Pane();
-        // Figure root pane, hvor alle dele af figuren skal være i
-         //angiv størrelse og placering
-    
+    // Figure root pane, hvor alle dele af figuren skal være i
+    public BorderPane create(DetectedCase detectedCase) {
+        BorderPane figureRoot = new BorderPane();
+        
+        // Figure VBox, hvor der skal være fire felt - Label, head, topTriag, butTriag
+            //angiv størrelse, placering og evt. spacing 
         VBox figureVBox = new VBox();
         figureVBox.setPadding(new Insets(4));
         figureVBox.setSpacing(8); //Find korrekte spacing
+    
 
-        //Label caseLabel = new Label(detectedCase.getCase().getName());
-        //figureVBox.getChildren().add(caseLabel);
+        // Label til casenavn
+        Label caseLabel = new Label(detectedCase.getCase().getName());
+        figureVBox.getChildren().add(caseLabel);
 
-        Pane headPane = new Pane();
+
+        // Pane til hovedet på trekanten
+        BorderPane headPane = new BorderPane();
+        // Draw figure
         figureVBox.getChildren().add(headPane);
 
-        Pane topTriagPane = new Pane();
-        figureVBox.getChildren().add(topTriagPane);
-
-        Pane butTriagPane = new Pane();
-        figureVBox.getChildren().add(butTriagPane);
-
-        // Figure VBox, hvor der skal være fire felt - Label, head, topTriag, butTriag
-            //angiv størrelse, placering og evt. spacing
-                //måske skal der i VBoxen angives placering til de tre panes og label
-        
-        // Label til casenavn
-            //angiv størrelse, placering og
-        // Pane til hovedet på trekanten
-            //angiv størrelse og placering
         // Pane til group med toppen til trekanten
-            //angiv størrelse og placering
+        BorderPane topTriagPane = new BorderPane();
+        // Draw figure
+        topTriagPane.getChildren().add()
+        figureVBox.getChildren().add(topTriagPane);
+        
+    
+
         // Pane til group med bunden til trekanten
-            //angiv størrelse og placering
+        BorderPane butTriagPane = new BorderPane();
+        // Draw figure
+        figureVBox.getChildren().add(butTriagPane);
+        
         figureRoot.setCenter(figureVBox);
         return figureRoot;
     }
 }
+
+
+/*
+public Polygon drawFigure(int Color, Double firstX, Double firstY, Double secondX, Double secondY, Double thirdX, Double thirdY){
+    Polygon MetaphoricFigure = new Polygon();
+
+    MetaphoricFigure.getPoints().addAll(new Double[]{
+        firstX, firstY,
+        secondX, secondY,
+        thirdX, thirdY,
+    });
+
+    MetaphoricFigure.setFill(Colors[Color]);	
+
+return MetaphoricFigure;
+}
+
+*/
