@@ -2,24 +2,27 @@ package WeanWatch.model;
 
 import java.util.function.Predicate;
 
-public class Indicator {
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+
+public class Indicator{
     // Store the duration of the indicator
-    private int duration;
+    private Integer duration;
     // Store the indicator as a predicate
-    private Predicate predicate;
+    private Predicate<Dataset<Row>> predicate;
 
     // Constructor
-    public Indicator(int duaration, Predicate predicate) {
+    protected Indicator(Integer duaration, Predicate<Dataset<Row>> predicate) {
         this.duration = duration;
         this.predicate = predicate;
     }
 
     // Getters
-    public int getDuration() {
+    public Integer getDuration() {
         return this.duration;
     }
 
-    public Predicate getPredicate() {
+    public Predicate<Dataset<Row>> getPredicate() {
         return this.predicate;
     }
 }

@@ -52,16 +52,9 @@ public class App extends Application {
         loader.setLocation(App.class.getClassLoader().getResource("view/LoginView.fxml"));
         BorderPane view = (BorderPane) loader.load();
         
-		//Kun til test af figurer
-		DetectedCase detectedcase = new DetectedCase();
-
-		TriangleMetaphoricCtrl MCtrl = new TriangleMetaphoricCtrl(detectedcase);
-
-		//Group root = MCtrl.drawFigure(0, 300.0, 100.0, 150.0, 200.0, 400.0, 500.0, 1, 800.0, 600.0, 400.0, 450.0, 900.0, 1000.0);
-		Group root = MCtrl.drawFigure(0, 960.00, 590.00, 1080.00, 590.00, 1020.00, 800.00, 1, 960.00, 500.00, 1080.00, 500.00, 1020.0, 400.00);
-
+	
 		try {
-			primaryStage.setScene(new Scene(root, width, height));			
+			primaryStage.setScene(new Scene(view, width, height));			
 			//primaryStage.setScene(new Scene(view, width, height));
 			//primaryStage.getScene().getStylesheets().add("view/Stylesheet.css");
 			primaryStage.show();

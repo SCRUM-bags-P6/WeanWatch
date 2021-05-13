@@ -6,6 +6,7 @@ public class Case {
     // Store the case name and description
     private String name;
     private String description;
+	private DetectionAlgorithm algorithm;
 
     // Store the case indicators
     private ArrayList<Indicator> characteristics;
@@ -30,4 +31,8 @@ public class Case {
         // Return the array of indicators
         return this.characteristics;
     }
+
+	public DetectionAlgorithm getAlgorithm(){
+		return this.algorithm;
+	}
 }
