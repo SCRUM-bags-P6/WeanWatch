@@ -16,7 +16,7 @@
          <right>
             <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER_RIGHT">
                <children>
-                  <Button mnemonicParsing="false" text="Logout">
+                  <Button onAction="#handleLogoutClick" mnemonicParsing="false" text="Logout">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -47,7 +47,7 @@
                         </Text>
                      </children>
                   </VBox>
-                  <Button mnemonicParsing="false" text="Select patient">
+                  <Button onAction="#handleSelectedPatientClick" mnemonicParsing="false" text="Select patient">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -55,7 +55,7 @@
                         <Insets left="10.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="Screen cases">
+                  <Button onAction="#handleShowOverviewClick" mnemonicParsing="false" text="Overview">
                      <font>
                         <Font size="20.0" />
                      </font>

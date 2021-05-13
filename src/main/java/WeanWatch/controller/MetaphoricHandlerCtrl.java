@@ -9,7 +9,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
 
 import java.util.ArrayList;
 
@@ -30,7 +29,8 @@ public class MetaphoricHandlerCtrl {
 
 	private TriangleMetaphoricCtrl metaphoricCtrl;
 
-	public MetaphoricCaptionCtrl() {
+	public MetaphoricHandlerCtrl() {
+
 	}
 
 
@@ -53,7 +53,7 @@ public class MetaphoricHandlerCtrl {
 				hbox = new HBox();
 			}
 			GenericMetaphoricCtrl figure = new TriangleMetaphoricCtrl(casesToDisplay.get(i));
-			hbox.getChildren().add(figure);			
+			//hbox.getChildren().add(figure);			
 		}
 		// Tilføj til VBox
 	}

@@ -36,19 +36,19 @@ public class CaseDetectorThread extends Thread {
 			
 			//Looper igennem antallet af tasks der er at scanne for 
 			
-				currentTask.getPatient().getData().foreach((ForeachFunction<Row>) row -> {
-					for(int z = 0; z<currentTask.getCasesToScan().size(); z++){						
-						if(currentTask.getCasesToScan().get(z).getAlgorithm().evaluate(row) == null){
-							//TODO: hvad sker der når evaluate returnerer null
-						}
-						else{
-							//TODO: Create en case når evaluate returnerer et TimeInterval. Den returnerer et TimeInterval, hvis testen er true.
-						}
-
-
+			currentTask.getPatient().getData().foreach((ForeachFunction<Row>) row -> {
+				for(int z = 0; z<currentTask.getCasesToScan().size(); z++){						
+					if(currentTask.getCasesToScan().get(z).getAlgorithm().evaluate(row) == null){
+						//TODO: hvad sker der når evaluate returnerer null
 					}
-					//Hvis der returneres noget forskelligt fra Null, skal der creates en DetectedCase, som skal sættes i DetectedCaseHandler
-				});
+					else{
+						//TODO: Create en case når evaluate returnerer et TimeInterval. Den returnerer et TimeInterval, hvis testen er true.
+					}
+
+
+				}
+				//Hvis der returneres noget forskelligt fra Null, skal der creates en DetectedCase, som skal sættes i DetectedCaseHandler
+			});
 				//Evaluer alle cases igennem, for hver patient i tasken
 				
 				
@@ -58,8 +58,8 @@ public class CaseDetectorThread extends Thread {
 			
 		//If Case is detected		
 
-			};
-		}
+		};
+		
 		
 
 		

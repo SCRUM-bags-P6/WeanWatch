@@ -37,7 +37,7 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         // Pane til group med toppen til trekanten
         BorderPane topTriagPane = new BorderPane();
         // Draw figure
-        topTriagPane.getChildren().add()
+        //topTriagPane.getChildren().add()
         figureVBox.getChildren().add(topTriagPane);
         
     
