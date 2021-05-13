@@ -43,6 +43,8 @@ public class App extends Application {
         PDMSConn pdmsConn = PDMSConn.getInstance();
 
         pdmsConn.getPatients();
+
+        //dispFigures(); 
     }
 
     @Override
@@ -64,10 +66,12 @@ public class App extends Application {
 		ScrollPane view = (ScrollPane) loader.load();
 
 		
-		
+		TriangleMetaphoricFactory factory = new TriangleMetaphoricFactory();
+
+
 
 		try {
-			primaryStage.setScene(new Scene(view, width, height));			
+			primaryStage.setScene(new Scene(factory.create(new DetectedCase()), width, height));			
 			//primaryStage.setScene(new Scene(view, width, height));
 			//primaryStage.getScene().getStylesheets().add("view/Stylesheet.css");
 			primaryStage.show();
