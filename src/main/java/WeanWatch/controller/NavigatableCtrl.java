@@ -1,6 +1,7 @@
 package WeanWatch.controller;
 
 import WeanWatch.model.DetectionSubscriber;
+import WeanWatch.model.Patient;
 
 public abstract class NavigatableCtrl implements DetectionSubscriber {
     // Store a reference to the partent

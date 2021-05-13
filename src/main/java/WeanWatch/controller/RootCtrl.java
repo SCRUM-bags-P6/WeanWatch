@@ -3,6 +3,8 @@ package WeanWatch.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import WeanWatch.model.Patient;
+import WeanWatch.model.Personnel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -51,7 +53,7 @@ public class RootCtrl {
 
     public void handleShowInspectClick(InspectCtrl inspectCtrl) {
         
-    } 
+    }
 
     public void handleShowOverviewClick() {
         changeView("/view/OverviewView.fxml");
