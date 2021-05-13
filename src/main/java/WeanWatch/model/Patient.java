@@ -6,7 +6,7 @@ import org.apache.spark.sql.Row;
 public class Patient {
     // Parameters
     private Dataset<Row> patientData; // Patient dataset
-    private DetectedCaseHandler patientCaseHandler; // Case handler
+    private DetectedCaseHandler patientCaseHandler = null; // Case handler
     
     // Patient information
     private String cpr;
@@ -35,11 +35,16 @@ public class Patient {
         return this.name;
     }
 
-    public DetectedCaseHandler getCaseHandler() {
+    public DetectedCaseHandler getDetectedCaseHandler() {
+        // If the patient has no case handler, create one
+        if (this.patientCaseHandler == null) {
+            this.patientCaseHandler = new DetectedCaseHandler();
+        }
+        // Return the case handler
         return this.patientCaseHandler;
     }
 
-    public Dataset<Row> getPatientData() {
+    public Dataset<Row> getData() {
         return this.patientData;
     }
     
