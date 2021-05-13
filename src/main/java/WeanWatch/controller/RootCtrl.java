@@ -42,7 +42,6 @@ public class RootCtrl {
     }
 
     public void handleSelectedPatientClick() {
-        changeView("/view/PatientSelectView.fxml");
         try {
             changeView("/view/PatientSelectView.fxml");
         } catch (Exception e) {
@@ -67,7 +66,6 @@ public class RootCtrl {
     }
 
     public void handleShowOverviewClick() {
-        changeView("/view/OverviewView.fxml");
         if (this.getPatient() == null) {
             Alert wydt = new Alert(AlertType.INFORMATION, "Please select a patient!");
             wydt.show();
