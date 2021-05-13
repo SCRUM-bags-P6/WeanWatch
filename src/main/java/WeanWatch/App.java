@@ -14,6 +14,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -55,59 +56,12 @@ public class App extends Application {
 
         double width = screenSize.getWidth();
 		double height = screenSize.getHeight();
-		
-/*		
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(App.class.getClassLoader().getResource("view/LoginView.fxml"));
-        BorderPane view = (BorderPane) loader.load();
-*/
 
 
-		//Kun til test af figurer
-		DetectedCase detectedCase = new DetectedCase();
-		//DetectedCase detectedCase2 = new DetectedCase();
 
-		TriangleMetaphoricCtrl MCtrl = new TriangleMetaphoricCtrl(detectedCase);
-		//TriangleMetaphoricCtrl MCtrl2 = new TriangleMetaphoricCtrl(detectedCase2);
-
-
-		TriangleFigure root = MCtrl.drawFigure(0, 31.00, 250.00, 151.00, 250.00, 91.00, 350.00, 3, 31.00, 260.00, 151.00, 260.00, 91.00, 160.00);
-		TriangleFigure root2 = MCtrl.drawFigure(0, 31.00, 250.00, 151.00, 250.00, 91.00, 350.00, 3, 31.00, 260.00, 151.00, 260.00, 91.00, 160.00);
-		TriangleFigure root3 = MCtrl.drawFigure(0, 31.00, 250.00, 151.00, 250.00, 91.00, 350.00, 3, 31.00, 260.00, 151.00, 260.00, 91.00, 160.00);
-		
-		/*
-		Group rootBottom = MCtrl.drawFigure(0, 1.00, 200.00, 121.00, 200.00, 61.00, 300.00, 1, 1.00, 210.00, 121.00, 210.00, 61.00, 110.00);
-		Group rootBottom2 = MCtrl.drawFigure(0, 1.00, 200.00, 121.00, 200.00, 61.00, 300.00, 1, 1.00, 210.00, 121.00, 210.00, 61.00, 110.00);
-		Group rootBottom3 = MCtrl.drawFigure(0, 1.00, 200.00, 121.00, 200.00, 61.00, 300.00, 1, 1.00, 210.00, 121.00, 210.00, 61.00, 110.00);
-		*/
-		
-
-		//MHCtrl.insertMetaphoricFigure(root);
-
-		
 		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(App.class.getClassLoader().getResource("view/MetaphoricHandlerView.fxml"));
-		VBox view = (VBox) loader.load();
-
-		
-		MetaphoricHandlerCtrl MHCtrl = loader.getController();
-		MHCtrl.setMetaphoricCtrl(MCtrl);
-
-		//Indsæt figur i top
-		MHCtrl.insertMetaphoricFigureTop(root.getFigureTop());
-		MHCtrl.insertMetaphoricFigureTop(root2.getFigureTop());
-		MHCtrl.insertMetaphoricFigureTop(root3.getFigureTop());
-
-		//Indsæt figur i bottom
-		MHCtrl.insertMetaphoricFigureBottom(root.getFigureBottom());
-		MHCtrl.insertMetaphoricFigureBottom(root2.getFigureBottom());
-		MHCtrl.insertMetaphoricFigureBottom(root3.getFigureBottom());
-		
-		
-	
-		
-		//String print = loader.getController().getClass().getName();
-		//System.out.println(print);
+		loader.setLocation(App.class.getClassLoader().getResource("view/ScreeningView.fxml"));
+		ScrollPane view = (ScrollPane) loader.load();
 
 		
 		
