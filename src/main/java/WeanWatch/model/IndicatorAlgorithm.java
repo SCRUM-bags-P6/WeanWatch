@@ -8,7 +8,7 @@ import org.apache.spark.sql.Row;
 
 
 
-public class IndicatorAlgorithm implements DetectionAlgorithm{
+public class IndicatorAlgorithm implements DetectionAlgorithm {
 	private Date startPointer;
 	private Date endPointer;
 	private Integer minimumCaseDuration;
