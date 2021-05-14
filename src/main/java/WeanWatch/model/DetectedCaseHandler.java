@@ -17,6 +17,11 @@ public class DetectedCaseHandler {
         return this.detectedCases;
 	}
 
+	/**
+	 * Returnes all detected cases of the case that has the given case name
+	 * @param caseName Name of case to retuen detected cases for
+	 * @return Array of detected cases of type case with case name
+	 */
 	public ArrayList<DetectedCase> getDetectedCases(String caseName) {
 		// Return the matching cases
         return this.getDetectedCases(detectedCase -> detectedCase.getCase().getName().equals(caseName));

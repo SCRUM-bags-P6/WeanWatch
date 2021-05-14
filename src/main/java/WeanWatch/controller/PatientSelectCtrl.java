@@ -51,8 +51,6 @@ public class PatientSelectCtrl extends NavigatableCtrl {
     public void handlePatientClick(ObservableValue<? extends Patient> ov, Patient oldPatient, Patient newPatient) {
         // Store the selected patient in the parent
         this.parentNode.setPatient(newPatient);
-        // Change the patient of priotiry in the thread
-        CaseDetectorThread.getInstance().prioritizePatient(newPatient);
         // Navigate to overview
         this.parentNode.handleShowOverviewClick();
     }

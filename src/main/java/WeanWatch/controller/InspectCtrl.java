@@ -44,7 +44,7 @@ public class InspectCtrl extends NavigatableCtrl {
             // Clear the rowsBox
             this.rowsBox.getChildren().clear();
             // Get the most recent daily occurrences of each case to display
-            ArrayList<DetectedCase> casesToDisplay = this.parentNode.getPatient().getDetectedCaseHandler().getDetectedCases(this.caseToDisplay.getName());
+            ArrayList<DetectedCase> casesToDisplay = this.parentNode.getPatient().getDetectedCaseHandler().getDetectedCases(this.caseTypeToDisplay.getName());
             // getting total size of arrlist
             // using size() method
             int casesToDisplaySize = casesToDisplay.size();

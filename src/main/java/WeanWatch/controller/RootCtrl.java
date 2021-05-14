@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import WeanWatch.model.CaseDetectorThread;
+import WeanWatch.model.DetectedCase;
 import WeanWatch.model.PDMSConn;
 import WeanWatch.model.Patient;
 import WeanWatch.model.Personnel;
@@ -11,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.LoadException;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
@@ -19,6 +22,12 @@ import javafx.scene.layout.VBox;
 
 public class RootCtrl {
     
+    @FXML
+    private Label clinicianID;
+
+    @FXML
+    private Label patientID;
+
     private Personnel user;
 
     private Patient selectedPatient; 
@@ -53,8 +62,8 @@ public class RootCtrl {
     } 
 
     @FXML
-    public void handleShowInspectClick(InspectCtrl inspectCtrl) {
-        
+    public void handleShowInspectClick(DetectedCase caseTypeToDisplay) {
+        // TODO: Implement
     }
 
     @FXML
@@ -74,7 +83,7 @@ public class RootCtrl {
 
     @FXML
     public void handleLogoutClick() {
-
+        // TODO: Implement
     }
 
     private NavigatableCtrl changeView(String path) throws IOException {
@@ -107,17 +116,16 @@ public class RootCtrl {
     public void setPatient(Patient patient) {
         // Set the patient
         this.selectedPatient = patient;
-        // Make DetectorThread priotitize the newly selected patient
-        //TODO: Prioritize patient in thread
+        // Update the view
+        this.patientID.setText(patient.getCPR());
+        // Change the patient of priotiry in the thread
+        CaseDetectorThread.getInstance().prioritizePatient(patient);
     }
 
     public void setPersonnel(Personnel personnel) {
-
+        // Store the user
+        this.user = personnel;
+        // Update the view
+        this.clinicianID.setText(personnel.getID());
     }
-
-
-   
-
-    
-
 }
