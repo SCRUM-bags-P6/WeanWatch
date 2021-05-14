@@ -3,6 +3,7 @@ package WeanWatch.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import WeanWatch.model.CaseDetectorThread;
 import WeanWatch.model.Patient;
 import WeanWatch.model.PatientHandler;
 import javafx.collections.FXCollections;
@@ -48,17 +49,17 @@ public class PatientSelectCtrl extends NavigatableCtrl {
     }
 
     public void handlePatientClick(ObservableValue<? extends Patient> ov, Patient oldPatient, Patient newPatient) {
-
-        // TODO: Set the patient, and navigate to overview screen
-        System.out.println(oldPatient);
-
-        System.out.println(newPatient);
-
+        // Store the selected patient in the parent
+        this.parentNode.setPatient(newPatient);
+        // Change the patient of priotiry in the thread
+        CaseDetectorThread.getInstance().prioritizePatient(newPatient);
+        // Navigate to overview
+        this.parentNode.handleShowOverviewClick();
     }
 
     // Implement the update method
+    @Override
     public void update(Patient context) {
 
     }
-
 }

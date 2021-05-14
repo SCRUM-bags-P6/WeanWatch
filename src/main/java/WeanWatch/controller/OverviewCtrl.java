@@ -12,17 +12,22 @@ import org.apache.commons.collections4.map.MultiKeyMap;
 import org.apache.commons.collections4.map.LinkedMap;
 
 import WeanWatch.model.Case;
+import WeanWatch.model.CaseDetectorThread;
 import WeanWatch.model.DailyOccurrence;
 import WeanWatch.model.DetectedCase;
 import WeanWatch.model.Patient;
+import WeanWatch.model.TriangleMetaphoricFactory;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class OverviewCtrl extends NavigatableCtrl {
 
     @FXML
-    public ScrollPane overviewScrolling;
+    private ScrollPane overviewScrolling;
     
     @FXML
     private VBox rowsBox;
@@ -35,70 +40,7 @@ public class OverviewCtrl extends NavigatableCtrl {
 
     }
 
-    @Override
-    public void setParent(RootCtrl rootCtrl) {
-
-        super.setParent(rootCtrl);
-
-        // Get the most recent daily occurrences of each case to display
-        ArrayList<DetectedCase> casesToDisplay = this.getDailyCaseOccurrencesToDisplay();
-		 // getting total size of arrlist
-        // using size() method
-        int casesToDisplaySize = casesToDisplay.size();
-        // Prepare a placeholder for the hbox 
-        HBox hbox = null;
-        // Loop through all cases
-        for (int i = 0; i < casesToDisplaySize; i++) {
-			if (i % 3 == 0) {
-                // Add the hbox, if it has been filled with figures
-                if (hbox != null) {
-                    this.rowsBox.getChildren().add(hbox);
-                }
-				// Create a hbox for each three cases
-				hbox = new HBox();
-            }	
-        // // Prepare a placeholder for the hbox 
-        // HBox hbox = null;
-        // // Loop through all cases
-        // for (int i = 0; i < casesToDisplaySize; i++) {
-		// 	if (i % 3 == 0) {
-        //         // Add the hbox, if it has been filled with figures
-        //         if (hbox != null) {
-        //             this.rowsBox.getChildren().add(hbox);
-        //         }
-		// 		// Create a hbox for each three cases
-		// 		hbox = new HBox();
-        //     }	
-
-			// Create a vbox for the cases
-			VBox vbox = new VBox();
-		// 	// Create a vbox for the cases
-		// 	VBox vbox = new VBox();
-
-
-       	    // Add a metaforic figure to the vbox
-       	//     // Add a metaforic figure to the vbox
-
-			TriangleMetaphoricFactory metaphoricFactory = new TriangleMetaphoricFactory();
-		// 	TriangleMetaphoricFactory metaphoricFactory = new TriangleMetaphoricFactory();
-
-			Pane metaphoricFigure = metaphoricFactory.create(casesToDisplay.get(i));
-		// 	Pane metaphoricFigure = metaphoricFactory.create(casesToDisplay.get(i));
-
-        	// Add caption to the vbox
-        // 	// Add caption to the vbox
-
-
-            // Add the vbox to the hbox
-        	hbox.getChrildren().add(vbox);
-        //     // Add the vbox to the hbox
-        // 	hbox.getChrildren().add(vbox);
-
-		}
-		// }
-    }
-
-    private ArrayList<DetectedCase> getDailyCaseOccurrencesToDisplay() {
+    private ArrayList<DailyOccurrence> getDailyCaseOccurrencesToDisplay() {
         // Get the all patients detected cases
         ArrayList<DetectedCase> detectedCases = this.parentNode.getPatient().getDetectedCaseHandler().getDetectedCases();
         /* Create a MultiKeyMap to store cases to be displayed. MultiKeyMap is used as there should be one
@@ -121,12 +63,12 @@ public class OverviewCtrl extends NavigatableCtrl {
                 dailyOccurrencesMap.get(caseDate, caseType).addOccurrence(detectedCase);
             }
         }
-        // Create a placeholder for all of the cases to display
-        ArrayList<DetectedCase> casesToDisplay = new ArrayList<DetectedCase>();
+        // Create a placeholder for all of the daily occurrences to display
+        ArrayList<DailyOccurrence> casesToDisplay = new ArrayList<DailyOccurrence>();
         // Convert the MultiKeyMap to an arraylist
         dailyOccurrencesMap.forEach((keys, dailyOccurrence) -> {
             // Add the daily occurrence to the casesToDisplay
-            casesToDisplay.add(dailyOccurrence.getCaseToDisplay());
+            casesToDisplay.add(dailyOccurrence);
         });
         // Return the occurrences
         return casesToDisplay;
@@ -134,13 +76,42 @@ public class OverviewCtrl extends NavigatableCtrl {
 
     @Override
     public void update(Patient context) {
-        // TODO Auto-generated method stub
-        
+        // Clear the rowsBox
+        this.rowsBox.getChildren().clear();
+        // Get the most recent daily occurrences of each case to display
+        ArrayList<DailyOccurrence> casesToDisplay = this.getDailyCaseOccurrencesToDisplay();
+		 // getting total size of arrlist
+        // using size() method
+        int casesToDisplaySize = casesToDisplay.size();
+        // Prepare a placeholder for the hbox 
+        HBox hbox = null;
+        // Loop through all cases
+        for (int i = 0; i < casesToDisplaySize; i++) {
+			if (i % 3 == 0) {
+                // Add the hbox, if it has been filled with figures
+                if (hbox != null) {
+                    this.rowsBox.getChildren().add(hbox);
+                }
+				// Create a hbox for each three cases
+				hbox = new HBox();
+            }	
+			// Create a vbox for the cases
+			VBox vbox = new VBox();
+       	    // Add a metaforic figure to the vbox
+			TriangleMetaphoricFactory metaphoricFactory = new TriangleMetaphoricFactory();
+			Pane metaphoricFigure = metaphoricFactory.create(casesToDisplay.get(i).getCaseToDisplay());
+        	// Create labels to caption for occurrences and time
+            Label labelOccurrences = new Label(casesToDisplay.get(i).getOccurrences().toString());
+            Label labelCumulativeTime = new Label(casesToDisplay.get(i).getCumulativeTime());
+            // Add metaphoricalfigure, number of occurrences and time duration to the Vbox
+            vbox.getChildren().addAll(metaphoricFigure,labelOccurrences,labelCumulativeTime);
+            // Add the vbox to the hbox
+        	hbox.getChildren().add(vbox);
+		}
     }
 	
 	public void handleGridClick() {
-		
+
+
 	}
-
-
 }

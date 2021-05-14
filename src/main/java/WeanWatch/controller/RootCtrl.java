@@ -38,9 +38,11 @@ public class RootCtrl {
         // Show the patient select on the first run
         handleSelectedPatientClick();
 
+
         this.setPatient(PDMSConn.getInstance().getPatients()[0]);
     }
 
+    @FXML
     public void handleSelectedPatientClick() {
         try {
             changeView("/view/PatientSelectView.fxml");
@@ -48,63 +50,52 @@ public class RootCtrl {
             System.out.println("Failed to display the the patient selection screen, with error:");
             e.printStackTrace();
         }
-        // try {
-        //     // Load the patient select view
-        //     FXMLLoader loader = new FXMLLoader();
-        //     loader.setLocation(getClass().getResource("/view/PatientSelectView.fxml"));
-        //     VBox patientSelectView = (VBox) loader.load();
-        //     // Display the patient select view
-        //     this.rootSubAnchorPane.getChildren().setAll(patientSelectView);
-        // } catch (Exception e) {
-        //     System.out.println("Failed to display the patient select view, with error:");
-        //     e.printStackTrace();
-        // }
     } 
 
+    @FXML
     public void handleShowInspectClick(InspectCtrl inspectCtrl) {
         
     }
 
+    @FXML
     public void handleShowOverviewClick() {
         if (this.getPatient() == null) {
             Alert wydt = new Alert(AlertType.INFORMATION, "Please select a patient!");
             wydt.show();
         } else {
             try {
-                NavigatableCtrl overviewCtrl = changeView("/view/OverviewView.fxml");
-                overviewCtrl.setParent(this);
+                changeView("/view/OverviewView.fxml").setParent(this);
             } catch (Exception e) {
                 System.out.println("Failed to display the the overview screen, with error:");
                 e.printStackTrace();
             }
         }
-        //   try {
-        //     // Load the patient select view
-        //     FXMLLoader loader = new FXMLLoader();
-        //     loader.setLocation(getClass().getResource("/view/OverviewView.fxml"));
-        //     VBox Overview = (VBox) loader.load();
-        //     // Display the patient select view
-        //     this.rootSubAnchorPane.getChildren().setAll(Overview);
-        // } catch (Exception e) {
-        //     System.out.println("Failed to display the overview, with error:");
-        //     e.printStackTrace();
-        // }
-
     }
 
+    @FXML
     public void handleLogoutClick() {
 
     }
 
     private NavigatableCtrl changeView(String path) throws IOException {
+        // Unsubscribe the current child
+        this.unsubscribeChild();
         // Load the view
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(path));
         Region loadedView = (Region) loader.load();
         // Display the view
         this.rootSubAnchorPane.getChildren().setAll(loadedView);
-        // Return the controller
-        return (NavigatableCtrl) loader.getController();
+        // Get the controller
+        this.childNode = (NavigatableCtrl) loader.getController();
+        // Return the child ctrl
+        return this.childNode;
+    }
+
+    private void unsubscribeChild() {
+        if (this.childNode != null) {
+            this.childNode.unsubscribe();
+        }
     }
 
     // Return the selected patient
