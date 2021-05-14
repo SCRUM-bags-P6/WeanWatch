@@ -28,54 +28,39 @@ public class CaseDetectorThread extends Thread {
 	}
 
     public void run() {
-		//iflg. Sekvensdiagram
+		//Følger Sekvensdiagrammet
 		//Loop gennem qeued detectorTasks.	
 		for(int i = 0; i<queuedTasks.size(); i++){
 			//Få nuværende task
 			DetectorTask currentTask = queuedTasks.get(i);
 			
-			//Looper igennem antallet af tasks der er at scanne for 
-			
+			//For patienten i den i'te DetectorCask køres foreach på hver række af Dataset'et			
 				currentTask.getPatient().getData().foreach((ForeachFunction<Row>) row -> {
+					//For each kører et for-loop igennem for hver række, der scanner hver række igennem for hver case
 					for(int z = 0; z<currentTask.getCasesToScan().size(); z++){						
-						if(currentTask.getCasesToScan().get(z).getAlgorithm().evaluate(row) == null){
-							//TODO: hvad sker der når evaluate returnerer null
+						if(currentTask.getCasesToScan().get(z).getAlgorithm().evaluate(row) != null){
+							//Hvis en case algoritme returnerer !null, altså TimeInterval, creates en ny case
+							DetectedCase newCase = new DetectedCase(currentTask.getPatient(), 
+							currentTask.getCasesToScan().get(z),
+							currentTask.getCasesToScan().get(z).getAlgorithm().evaluate(row));
+														
+							//Denne case addes til den nuværende patient's DetectedCaseHandler
+							currentTask.getPatient().getDetectedCaseHandler().addCase(newCase);										
 						}
-						else{
-							//TODO: Create en case når evaluate returnerer et TimeInterval. Den returnerer et TimeInterval, hvis testen er true.
-						}
-
-
 					}
-					//Hvis der returneres noget forskelligt fra Null, skal der creates en DetectedCase, som skal sættes i DetectedCaseHandler
-				});
-				//Evaluer alle cases igennem, for hver patient i tasken
-				
-				
-
-			
-		//Nested loop: Loop gennem hver case i DetectorTask
-			
-		//If Case is detected		
-
-			};
+				});			
+		//NotifySubscribers
+			}
 		}
 		
 
 		
 		
-		//Lav TimeInterval med newest time, oldest time
-		//Lav detectedCase(patient, case, caseinterval)
-		//getPatient()
-		//getDetectedCaseHandler()		
-		//Return DetectedCaseHandler
-		//AddCase til detectedCaseHandler
-		//NotifySubscribers
+		
 
 
 
-
-    }
+    
     
     public void initialize() {
         for (Patient patient : PatientHandler.getInstance().getPatients()) {
