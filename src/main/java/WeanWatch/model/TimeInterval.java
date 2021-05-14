@@ -1,5 +1,6 @@
 package WeanWatch.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TimeInterval {
@@ -32,4 +33,10 @@ public class TimeInterval {
         // Return the result
         return isNewerThanCompare && isOlderThanCompare;
     }
+	//method to convert time to string
+	public String toString(){
+		SimpleDateFormat formatter = new SimpleDateFormat("dd hh:mm");  
+		String strDate = formatter.format(date);  
+		
+	}
 }

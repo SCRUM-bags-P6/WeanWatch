@@ -64,11 +64,11 @@ public class InspectCtrl extends NavigatableCtrl {
                 VBox vbox = new VBox();
                 // Add a metaforic figure to the vbox
                 TriangleMetaphoricFactory metaphoricFactory = new TriangleMetaphoricFactory();
-                Pane metaphoricFigure = metaphoricFactory.create(casesToDisplay.get(i).getCaseToDisplay());
+                Pane metaphoricFigure = metaphoricFactory.create(casesToDisplay.get(i));
                 // Create labels to caption time
-                Label labelCumulativeTime = new Label(casesToDisplay.get(i).getCumulativeTime());
+                Label labelCaseInterval = new Label(casesToDisplay.get(i).getCaseInterval().toString());
                 // Add metaphoricalfigure, number of occurrences and time duration to the Vbox
-                vbox.getChildren().addAll(metaphoricFigure,labelCumulativeTime);
+                vbox.getChildren().addAll(metaphoricFigure,labelCaseInterval);
                 // Add the vbox to the hbox
                 hbox.getChildren().add(vbox);
             }
