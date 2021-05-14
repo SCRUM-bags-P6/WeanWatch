@@ -79,7 +79,7 @@ public class PDMSConn {
                 Dataset<Row> patientData;
                 // Load the patient dataset, if it is set
                 if (patient.get("filename") != null) {
-                    patientData = PDMSConn.dataFrameReader.option("header", true).csv(PDMSConn.dataFolder + patient.get("filename"));
+                    patientData = PDMSConn.dataFrameReader.option("header", true).option("inferSchema", true).csv(PDMSConn.dataFolder + patient.get("filename"));
                 } else {
                     patientData = null;
                 }
