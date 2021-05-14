@@ -6,7 +6,7 @@ package WeanWatch;
 import java.awt.Color;
 import java.awt.Dimension;
 
-import WeanWatch.controller.MetaphoricHandlerCtrl;
+//import WeanWatch.controller.MetaphoricHandlerCtrl;
 import WeanWatch.controller.RootCtrl;
 import WeanWatch.controller.TriangleMetaphoricCtrl;
 import WeanWatch.model.PDMSConn;

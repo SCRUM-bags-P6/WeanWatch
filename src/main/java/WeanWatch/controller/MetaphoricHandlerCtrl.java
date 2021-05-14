@@ -1,3 +1,4 @@
+/*
 package WeanWatch.controller;
 
 import WeanWatch.model.DetectedCase;
@@ -9,8 +10,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
-
 import java.util.ArrayList;
 
 import WeanWatch.controller.*;
@@ -30,16 +29,16 @@ public class MetaphoricHandlerCtrl {
 
 	private TriangleMetaphoricCtrl metaphoricCtrl;
 
-	public MetaphoricCaptionCtrl() {
+	//public MetaphoricCaptionCtrl() {
 	}
 
 
 	public void handleFigureClick() {
 	
 	}
+	*/
 
-
-
+/*
 	public void dispFigures(ArrayList<DetectedCase> casesToDisplay, ArrayList<MetaphoricCaptionCtrl> captionsToDisplay) {
 		// Lav HBox
 		HBox hbox;
@@ -57,17 +56,19 @@ public class MetaphoricHandlerCtrl {
 		}
 		// Tilføj til VBox
 	}
-
+*/
 
 
 /**
  * Sætter den metaforiske figur i øverste HBox
  */
+	/*
 	public void insertMetaphoricFigureTop(Group metaphoricFigure){
 		BorderPane pane = new BorderPane();
 		pane.getChildren().add(metaphoricFigure);
 
-	/*
+	*/
+		/*
 	DEN HER DEL HØRER TIL "DET GAMLE" KODE, HVOR DER BLEV HARDCODED EN TOP OG EN BUND
 	this.FigureHBoxTop.setSpacing(700.0);
 	this.FigureHBoxTop.getChildren().add(pane);
@@ -79,15 +80,17 @@ public class MetaphoricHandlerCtrl {
 	//PRøv at lave counter der tæller antallet af metaphoricFigures der bliver lavet
 	//Udfra counteren kan der laves if eller for loop, der laver ny HBox for hver tredje figur der bliver lavet
 
+	/*
 		HBox HBox = createHBox(metaphoricFigure);
 
 		this.FigureVBox.getChildren().add(HBox);
 
 	}
-
+*/
 /**
  * Sætter den metaforiske figur i nederste HBox
  */
+/*
 public void insertMetaphoricFigureBottom(Group metaphoricFigure){
 	BorderPane pane = new BorderPane();
 	pane.getChildren().add(metaphoricFigure);
@@ -112,3 +115,4 @@ public HBox createHBox (Group metaphoricFigure){
 }
 
 }
+*/

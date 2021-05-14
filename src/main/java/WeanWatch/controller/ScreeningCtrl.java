@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 
 public class ScreeningCtrl {
 
+
 @FXML
 public ScrollPane scroll;
 
@@ -33,10 +34,11 @@ try {
 
 	this.scroll.setContent(view);
 
-		
+	/*	
 	MetaphoricHandlerCtrl MHCtrl = loader.getController();
 	MHCtrl.setMetaphoricCtrl(MCtrl);
 
+	
 	//Indsæt figur i top
 	MHCtrl.insertMetaphoricFigureTop(root.getFigureTop());
 	MHCtrl.insertMetaphoricFigureTop(root2.getFigureTop());
@@ -46,7 +48,7 @@ try {
 	MHCtrl.insertMetaphoricFigureBottom(root.getFigureBottom());
 	MHCtrl.insertMetaphoricFigureBottom(root2.getFigureBottom());
 	MHCtrl.insertMetaphoricFigureBottom(root3.getFigureBottom());
-		
+		*/
 	
 } catch (Exception e) {
 	//TODO: handle exception
