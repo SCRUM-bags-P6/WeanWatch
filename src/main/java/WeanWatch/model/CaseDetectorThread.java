@@ -32,24 +32,28 @@ public class CaseDetectorThread extends Thread {
 		//Loop gennem qeued detectorTasks.	
 		for(int i = 0; i<queuedTasks.size(); i++){
 			//Få nuværende task
-			DetectorTask currentTask = queuedTasks.get(i);
+			DetectorTask curTask = queuedTasks.get(i);
+			Patient curPatient = curTask.getPatient();
 			
 			//For patienten i den i'te DetectorCask køres foreach på hver række af Dataset'et			
-				currentTask.getPatient().getData().foreach((ForeachFunction<Row>) row -> {
+				curPatient.getData().foreach((ForeachFunction<Row>) row -> {
 					//For each kører et for-loop igennem for hver række, der scanner hver række igennem for hver case
-					for(int z = 0; z<currentTask.getCasesToScan().size(); z++){						
-						if(currentTask.getCasesToScan().get(z).getAlgorithm().evaluate(row) != null){
+					for(int z = 0; z<curTask.getCasesToScan().size(); z++){						
+						if(curTask.getCasesToScan().get(z).getAlgorithm().evaluate(row) != null){							
 							//Hvis en case algoritme returnerer !null, altså TimeInterval, creates en ny case
-							DetectedCase newCase = new DetectedCase(currentTask.getPatient(), 
-							currentTask.getCasesToScan().get(z),
-							currentTask.getCasesToScan().get(z).getAlgorithm().evaluate(row));
+							DetectedCase newCase = new DetectedCase(curPatient, 
+							curTask.getCasesToScan().get(z),
+							curTask.getCasesToScan().get(z).getAlgorithm().evaluate(row));
 														
 							//Denne case addes til den nuværende patient's DetectedCaseHandler
-							currentTask.getPatient().getDetectedCaseHandler().addCase(newCase);										
+							curPatient.getDetectedCaseHandler().addCase(newCase);
+
+							//NotifySubscribers
+							notifySubscribers(curPatient);
 						}
 					}
 				});			
-		//NotifySubscribers
+		
 			}
 		}
 		
