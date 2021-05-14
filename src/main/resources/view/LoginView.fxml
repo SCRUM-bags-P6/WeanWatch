@@ -17,15 +17,15 @@
                   <Font size="60.0" />
                </font>
             </Text>
-            <TextField fx:id="userTextField" promptText="User ID">
+            <TextField fx:id="useridField" promptText="User ID">
                <font>
                   <Font size="20.0" />
                </font></TextField>
-            <PasswordField fx:id="userPassField" promptText="Password">
+            <PasswordField fx:id="passwordField" promptText="Password">
                <font>
                   <Font size="20.0" />
                </font></PasswordField>
-            <Button fx:id="loginBtn" mnemonicParsing="false" onAction="#handleLoginBtnPress" prefWidth="150.0" text="Login">
+            <Button fx:id="loginBtn" mnemonicParsing="false" onAction="#handleLoginClick" prefWidth="150.0" text="Login">
                <font>
                   <Font size="20.0" />
                </font></Button>

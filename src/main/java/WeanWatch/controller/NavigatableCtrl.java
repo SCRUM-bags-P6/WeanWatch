@@ -8,11 +8,6 @@ public abstract class NavigatableCtrl implements DetectionSubscriber {
     // Store a reference to the partent
     RootCtrl parentNode;
 
-    // Constructor
-    public NavigatableCtrl() {
-
-    }
-
     // Set the patient
     public void setParent(RootCtrl rootCtrl) {
         this.parentNode = rootCtrl;

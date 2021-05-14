@@ -10,6 +10,11 @@ public class Personnel {
         this.id = id;
     }
     
+    public Personnel(String id) {
+        this.name = null;
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }

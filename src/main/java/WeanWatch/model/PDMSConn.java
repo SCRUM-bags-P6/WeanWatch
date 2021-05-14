@@ -31,7 +31,6 @@ public class PDMSConn {
         session = SparkSession.builder().appName("PDMSConn").config("spark.master", "local").getOrCreate();
         // Create a data frame reader
         dataFrameReader = session.read();
-
     }
 
     // Create the method to get the shared instance

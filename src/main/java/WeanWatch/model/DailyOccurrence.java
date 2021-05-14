@@ -55,12 +55,12 @@ public class DailyOccurrence {
         // Construct a string builder to create the output string
         StringBuilder builder = new StringBuilder();
         // Hmmmm
-        Object[][] timesToDisplay = {{3600000L, "h"},{60000, "m"},{1000L, "s"}};
+        Object[][] timesToDisplay = {{3600000L, "h"},{60000L, "m"},{1000L, "s"}};
         // Create a placeholder for the remaining time (minutes, seconds)
         Long remainingTime = this.cumulativeMilliseconds;
         for (Object[] timeToDisplay : timesToDisplay) {
             // Calculate number of (hours then minutes then seconds)
-            Integer hms = (int) (this.cumulativeMilliseconds / (Long) timeToDisplay[0]);
+            Long hms = (this.cumulativeMilliseconds / (Long) timeToDisplay[0]);
             // Add the hours to the string builder, if the it is not 0
             if (hms != 0) {
                 builder.append(hms).append(" ").append(timeToDisplay[1]).append(" ");

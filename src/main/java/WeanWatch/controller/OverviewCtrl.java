@@ -13,9 +13,12 @@ import org.apache.commons.collections4.map.LinkedMap;
 
 import WeanWatch.model.Case;
 import WeanWatch.model.CaseDetectorThread;
+import WeanWatch.model.CaseHandler;
 import WeanWatch.model.DailyOccurrence;
 import WeanWatch.model.DetectedCase;
 import WeanWatch.model.Patient;
+import WeanWatch.model.PatientHandler;
+import WeanWatch.model.TimeInterval;
 import WeanWatch.model.TriangleMetaphoricFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -32,12 +35,19 @@ public class OverviewCtrl extends NavigatableCtrl {
     @FXML
     private VBox rowsBox;
 
-    public OverviewCtrl() {
-
-    }
+    private HashMap<VBox, Case> figureLookup = new HashMap<VBox, Case>();
 
     public void initialize() {
+        CaseHandler.getInstance().addCase("Apnea", "Apnea", null);
 
+        PatientHandler.getInstance().getPatients()[0].getDetectedCaseHandler().addCase(
+            new DetectedCase(
+                PatientHandler.getInstance().getPatients()[0], 
+                CaseHandler.getInstance().getCase("Apnea"),
+                new TimeInterval(
+                    new Date(2021, 05, 14, 10, 00), 
+                    new Date(2021, 05, 14, 9, 50)))
+        );
     }
 
     private ArrayList<DailyOccurrence> getDailyCaseOccurrencesToDisplay() {
@@ -80,13 +90,12 @@ public class OverviewCtrl extends NavigatableCtrl {
         this.rowsBox.getChildren().clear();
         // Get the most recent daily occurrences of each case to display
         ArrayList<DailyOccurrence> casesToDisplay = this.getDailyCaseOccurrencesToDisplay();
-		 // getting total size of arrlist
-        // using size() method
-        int casesToDisplaySize = casesToDisplay.size();
+		// Prepare a figure factory
+        TriangleMetaphoricFactory metaphoricFactory = new TriangleMetaphoricFactory();
         // Prepare a placeholder for the hbox 
         HBox hbox = null;
         // Loop through all cases
-        for (int i = 0; i < casesToDisplaySize; i++) {
+        for (int i = 0; i < casesToDisplay.size(); i++) {
 			if (i % 3 == 0) {
                 // Add the hbox, if it has been filled with figures
                 if (hbox != null) {
@@ -94,24 +103,32 @@ public class OverviewCtrl extends NavigatableCtrl {
                 }
 				// Create a hbox for each three cases
 				hbox = new HBox();
-            }	
+            } 	
 			// Create a vbox for the cases
 			VBox vbox = new VBox();
        	    // Add a metaforic figure to the vbox
-			TriangleMetaphoricFactory metaphoricFactory = new TriangleMetaphoricFactory();
 			Pane metaphoricFigure = metaphoricFactory.create(casesToDisplay.get(i).getCaseToDisplay());
         	// Create labels to caption for occurrences and time
             Label labelOccurrences = new Label(casesToDisplay.get(i).getOccurrences().toString());
             Label labelCumulativeTime = new Label(casesToDisplay.get(i).getCumulativeTime());
             // Add metaphoricalfigure, number of occurrences and time duration to the Vbox
             vbox.getChildren().addAll(metaphoricFigure,labelOccurrences,labelCumulativeTime);
+            // Store a reference to the vbox
+            figureLookup.put(vbox, casesToDisplay.get(i).getCaseToDisplay().getCase());
+            // Create a click handler for each
+            vbox.setOnMouseClicked((e) -> {
+                // Lookup the vbox, and execute the handleGridClick
+                this.handleGridClick(this.figureLookup.get(e.getSource()));
+            });
             // Add the vbox to the hbox
         	hbox.getChildren().add(vbox);
 		}
+        // Add the last hbox created to the rowsBox
+        this.rowsBox.getChildren().add(hbox);
     }
 	
-	public void handleGridClick() {
-
-
+	public void handleGridClick(Case caseToFocus) {
+        // Trigger the view to change
+        this.parentNode.handleShowInspectClick(caseToFocus);
 	}
 }

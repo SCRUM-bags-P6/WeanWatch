@@ -48,11 +48,11 @@ public class DetectedCaseHandler {
         return foundCases;
 	}
 
-	protected void addCase(DetectedCase detectedCase) {
+	public void addCase(DetectedCase detectedCase) {
 		this.detectedCases.add(detectedCase);
 	}
 
-	protected void removeCase(DetectedCase detectedCase) {
+	public void removeCase(DetectedCase detectedCase) {
 		this.detectedCases.remove(detectedCase);
 	}
 }

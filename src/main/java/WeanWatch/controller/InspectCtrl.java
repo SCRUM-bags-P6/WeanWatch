@@ -3,7 +3,6 @@ package WeanWatch.controller;
 import java.util.ArrayList;
 
 import WeanWatch.model.Case;
-import WeanWatch.model.CaseDetectorThread;
 import WeanWatch.model.DetectedCase;
 import WeanWatch.model.Patient;
 import WeanWatch.model.TriangleMetaphoricFactory;
@@ -24,14 +23,6 @@ public class InspectCtrl extends NavigatableCtrl {
 
     private Case caseTypeToDisplay;
 
-    public InspectCtrl() {
-
-    }
-
-    public void initialize() {
-
-    }
-
     public void setCase(Case caseTypeToDisplay) {
         this.caseTypeToDisplay = caseTypeToDisplay;
         // Force an update
@@ -45,13 +36,12 @@ public class InspectCtrl extends NavigatableCtrl {
             this.rowsBox.getChildren().clear();
             // Get the most recent daily occurrences of each case to display
             ArrayList<DetectedCase> casesToDisplay = this.parentNode.getPatient().getDetectedCaseHandler().getDetectedCases(this.caseTypeToDisplay.getName());
-            // getting total size of arrlist
-            // using size() method
-            int casesToDisplaySize = casesToDisplay.size();
+            // Prepare a figure factory
+            TriangleMetaphoricFactory metaphoricFactory = new TriangleMetaphoricFactory();
             // Prepare a placeholder for the hbox 
             HBox hbox = null;
             // Loop through all cases
-            for (int i = 0; i < casesToDisplaySize; i++) {
+            for (int i = 0; i < casesToDisplay.size(); i++) {
                 if (i % 3 == 0) {
                     // Add the hbox, if it has been filled with figures
                     if (hbox != null) {
@@ -63,7 +53,6 @@ public class InspectCtrl extends NavigatableCtrl {
                 // Create a vbox for the cases
                 VBox vbox = new VBox();
                 // Add a metaforic figure to the vbox
-                TriangleMetaphoricFactory metaphoricFactory = new TriangleMetaphoricFactory();
                 Pane metaphoricFigure = metaphoricFactory.create(casesToDisplay.get(i));
                 // Create labels to caption time
                 Label labelCaseInterval = new Label(casesToDisplay.get(i).getCaseInterval().toString());
@@ -72,11 +61,12 @@ public class InspectCtrl extends NavigatableCtrl {
                 // Add the vbox to the hbox
                 hbox.getChildren().add(vbox);
             }
+            // Add the last hbox created to the rowsBox
+            this.rowsBox.getChildren().add(hbox);
         }       
     }
     
     public void handleBackClick() {
-        
-        
+        // TODO: Implement
     }
 }

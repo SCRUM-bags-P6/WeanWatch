@@ -36,7 +36,8 @@ public class TimeInterval {
 	//method to convert time to string
 	public String toString(){
 		SimpleDateFormat formatter = new SimpleDateFormat("dd hh:mm");  
-		String strDate = formatter.format(date);  
+		String strDate = formatter.format(this.newestTime);  
 		
+        return new String("Not yet implemented");
 	}
 }

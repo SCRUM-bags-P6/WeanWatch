@@ -1,24 +1,18 @@
 package WeanWatch.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
+import WeanWatch.model.Case;
 import WeanWatch.model.CaseDetectorThread;
-import WeanWatch.model.DetectedCase;
-import WeanWatch.model.PDMSConn;
 import WeanWatch.model.Patient;
 import WeanWatch.model.Personnel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.LoadException;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 public class RootCtrl {
     
@@ -34,21 +28,15 @@ public class RootCtrl {
 
     private NavigatableCtrl childNode;  
 
+    private Runnable logOutCallback;
+
     @FXML
     private StackPane rootSubAnchorPane;
-
-    // Constructor for RootCtrl
-    public RootCtrl() {
-
-    }
 
     @FXML
     private void initialize() {
         // Show the patient select on the first run
         handleSelectedPatientClick();
-
-
-        this.setPatient(PDMSConn.getInstance().getPatients()[0]);
     }
 
     @FXML
@@ -62,8 +50,14 @@ public class RootCtrl {
     } 
 
     @FXML
-    public void handleShowInspectClick(DetectedCase caseTypeToDisplay) {
-        // TODO: Implement
+    public void handleShowInspectClick(Case caseTypeToDisplay) {
+        try {
+            InspectCtrl inspectCtrl = (InspectCtrl) changeView("/view/InspectView.fxml");
+            inspectCtrl.setCase(caseTypeToDisplay);
+        } catch (Exception e) {
+            System.out.println("Failed to display the the inspect screen, with error:");
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -73,7 +67,7 @@ public class RootCtrl {
             wydt.show();
         } else {
             try {
-                changeView("/view/OverviewView.fxml").setParent(this);
+                changeView("/view/OverviewView.fxml");
             } catch (Exception e) {
                 System.out.println("Failed to display the the overview screen, with error:");
                 e.printStackTrace();
@@ -83,7 +77,8 @@ public class RootCtrl {
 
     @FXML
     public void handleLogoutClick() {
-        // TODO: Implement
+        // Execute the logout callback
+        this.logOutCallback.run();
     }
 
     private NavigatableCtrl changeView(String path) throws IOException {
@@ -97,6 +92,8 @@ public class RootCtrl {
         this.rootSubAnchorPane.getChildren().setAll(loadedView);
         // Get the controller
         this.childNode = (NavigatableCtrl) loader.getController();
+        // Set parent
+        this.childNode.setParent(this);
         // Return the child ctrl
         return this.childNode;
     }
@@ -127,5 +124,9 @@ public class RootCtrl {
         this.user = personnel;
         // Update the view
         this.clinicianID.setText(personnel.getID());
+    }
+
+    public void setLogOutCallback(Runnable callback) {
+        this.logOutCallback = callback;
     }
 }

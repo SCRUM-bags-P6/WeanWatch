@@ -3,81 +3,97 @@
  */
 package WeanWatch;
 
-import java.awt.Color;
 import java.awt.Dimension;
 
-import WeanWatch.controller.MetaphoricHandlerCtrl;
+import WeanWatch.controller.LoginCtrl;
 import WeanWatch.controller.RootCtrl;
-import WeanWatch.controller.TriangleMetaphoricCtrl;
-import WeanWatch.model.PDMSConn;
+import WeanWatch.model.PatientHandler;
+import WeanWatch.model.Personnel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
-import java.io.FileInputStream;
-import javafx.fxml.FXML;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.*;
-
-import WeanWatch.model.*;
+import java.io.IOException;
 
 
 public class App extends Application {
 
+    // Store the primary scene
+    private Stage weanStage;
+
     public static void main(String[] args) {
+        // Start loading the patients form the PDMS
+        PatientHandler.getInstance().getPatients();
         // Launch JavaFX
         launch(args); 
-
-        PDMSConn pdmsConn = PDMSConn.getInstance();
-
-        pdmsConn.getPatients();
-
-        //dispFigures(); 
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Get screen size
+        // Store the primary stage
+        this.weanStage = primaryStage;
+        // Show the login screen
+        this.userLogOutCallback();
+        // Show the stage
+        primaryStage.show();
+    }
+
+    protected void userLoginCallback(Personnel user) {
+        // Get the scene size
         Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        // Create a FXML loader
+        FXMLLoader loader = new FXMLLoader();
+        // Set the location of the login view
+		loader.setLocation(App.class.getClassLoader().getResource("view/RootView.fxml"));
+        // Try loading the borderpane
+        try {
+            // Load the borderpane
+            BorderPane rootView = (BorderPane) loader.load();
+            // Set the scene
+            this.weanStage.setScene(new Scene(rootView, screenSize.getWidth(), screenSize.getHeight()));
+            // Get the controller
+            RootCtrl rootCtrl = loader.getController();
+            // Set the logout callback
+            rootCtrl.setLogOutCallback(() -> {
+                userLogOutCallback();
+            });
+            // Set the personnel
+            rootCtrl.setPersonnel(user);
+        } catch (IOException e) {
+            System.err.println("Failed to display navigation screen.");
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Unhandled exception.");
+            e.printStackTrace();
+        }
+    }
 
-        System.out.println(screenSize.getHeight());
-        System.out.println(screenSize.getWidth());
-
-
-        double width = screenSize.getWidth();
-		double height = screenSize.getHeight();
-
-
-
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(App.class.getClassLoader().getResource("view/ScreeningView.fxml"));
-		ScrollPane view = (ScrollPane) loader.load();
-
-		
-		TriangleMetaphoricFactory factory = new TriangleMetaphoricFactory();
-
-
-
-		try {
-			primaryStage.setScene(new Scene(factory.create(new DetectedCase()), width, height));			
-			//primaryStage.setScene(new Scene(view, width, height));
-			//primaryStage.getScene().getStylesheets().add("view/Stylesheet.css");
-			primaryStage.show();
-            
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		//System.out.println(firstTriangle.getPoints());        // TODO Auto-generated method stub
-        
+    protected void userLogOutCallback() {
+        // Get the scene size
+        Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        // Create a FXML loader
+        FXMLLoader loader = new FXMLLoader();
+        // Set the location of the login view
+		loader.setLocation(App.class.getClassLoader().getResource("view/LoginView.fxml"));
+        // Try loading the borderpane
+        try {
+            // Load the borderpane
+            BorderPane loginView = (BorderPane) loader.load();
+            // Set the scene
+            this.weanStage.setScene(new Scene(loginView, screenSize.getWidth(), screenSize.getHeight()));
+            // Get the controller
+            LoginCtrl loginCtrl = loader.getController();
+            // Set the login callback
+            loginCtrl.setLoginCallback((Personnel user) -> {
+                userLoginCallback(user);
+            });
+        } catch (IOException e) {
+            System.err.println("Failed to display login screen.");
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Unhandled exception.");
+            e.printStackTrace();
+        }
     }
 }
