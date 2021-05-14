@@ -7,8 +7,16 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.Formatter;
+
 import org.apache.spark.api.java.function.ForeachFunction;
+import org.apache.spark.sql.Column;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.connector.catalog.TableChange.After;
+import org.junit.Before;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -66,11 +74,24 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         Double X3 = 60.00;
         Double Y3 = 0.00;
 
-        PatientHandler.getInstance().getPatients()[0].getData().foreach((ForeachFunction<Row>) row -> {
-            System.out.println(row.getString(0));
-        });
-        
+        //Hent tider fra timeinterval for detectedCase
+        LocalDateTime newestTime = LocalDateTime.of(2021, 05, 16, 23, 00, 00);
+        LocalDateTime oldestTime = LocalDateTime.of(2021, 05, 17, 23, 00, 00);
 
+        PatientHandler.getInstance().getPatients()[0].getData().foreach((ForeachFunction<Row>) row -> {
+            LocalDateTime localDateTime = LocalDateTime.parse(row.getString(0));
+            if(localDateTime.isAfter(newestTime) && localDateTime.isBefore(oldestTime)){
+                System.out.println(LocalDateTime.parse(row.getString(0)));
+            }
+            //
+
+            //System.out.println(row.getString(20)); //SpO2
+            //System.out.println(row.getString(22)); //FetCO2
+
+        });
+
+        
+        
         // Draw top triangle
         Polygon topPolygon = new Polygon();
         topPolygon.getPoints().addAll(new Double[] {
@@ -100,6 +121,21 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         figureRoot.setCenter(figureVBox);
 
         return figureRoot;
+    }
+
+
+    private boolean After(Object column) {
+        return false;
+    }
+
+
+    private boolean Before(Object column) {
+        return false;
+    }
+
+
+    private Object Column(int i) {
+        return null;
     }
 }
 
