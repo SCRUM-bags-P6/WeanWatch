@@ -2,6 +2,8 @@ package WeanWatch.model;
 
 import java.util.ArrayList;
 
+import WeanWatch.model.Case.Severity;
+
 public class CaseHandler {
 	private static CaseHandler instance = null;
 
@@ -19,8 +21,8 @@ public class CaseHandler {
         return CaseHandler.instance;
 	}
 
-	public void addCase(String name, String description, ArrayList<Indicator> characteristics) {
-		Case patientCase = new Case(name, description, characteristics);
+	public void addCase(String name, String description, Severity severity, ArrayList<Indicator> characteristics) {
+		Case patientCase = new Case(name, description, severity, characteristics);
 		this.cases.add(patientCase);
 	}
 

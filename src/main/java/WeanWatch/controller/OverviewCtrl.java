@@ -38,7 +38,7 @@ public class OverviewCtrl extends NavigatableCtrl {
     private HashMap<VBox, Case> figureLookup = new HashMap<VBox, Case>();
 
     public void initialize() {
-        CaseHandler.getInstance().addCase("Apnea", "Apnea", null);
+        CaseHandler.getInstance().addCase("Apnea", "Apnea", Case.Severity.INTERMEDIATE, null);
 
         PatientHandler.getInstance().getPatients()[0].getDetectedCaseHandler().addCase(
             new DetectedCase(
