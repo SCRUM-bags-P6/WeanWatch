@@ -1,20 +1,21 @@
 package WeanWatch.model;
 
 import java.util.function.Predicate;
+import java.io.Serializable;
 
-import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
-public class Indicator{
-    // Store the duration of the indicator
+public class Indicator implements Serializable {
+    // Store the duration (in minutes) of the indicator
     private Integer duration;
     // Store the indicator as a predicate
 	private Predicate<Row> predicate;
 
     // Constructor
-    protected Indicator(Integer duaration, Predicate<Row> predicate) {
+    public Indicator(Integer duration, Predicate<Row> predicate) {
         this.duration = duration;
-        this.predicate = predicate;
+        // Cast the perdicate to a serialisable and store it
+        this.predicate = (Predicate<Row> & Serializable) predicate;
     }
 
     // Getters

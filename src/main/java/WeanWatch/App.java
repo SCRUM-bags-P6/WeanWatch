@@ -7,14 +7,27 @@ import java.awt.Dimension;
 
 import WeanWatch.controller.LoginCtrl;
 import WeanWatch.controller.RootCtrl;
+import WeanWatch.model.DetectionAlgorithm;
+import WeanWatch.model.Indicator;
+import WeanWatch.model.IndicatorAlgorithm;
+import WeanWatch.model.PDMSConn;
 import WeanWatch.model.PatientHandler;
 import WeanWatch.model.Personnel;
+import WeanWatch.model.TimeInterval;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.io.Serializable;
+import java.lang.invoke.SerializedLambda;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.function.Predicate;
+
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 
 
 public class App extends Application {
@@ -29,14 +42,160 @@ public class App extends Application {
         launch(args); 
     }
 
+
+
+
+
+
+
+
+
+    public void getDateForCaseExample() {
+        Dataset<Row> patientData = PatientHandler.getInstance().getPatients()[0].getData();
+        System.out.println("Showing first 20 of all data: ");
+        patientData.show();
+
+        LocalDateTime newestTime = LocalDateTime.of(2021, 05, 16, 23, 00, 00);
+        LocalDateTime oldestTime = LocalDateTime.of(2021, 05, 17, 23, 00, 00);
+
+        System.out.println("Filtering for dates...");
+        Dataset<Row> caseData = patientData.filter((Row row) -> {    
+            LocalDateTime localDateTime = LocalDateTime.parse(row.getString(0));
+            if(localDateTime.isAfter(newestTime) && localDateTime.isBefore(oldestTime)){
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        System.out.println("Showing first 20 of filtered data: ");
+        caseData.show();
+    }
+
+    public void perdicateOnDataExample() {
+        Dataset<Row> patientData = PatientHandler.getInstance().getPatients()[0].getData();
+
+        String paramName = "SpO2";
+
+        Double paramValue = 0.9D;
+        // Define test
+        Predicate<Row> noiceTest = (Predicate<Row>)(Row x) -> {
+            int compareResult = Double.compare(x.getDouble(x.fieldIndex(paramName)), paramValue);
+            if (compareResult == 0) {
+                //System.out.println("SpO2 at 0.9");
+                return false;
+            } else if (compareResult < 0) {
+                System.out.println("SpO2 above 0.9");
+                return false;
+            } else {
+                //System.out.println("SpO2 below 0.9");
+                return true;
+            }
+        };
+        
+        System.out.println("Performing test on data: ");
+        performTestOnData(patientData, noiceTest);
+    }
+
+    public static int trueCount = 0;
+    public static boolean lastWasTrue = false;
+
+    public void performTestOnData(Dataset<Row> patientData, Predicate<Row> test) {
+        patientData.foreach((Row x) -> {
+            boolean testResult = test.test(x);
+            if (testResult) {
+                // Increment true count
+                trueCount++;
+                // Mark this occurrence as true
+                lastWasTrue = true;
+            } else {
+                if (lastWasTrue) {
+                    // Printout
+                    System.out.println("Test no longer true. Number of consequetive trues: " + trueCount);
+                    // Reset
+                    trueCount = 0;
+                    lastWasTrue = false;
+                }
+            }
+        });
+    }
+
+    public void testUsingIndicatorAlgorithm() {
+        Dataset<Row> patientData = PatientHandler.getInstance().getPatients()[0].getData();
+
+        // Define indicators
+        ArrayList<Indicator> indicators = new ArrayList<Indicator>();
+
+        
+        indicators.add(new Indicator(250, (Predicate<Row> & Serializable)(Row x) -> {
+            return Double.compare(x.getDouble(x.fieldIndex("PEEPSet")), 12D) == 0; 
+        }));
+
+                
+        indicators.add(new Indicator(250, (Predicate<Row> & Serializable)(Row x) -> {
+            return Double.compare(x.getDouble(x.fieldIndex("SpO2")), 0.9D) > 0; 
+        }));
+
+        // indicators.add(new Indicator(30, (Predicate<Row> & Serializable)(Row x) -> {
+        //     int compareResult = Double.compare(x.getDouble(x.fieldIndex("SpO2")), 0.8D);
+        //     if (compareResult == 0) {
+        //         //System.out.println("SpO2 at 0.9");
+        //         return false;
+        //     } else if (compareResult < 0) {
+        //         //System.out.println("SpO2 above 0.9");
+        //         return false;
+        //     } else {
+        //         //System.out.println("SpO2 below 0.9");
+        //         return true;
+        //     }
+        // }));
+
+        // indicators.add(new Indicator(30, (Predicate<Row> & Serializable)(Row x) -> {
+        //     int compareResult = Double.compare(x.getDouble(x.fieldIndex("SvO2")), 0.9D);
+        //     if (compareResult == 0) {
+        //         //System.out.println("SpO2 at 0.9");
+        //         return false;
+        //     } else if (compareResult < 0) {
+        //         //System.out.println("SpO2 above 0.9");
+        //         return false;
+        //     } else {
+        //         //System.out.println("SpO2 below 0.9");
+        //         return true;
+        //     }
+        // }));
+
+        // Define a indicator algorithm
+        DetectionAlgorithm algo = new IndicatorAlgorithm(indicators);
+        
+        patientData.foreach((Row x) -> {
+            TimeInterval output = algo.evaluate(x);
+            if (output != null) {
+                System.out.println("A case was detected!");
+            }
+        });
+
+
+    }
+
+
+
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Store the primary stage
-        this.weanStage = primaryStage;
-        // Show the login screen
-        this.userLogOutCallback();
-        // Show the stage
-        primaryStage.show();
+
+        //getDateForCaseExample();
+
+        //perdicateOnDataExample();
+
+        testUsingIndicatorAlgorithm();
+
+
+        // // Store the primary stage
+        // this.weanStage = primaryStage;
+        // // Show the login screen
+        // this.userLogOutCallback();
+        // // Show the stage
+        // primaryStage.show();
     }
 
     protected void userLoginCallback(Personnel user) {
