@@ -48,7 +48,7 @@ public class TimeInterval {
 
 
 
-    // Method to 
+    // Method to calculate occurrens duration - by finding time between newestTime and oldestTime
     public long getIntervalTime(){
         LocalDateTime fromDateTime = this.oldestTime;
         LocalDateTime toDateTime = this.newestTime;
