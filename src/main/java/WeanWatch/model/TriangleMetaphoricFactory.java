@@ -53,6 +53,12 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
             avg("SpO2"),
             avg("FiO2Set")
         );
+
+        caseData.select(
+            avg("SpO2"),
+            avg("FiO2Set")
+        ).show();
+        averageValeus.show();
         // Get the top triangle
         figureVBox.getChildren().add(this.loadTopTriangle(
             averageValeus.first().getDouble(0), 
@@ -73,69 +79,9 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         Double Y3 = 0.00;
 
         //Hent tider fra timeinterval for detectedCase
-        LocalDateTime newestTime = LocalDateTime.of(2021, 05, 16, 23, 00, 00); // Find fra detectedCase.getCaseInterval().getNewestTime() / .getOldestTime()
-        LocalDateTime oldestTime = LocalDateTime.of(2021, 05, 17, 23, 00, 00);
-
-
-        double cumulativeSpO2 = 0;
-        int countSpO2 = 0;
-
-        caseData.select(avg("SpO2"), avg("FiO2Set")).show();
-
-        caseData.select(avg("SpO2")).first().get(0);
-
-
-        // PatientHandler.getInstance().getPatients()[0].getData().foreach((Row row) -> {
-        //     LocalDateTime localDateTime = LocalDateTime.parse(row.getString(0));
-        //     if(localDateTime.isAfter(newestTime) && localDateTime.isBefore(oldestTime)){
-        //         try{
-        //             // get the SpO2
-        //             double spo2 = row.fieldIndex("SpO2");
-        //             // Store the SpO2 in the cumulativeSpO2 for avg calculation
-        //             cumulativeSpO2 = spo2;
-        //             // Increment SPO2 counter for avg calculation.
-
-        //             double spo2X1 = 20 * spo2 - 15; double spo2Y1 = 0;
-        //             double spo2X2 = 20 * spo2 + 15; double spo2Y2 = 0;
-
-
-
-
-        //             // indicators.add(new Indicator(30, (Predicate<Row> & Serializable)(Row x) -> {
-        // //     int compareResult = Double.compare(x.getDouble(x.fieldIndex("SpO2")), 0.8D);
-        // //     if (compareResult == 0) {
-        // //         //System.out.println("SpO2 at 0.9");
-        // //         return false;
-        // //     } else if (compareResult < 0) {
-        // //         //System.out.println("SpO2 above 0.9");
-        // //         return false;
-        // //     } else {
-        // //         //System.out.println("SpO2 below 0.9");
-        // //         return true;
-        //         } catch(NullPointerException e){
-        //             System.err.println();
-        //         }
-
-
-
-        //         // Beregn øverste trekant
-        //         // Beregn nederste trekant
-
-        //         System.out.println(LocalDateTime.parse(row.getString(0)));
-        //     }
-        //     //
-
-        //     //System.out.println(row.getString(20)); //SpO2
-        //     //System.out.println(row.getString(22)); //FetCO2
-
-        // });
-
-        // double avgSpO2 = cumulativeSpO2 / countSpO2;
-
-        // int spo2 = 10;
-
-        // int ptFromHalf = 20 * spo2 - 15;
-
+        //LocalDateTime newestTime = LocalDateTime.of(2021, 05, 16, 23, 00, 00);
+        //LocalDateTime oldestTime = LocalDateTime.of(2021, 05, 16, 23, 30, 00);      
+   
 
 
         // Pane til group med bunden til trekanten

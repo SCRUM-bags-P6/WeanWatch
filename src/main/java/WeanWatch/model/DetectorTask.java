@@ -1,7 +1,7 @@
 package WeanWatch.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class DetectorTask {
     private Patient patient;
@@ -15,15 +15,15 @@ public class DetectorTask {
         return CaseHandler.getInstance().getCases();
     }
 
-    protected void updateInterval(Date newestTime, Date oldestTime) {
+    protected void updateInterval(LocalDateTime newestTime, LocalDateTime oldestTime) {
         this.scannedInterval = new TimeInterval(newestTime, oldestTime);
     }
 
-    protected Date getNewestTime() {
+    protected LocalDateTime getNewestTime() {
         return this.scannedInterval.getNewestTime();
     }
 
-    protected Date getOldestTime() {
+    protected LocalDateTime getOldestTime() {
         return this.scannedInterval.getOldestTime();
     }
 
