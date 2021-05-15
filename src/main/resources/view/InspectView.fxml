@@ -3,8 +3,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<ScrollPane fx:id="overviewScrolling" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="625.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WeanWatch.controller.InspectCtrl">
+<ScrollPane fx:id="overviewScrolling" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WeanWatch.controller.InspectCtrl">
    <content>
       <VBox fx:id="rowsBox" />
    </content>

@@ -48,9 +48,7 @@ public class TimeInterval {
 
 
 
-    // method to get timeinterval
-
-    
+    // Method to 
     public long getIntervalTime(){
         LocalDateTime fromDateTime = this.oldestTime;
         LocalDateTime toDateTime = this.newestTime;

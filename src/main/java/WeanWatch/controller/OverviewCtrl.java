@@ -64,7 +64,7 @@ public class OverviewCtrl extends NavigatableCtrl {
         // Loop through each case
         for (DetectedCase detectedCase : detectedCases) {
             // Get the start time of the case
-            LocalDateTime caseStartTime = detectedCase.getCaseInterval().getOldestTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            LocalDateTime caseStartTime = detectedCase.getCaseInterval().getOldestTime();
             // Get the date at which the case occured
             LocalDate caseDate = caseStartTime.toLocalDate();
             // Get the case type of the detected case

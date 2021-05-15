@@ -63,8 +63,8 @@ public class IndicatorAlgorithm implements DetectionAlgorithm {
 			if (this.startPointer != null && this.endPointer != null && this.startPointer.until(this.endPointer, ChronoUnit.MINUTES) > this.minimumCaseDuration) {
 				// A case was found! Create the time interval
 				
-				//return new TimeInterval(this.startPointer, this.endPointer);
-				return new TimeInterval(new Date(2021, 05, 16, 10, 10, 00), new Date(2021, 05, 14, 10, 10, 00));
+				return new TimeInterval(this.startPointer, this.endPointer);
+
 
 			} else {
 				// Some test failed, reset pointers and return null
