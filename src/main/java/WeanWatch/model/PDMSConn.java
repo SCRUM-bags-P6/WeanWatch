@@ -1,6 +1,7 @@
 package WeanWatch.model;
 
 import java.io.FileReader;
+import java.util.ArrayList;
 
 import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
@@ -21,6 +22,9 @@ public class PDMSConn {
     private static DataFrameReader dataFrameReader;
     // Data folder
     private static final String dataFolder = "data/";
+
+    // Store avaliable parameters
+    ArrayList<String> parameters = null;
 
     // Set the constructor private
     private PDMSConn() {
@@ -45,12 +49,8 @@ public class PDMSConn {
     }
 
     // Get parameters avaliable for display
-    public String[] getParameters() {
-
-        String[] temp = {"Param1", "Param2"};
-        
-        return temp;
-
+    public ArrayList<String> getParameters() {
+        return this.parameters;
     }
 
     // Get patients
@@ -79,6 +79,15 @@ public class PDMSConn {
                 // Load the patient dataset, if it is set
                 if (patient.get("filename") != null) {
                     patientData = PDMSConn.dataFrameReader.option("header", true).option("inferSchema", true).csv(PDMSConn.dataFolder + patient.get("filename"));
+                    // Preload the column names the first time a a CSV file is loaded
+                    if (this.parameters == null) {
+                        // Create a new array list
+                        this.parameters = new ArrayList<String>();
+                        // Load the column names into the array list
+                        for (String columnName : patientData.columns()) {
+                            this.parameters.add(columnName);
+                        }
+                    }
                 } else {
                     patientData = null;
                 }

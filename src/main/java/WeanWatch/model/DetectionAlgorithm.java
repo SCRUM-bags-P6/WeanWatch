@@ -1,10 +1,10 @@
 package WeanWatch.model;
 
-import org.apache.spark.sql.Dataset;
+import java.io.Serializable;
+
 import org.apache.spark.sql.Row;
 
-public interface DetectionAlgorithm {
-	public void DetectionAlgorithm(Integer minDuration);
+public interface DetectionAlgorithm extends Serializable {
 
 	public TimeInterval evaluate(Row patientDataRow);
 

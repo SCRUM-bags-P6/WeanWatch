@@ -39,7 +39,7 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         figureVBox.setSpacing(200); //Find korrekte spacing
     
         // Label til casenavn + detaljer
-        Label caseLabel = new Label("Apnea"/*detectedCase.getCase().getName()*/);
+        Label caseLabel = new Label(detectedCase.getCase().getName());
         caseLabel.setFont(new Font("Arial",30));
         caseLabel.setMaxWidth(Double.MAX_VALUE);
         caseLabel.setAlignment(Pos.CENTER);
@@ -84,6 +84,10 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         PatientHandler.getInstance().getPatients()[0].getData().foreach((ForeachFunction<Row>) row -> {
             LocalDateTime localDateTime = LocalDateTime.parse(row.getString(0));
             if(localDateTime.isAfter(newestTime) && localDateTime.isBefore(oldestTime)){
+
+                // Beregn øverste trekant
+                // Beregn nederste trekant
+
                 System.out.println(LocalDateTime.parse(row.getString(0)));
                 
 

@@ -39,11 +39,14 @@ public class CaseDetectorThread extends Thread {
 				curPatient.getData().foreach((ForeachFunction<Row>) row -> {
 					//For each kører et for-loop igennem for hver række, der scanner hver række igennem for hver case
 					for(int z = 0; z<curTask.getCasesToScan().size(); z++){						
-						if(curTask.getCasesToScan().get(z).getAlgorithm().evaluate(row) != null){							
+
+                        TimeInterval detectedTime = curTask.getCasesToScan().get(z).getAlgorithm().evaluate(row);
+
+						if(detectedTime != null){							
 							//Hvis en case algoritme returnerer !null, altså TimeInterval, creates en ny case
 							DetectedCase newCase = new DetectedCase(curPatient, 
 							curTask.getCasesToScan().get(z),
-							curTask.getCasesToScan().get(z).getAlgorithm().evaluate(row));
+							detectedTime);
 														
 							//Denne case addes til den nuværende patient's DetectedCaseHandler
 							curPatient.getDetectedCaseHandler().addCase(newCase);
