@@ -44,9 +44,13 @@ public class OverviewCtrl extends NavigatableCtrl {
             new DetectedCase(
                 PatientHandler.getInstance().getPatients()[0], 
                 CaseHandler.getInstance().getCase("Apnea"),
+                //Ændre til LocalDateTime
                 new TimeInterval(
-                    new Date(2021, 05, 14, 10, 00), 
-                    new Date(2021, 05, 14, 9, 50)))
+                    LocalDateTime.of(2021, 05, 14, 10, 00, 00),
+                    LocalDateTime.of(2021, 05, 14, 9, 50, 00)
+                    //new Date(2021, 05, 14, 10, 00), 
+                    //new Date(2021, 05, 14, 9, 50)
+                    ))
         );
     }
 

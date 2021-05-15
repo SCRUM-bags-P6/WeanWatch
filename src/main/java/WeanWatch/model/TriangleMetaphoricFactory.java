@@ -75,13 +75,19 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         Double Y3 = 0.00;
 
         //Hent tider fra timeinterval for detectedCase
-        LocalDateTime newestTime = LocalDateTime.of(2021, 05, 16, 23, 00, 00);
-        LocalDateTime oldestTime = LocalDateTime.of(2021, 05, 17, 23, 00, 00);
+        //LocalDateTime newestTime = LocalDateTime.of(2021, 05, 16, 23, 00, 00);
+        //LocalDateTime oldestTime = LocalDateTime.of(2021, 05, 16, 23, 30, 00);      
+        /*
+        LocalDateTime newestTime = LocalDateTime.getNewestTime;
+        LocalDateTime oldestTime = LocalDateTime.getOldestTime;
 
         PatientHandler.getInstance().getPatients()[0].getData().foreach((ForeachFunction<Row>) row -> {
             LocalDateTime localDateTime = LocalDateTime.parse(row.getString(0));
             if(localDateTime.isAfter(newestTime) && localDateTime.isBefore(oldestTime)){
                 System.out.println(LocalDateTime.parse(row.getString(0)));
+                
+
+
             }
             //
 
@@ -90,7 +96,7 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
 
         });
 
-        
+        */
         
         // Draw top triangle
         Polygon topPolygon = new Polygon();
