@@ -44,12 +44,6 @@ public class App extends Application {
 
 
 
-
-
-
-
-
-
     public void getDateForCaseExample() {
         Dataset<Row> patientData = PatientHandler.getInstance().getPatients()[0].getData();
         System.out.println("Showing first 20 of all data: ");

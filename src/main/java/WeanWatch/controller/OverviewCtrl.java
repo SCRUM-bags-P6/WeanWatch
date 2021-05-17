@@ -27,6 +27,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+
 public class OverviewCtrl extends NavigatableCtrl {
 
     @FXML
@@ -124,6 +127,7 @@ public class OverviewCtrl extends NavigatableCtrl {
                 // Lookup the vbox, and execute the handleGridClick
                 this.handleGridClick(this.figureLookup.get(e.getSource()));
             });
+            //vbox.setAlignment(Pos.CENTER);
             // Add the vbox to the hbox
         	hbox.getChildren().add(vbox);
 		}

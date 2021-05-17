@@ -1,5 +1,6 @@
 package WeanWatch.model;
 
+import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,11 +30,9 @@ import javafx.geometry.Pos;
 
 
 public class TriangleMetaphoricFactory extends MetaphoricFactory {
-    
-    private static Integer count = 0;
 
-    private final static Double figureMaxWidth = 50D;
-    private final static Double figureMaxHeight = 50D;
+    private final static Double figureMaxWidth = 300D;
+    private final static Double figureMaxHeight = 300D;
 
     public BorderPane create(DetectedCase detectedCase) {
         // Figure root pane, hvor alle dele af figuren skal være i
@@ -41,83 +40,63 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         // Create a figure vbox
         VBox figureVBox = new VBox();
         // Set padding
-        figureVBox.setPadding(new Insets(4));
+        //figureVBox.setPadding(new Insets(0,0,0,100D)); //Rykker figurerne 100pixels til højre
         // Set the figure spacing
-        figureVBox.setSpacing(50);
+        figureVBox.setSpacing(150D);
+        figureVBox.setAlignment(Pos.CENTER);
+        figureVBox.prefWidth(TriangleMetaphoricFactory.figureMaxWidth);
         // Load the case label
-        figureVBox.getChildren().add(this.loadCaseLabel(detectedCase.getCase().getName()));
+        Label caseLabel = this.loadCaseLabel(detectedCase.getCase().getName());
         // Load the figure head
-        figureVBox.getChildren().add(this.loadHead(detectedCase.getCase().getSeverity())); //loadHead metoden er i bunden
+        BorderPane figureHead = this.loadHead(detectedCase.getCase().getSeverity()); //loadHead metoden er i bunden
         // Get the case data
         Dataset<Row> caseData = this.getCaseDataset(detectedCase.getPatient().getData(), detectedCase.getCaseInterval());
         // Calcualte case average values
         Dataset<Row> averageValeus = caseData.select(
             avg("SpO2"),
-            avg("FiO2Set")
+            avg("FiO2Set"),
+            avg("Rf"),
+            avg("Comp"),
+            avg("RSBI"),
+            avg("EE")
         );
-
-        caseData.select(
-            avg("SpO2"),
-            avg("FiO2Set")
-        ).show();
-        averageValeus.show();
         // Get the top triangle
-        figureVBox.getChildren().add(this.loadTopTriangle(
+        BorderPane topTriag = this.loadTopTriangle(
             averageValeus.first().getDouble(0), 
-            averageValeus.first().getDouble(1))
+            averageValeus.first().getDouble(1)
+        );
+        
+        // Get the bottom triangle
+        BorderPane butTriag = this.loadButTriangle(
+            averageValeus.first().getDouble(2), 
+            averageValeus.first().getDouble(3), 
+            averageValeus.first().getDouble(4),
+            averageValeus.first().getDouble(5)
         );
 
+        
 
-        // Pane to contain top triangle
-        BorderPane topTriagPane = new BorderPane();
+        figureVBox.getChildren().addAll(caseLabel, figureHead, topTriag, butTriag);
+        //figureVBox.setCenter(caseLabel);
 
-        //Hent det rå patient data + tidsinterval + tilhørende række for den pågældende parameter. 
-        //Gennemsnittet for Patientdata for tidsintervallet skal regnes, hvorefter det skal omregnes til koordinater.
-        Double X1 = 160.00; 
-        Double Y1 = 100.00; //detectedCase.getPatient().getData(); 
-        Double X2 = 120.00; //detectedCase.getPatient().getData();
-        Double Y2 = 0.00;
-        Double X3 = 60.00;
-        Double Y3 = 0.00;
+        Double labelWidth = caseLabel.getBoundsInLocal().getWidth(); //Bruges til at centrere figurerne dynamisk
+        Double headWidth = figureHead.getBoundsInLocal().getWidth();
+        caseLabel.setPadding(new Insets(0,0,0,(TriangleMetaphoricFactory.figureMaxWidth / 2D) - 50/*(labelWidth)*/));
+        figureHead.setPadding(new Insets(0,0,0,(TriangleMetaphoricFactory.figureMaxWidth / 2D) - 50 /*(headWidth)*/));
 
-        //Hent tider fra timeinterval for detectedCase
-        //LocalDateTime newestTime = LocalDateTime.of(2021, 05, 16, 23, 00, 00);
-        //LocalDateTime oldestTime = LocalDateTime.of(2021, 05, 16, 23, 30, 00);      
-   
+        System.out.println("First Spot = " + figureVBox.getChildren().get(0).getClass().getSimpleName());
+        System.out.println("Second Spot = " +figureVBox.getChildren().get(1).getClass().getSimpleName());
+        System.out.println("Third Spot = " +figureVBox.getChildren().get(2).getClass().getSimpleName());
+        System.out.println("Fourth Spot = " +figureVBox.getChildren().get(3).getClass().getSimpleName());
 
-
-        // Pane til group med bunden til trekanten
-        BorderPane botTriagPane = new BorderPane();
-
-        // Draw bottom triangle
-        Polygon botPolygon = new Polygon();
-        botPolygon.getPoints().addAll(new Double[] {
-            X1, Y1,
-            X2, Y2,
-            X3, Y3
-        });
-        botTriagPane.getChildren().add(botPolygon);
-        figureVBox.getChildren().add(botTriagPane);
+       // System.out.println("First Spot = " + figureVBox.getChildren().get(0).getClass().getFields().getSimpleName());
+       
+        
         
         //Set figurVBox in figureRoots center
         figureRoot.setCenter(figureVBox);
-
+        // Return the figure
         return figureRoot;
-    }
-
-
-    private boolean After(Object column) {
-        return false;
-    }
-
-
-    private boolean Before(Object column) {
-        return false;
-    }
-
-
-    private Object Column(int i) {
-        return null;
     }
 
     private Label loadCaseLabel(String labelText) {
@@ -125,7 +104,8 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         Label caseLabel = new Label(labelText);
         caseLabel.setFont(new Font("Arial",30));
         caseLabel.setMaxWidth(Double.MAX_VALUE);
-        caseLabel.setAlignment(Pos.CENTER);
+        //caseLabel.setAlignment(Pos.CENTER);
+        System.out.println("LABEL!!!!");
         return caseLabel;
     }
 
@@ -159,12 +139,14 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
             // Create a image view form the image
             ImageView imageView = new ImageView(image);
             // Set the width of the image
-            imageView.setFitWidth(50); 
+            imageView.setFitWidth(100); 
             imageView.setPreserveRatio(true); 
             // Place the image in the headpane
-            headPane.setCenter(imageView); 
+            headPane.setCenter(imageView);             
+            System.out.println("HOVED");
         }
         return headPane;
+
     }
     
     private Dataset<Row> getCaseDataset(Dataset<Row> patientData, TimeInterval caseInterval) {
@@ -178,42 +160,119 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         });
     }
 
-    private BorderPane loadTopTriangle(Double meanSpO2, Double meanFiO2) {
+        private BorderPane loadTopTriangle(Double meanSpO2, Double meanFiO2) {
         // Create the border pane
         BorderPane topTriagPane = new BorderPane();
+        // Enforce size
+        topTriagPane.prefHeight(TriangleMetaphoricFactory.figureMaxHeight);
+        topTriagPane.prefWidth(TriangleMetaphoricFactory.figureMaxWidth);
         // Calculate the height of the FiO2 setting
         // (1 - 1) * 50 = 0
         // (1 - 0.21) * 50 = 39.5
-        // :))))))
+        
         Double heightFiO2 = (1 - meanFiO2) * TriangleMetaphoricFactory.figureMaxHeight;
         // Calcualte the width of the SpO2
         // Prevent negative fractions, by enforcing meanFiO2 above 0.75
-        if (meanFiO2.compareTo(0.75) < 0) {
-            meanFiO2 = 0.75;
+        if (meanFiO2.compareTo(0.75D) > 0) {
+            meanFiO2 = 0.75D;
         }
         // Calcuate fraction of range for meanFiO2
-        Double fraction = (meanFiO2 - 0.75) / (0.98 - 0.75);
+        Double fraction = (meanFiO2 - 0.75D) / (0.98D - 0.75D);
         // Get the middle point
-        Double middle = (TriangleMetaphoricFactory.figureMaxWidth / 2);
+        Double middle = (TriangleMetaphoricFactory.figureMaxWidth / 2D);
         // Calculate the coordinates
-        Double leftWidthSpO2 = ((middle - (middle * 0.2)) - (middle - (middle * 0.2)) * fraction);
+        Double leftWidthSpO2 = ((middle - (middle * 0.2D)) - (middle - (middle * 0.2D)) * fraction);
         Double rightWidthSpO2 = (middle + (middle - leftWidthSpO2));
         // Width coordinates SpO2
-        Double X1 = leftWidthSpO2; Double Y1 = TriangleMetaphoricFactory.figureMaxHeight; 
-        Double X2 = rightWidthSpO2; Double Y2 = TriangleMetaphoricFactory.figureMaxHeight;
+        Double X1 = leftWidthSpO2; 
+        //Double Y1 = TriangleMetaphoricFactory.figureMaxHeight; 
+        Double X2 = rightWidthSpO2; 
+        //Double Y2 = TriangleMetaphoricFactory.figureMaxHeight;
         // Height coordinates FiO2
-        Double X3 = (TriangleMetaphoricFactory.figureMaxWidth / 2); Double Y3 = heightFiO2;
+        Double X3 = middle; Double Y3 = 0D - heightFiO2;
         // Draw top triangle
+        Double Y1 = 0D;
+        Double Y2 = 0D;
+
         Polygon topPolygon = new Polygon();
         topPolygon.getPoints().addAll(new Double[] {
             X1, Y1,
             X2, Y2,
-            X3, Y3
+            X3, Y3,
         });
+        
+        System.out.println("ØVERSTE TREKANT");
+        //System.out.println(" 1. " + X1 + Y1 + " 2. " + X2 + Y2 + " 3. " + X3 + Y3);
+        
+        System.out.println(" 1. " + "X = " + X1 + "Y = " + Y1 + " 2. " + "X = " +X2 + "Y = " + Y2 + " 3. " + "X = " + X3 + "Y = " +Y3);
+
         // Add the prolygon the the pane
         topTriagPane.getChildren().add(topPolygon);
+        topTriagPane.setAlignment(topPolygon, Pos.TOP_CENTER);
         // return the pane
         return topTriagPane;
     }
+
+    private BorderPane loadButTriangle(Double meanRR, Double meanComp, Double meanRSBI, Double meanEE) {
+        // Create the border pane
+        BorderPane butTriagPane = new BorderPane();
+        // Enforce size
+        butTriagPane.prefHeight(TriangleMetaphoricFactory.figureMaxHeight);
+        butTriagPane.prefWidth(TriangleMetaphoricFactory.figureMaxWidth);
+        // y = 0,0143x
+        //Height of RR
+        if (meanRR.compareTo(70D) > 0){
+            meanRR = 70D;
+        }
+        //Y-value of the triag height
+        Double heightRR = (meanRR*0.0143D) * TriangleMetaphoricFactory.figureMaxHeight;
+        //X-value equals maxWidth/2
+        // Get the middle point
+        Double middle = (TriangleMetaphoricFactory.figureMaxWidth / 2);
+        Double diagStrength = meanComp*meanEE*meanRSBI;
+        // Calculate the width of diaphragmaStrenght Triag baseline
+        // y = -5*10^16*x^4 + 2*10^-11*x^3 - 2E-07x^2 + 0,001x - 0,526
+        //Double widthDiagStrength = (middle + (Math.pow(-5, -16) * Math.pow(diagStrenght, 4) + Math.pow(2, -11D) * Math.pow(diagStrength, 3) - Math.pow(2, -0.7D) * Math.pow(diagStrength, 2) + 0.001D * diagStrength - 0.526D))
+        Double x4 = (-5D) * Math.pow(10D, (-16D)) * Math.pow(diagStrength, 4D);
+        Double x3 = 2D * Math.pow(10D, (-11D)) * Math.pow(diagStrength, 3D);
+        Double x2 = 2D * Math.pow(10D, (-7D)) * Math.pow(diagStrength, 2D);
+        Double x1 = 0.001D * diagStrength;
+        Double offset = 0.526D;
+        /*
+        System.out.println(x4 +" x4");
+        System.out.println(x3 +" x3");
+        System.out.println(x2 +" x2");
+        System.out.println(x1 +" x1");
+        System.out.println(offset + " offset");
+        */
+        Double regressionDiagStrength = x4 + x3 - x2 + x1 - offset;
+        
+        //Double regressionDiagStrength = (( + ((2D*Math.pow(10D, (-11D)) * Math.pow(diagStrength, 3D)) - ((2D*Math.pow(10D, (-0.7D))) * Math.pow(diagStrength, 2D)) + (0.001D * diagStrength) );
+        //System.out.println(regressionDiagStrength+ "SE MIG HER");
+        //System.out.println(diagStrength + "JEG ER DIAGSTRENGTH");
+        // Calculate the coordinates
+        Double leftWidthDS = middle - (regressionDiagStrength * middle);
+        Double rightWidthDS = middle + (regressionDiagStrength * middle);
+        // Width coordinates SpO2
+        Double X1 = leftWidthDS; Double Y1 = 0D;
+        Double X2 = rightWidthDS; Double Y2 = 0D;
+        // Height coordinates FiO2
+        Double X3 = middle; Double Y3 = heightRR;
+        // Draw top triangle
+        Polygon butPolygon = new Polygon();
+        butPolygon.getPoints().addAll(new Double[] {
+            X1, Y1,
+            X2, Y2,
+            X3, Y3,
+        });
+        System.out.println("NEDERSTE");
+        System.out.println(" 1. " + "X = " + X1 + "Y = " + Y1 + " 2. " + "X = " + X2 + "Y = " + Y2 + " 3. " + "X = " + X3 + "Y = " +Y3);
+        // Add the polygon the the pane
+        butTriagPane.getChildren().add(butPolygon);
+        butTriagPane.setAlignment(butPolygon, Pos.BOTTOM_CENTER);
+        // return the pane
+        return butTriagPane;
+    }
+
 
 }
