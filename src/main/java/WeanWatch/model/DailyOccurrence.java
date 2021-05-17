@@ -1,6 +1,11 @@
 package WeanWatch.model;
 
 import java.security.InvalidParameterException;
+import java.time.temporal.TemporalField;
+
+import org.apache.arrow.vector.types.pojo.ArrowType.Int;
+
+import java.time.LocalDateTime;
 
 public class DailyOccurrence {
     
@@ -29,15 +34,19 @@ public class DailyOccurrence {
         // Add the occurrence time to the cumulative time
         this.cumulativeMilliseconds = DailyOccurrence.getOccurrenceTime(occurrenceTimeInterval);
         // Compare the recency of the caseToDisplay with that of the detectedCase
-        if (occurrenceTimeInterval.getOldestTime().before(occurrenceTimeInterval.getOldestTime())) {
+        if (occurrenceTimeInterval.getOldestTime().isBefore(occurrenceTimeInterval.getOldestTime())) {
             // The newly added DetectedCase occured more recendly then the caseToDisplay, use the new insted
             this.caseToDisplay = detectedCase;
         }
     }
-
+    
     private static Long getOccurrenceTime(TimeInterval occurrenceTimeInterval) {
-        return occurrenceTimeInterval.getNewestTime().getTime() - occurrenceTimeInterval.getOldestTime().getTime();
+        //return occurrenceTimeInterval.getNewestTime().getTime() - occurrenceTimeInterval.getOldestTime().getTime();
+        //return occurrenceTimeInterval.getNewestTime().getTime() - occurrenceTimeInterval.getOldestTime().getTime();
+        //return occurrenceTimeInterval.ChronoUnit.MILLIS.between(getNewestTime, getOldestTime);
+        return occurrenceTimeInterval.getIntervalTime();   
     }
+    
 
     public DetectedCase getCaseToDisplay() {
         return this.caseToDisplay;
@@ -47,10 +56,12 @@ public class DailyOccurrence {
         return this.occurrences;
     }
 
+    
     public Long getCumulativeMilliseconds() {
         return this.cumulativeMilliseconds;
     }
-
+    
+    
     public String getCumulativeTime() {
         // Construct a string builder to create the output string
         StringBuilder builder = new StringBuilder();
@@ -73,5 +84,7 @@ public class DailyOccurrence {
         // Convert the hours, minuts and seconds to a string
         return builder.toString();
     }
+    
+
     
 }

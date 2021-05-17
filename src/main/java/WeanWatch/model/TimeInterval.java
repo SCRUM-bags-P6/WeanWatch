@@ -1,38 +1,45 @@
 package WeanWatch.model;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
-public class TimeInterval {
+import java.io.Serializable;
+
+import org.apache.parquet.format.MilliSeconds;
+
+public class TimeInterval implements Serializable {
     // Store the start and end time
-    private Date newestTime;
-    private Date oldestTime;
+    private LocalDateTime newestTime;
+    private LocalDateTime oldestTime;
 
     // Constructor
-    public TimeInterval(Date newestTime, Date oldestTime) {
+    public TimeInterval(LocalDateTime newestTime, LocalDateTime oldestTime) {
         this.newestTime = newestTime;
         this.oldestTime = oldestTime;
     }
 
     // Return the start time
-    public Date getNewestTime() {
+    public LocalDateTime getNewestTime() {
         return this.newestTime;
     }
 
     // Return the end time
-    public Date getOldestTime() {
+    public LocalDateTime getOldestTime() {
         return this.oldestTime;
     }
 
     // Static method to test if a timeinterval is inside another time interval
     public boolean contains(TimeInterval intervalToCompare) {
         // Check if the newestTime is newer than  before the comparedStartTime
-        boolean isNewerThanCompare = this.newestTime.after(intervalToCompare.getNewestTime()) || this.newestTime.equals(intervalToCompare.getNewestTime());
+        boolean isNewerThanCompare = this.newestTime.isAfter(intervalToCompare.getNewestTime()) || this.newestTime.equals(intervalToCompare.getNewestTime());
         // Check if the oldestTime is older than the comparedOldestTime
-        boolean isOlderThanCompare = this.oldestTime.before(intervalToCompare.getOldestTime()) || this.oldestTime.equals(intervalToCompare.getOldestTime());
+        boolean isOlderThanCompare = this.oldestTime.isBefore(intervalToCompare.getOldestTime()) || this.oldestTime.equals(intervalToCompare.getOldestTime());
         // Return the result
+        //System.out.println(intervalToCompare);
         return isNewerThanCompare && isOlderThanCompare;
     }
+
 	//method to convert time to string
 	public String toString(){
 		SimpleDateFormat formatter = new SimpleDateFormat("dd hh:mm");  
@@ -40,4 +47,21 @@ public class TimeInterval {
 		
         return new String("Not yet implemented");
 	}
+
+
+
+    // Method to calculate occurrens duration - by finding time between newestTime and oldestTime
+    public long getIntervalTime(){
+        LocalDateTime fromDateTime = this.oldestTime;
+        LocalDateTime toDateTime = this.newestTime;
+
+        long timeInterval = ChronoUnit.MILLIS.between(fromDateTime, toDateTime);
+        return timeInterval;
+
+
+    }
+
+
+
+
 }
