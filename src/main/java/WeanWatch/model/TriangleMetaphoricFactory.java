@@ -30,6 +30,8 @@ import javafx.geometry.Pos;
 
 public class TriangleMetaphoricFactory extends MetaphoricFactory {
     
+    private static Integer count = 0;
+
     private final static Double figureMaxWidth = 50D;
     private final static Double figureMaxHeight = 50D;
 

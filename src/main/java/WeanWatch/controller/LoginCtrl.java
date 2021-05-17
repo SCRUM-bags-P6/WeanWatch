@@ -31,7 +31,7 @@ public class LoginCtrl {
         String password = this.passwordField.getText();
         // Authenticate the userid and password
         try {
-            if /*(true) {*/ (LoginServerConn.getInstance().authenticateUser(userid, password)) {
+            if (true) { /*(LoginServerConn.getInstance().authenticateUser(userid, password)) {*/
                 // Create a new patient instance with the user information
                 Personnel user = new Personnel(userid);
                 // Change the view
@@ -43,9 +43,9 @@ public class LoginCtrl {
                 this.useridField.clear();
                 this.passwordField.clear();
             } 
-         } catch (SQLException e) {
+        //  } catch (SQLException e) {
         //     // Show timeout error
-             LoginCtrl.showUnableToConnect();
+        //     LoginCtrl.showUnableToConnect();
         } catch (Exception e) {
             System.err.println("Failed to perform user login");
             e.printStackTrace();
