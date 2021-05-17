@@ -41,7 +41,7 @@ public abstract class Server {
 
     protected PreparedStatement getPreparedStatement(String query) {
         try {
-            return this.getConnection().prepareStatement(query);
+            return this.getConnection().prepareStatement(query);			
         }
         catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());

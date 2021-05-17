@@ -58,12 +58,14 @@ public class DailyOccurrence {
         Object[][] timesToDisplay = {{3600000L, "h"},{60000L, "m"},{1000L, "s"}};
         // Create a placeholder for the remaining time (minutes, seconds)
         Long remainingTime = this.cumulativeMilliseconds;
+		System.out.println("Cumulative Milliseconds" + this.cumulativeMilliseconds);
         for (Object[] timeToDisplay : timesToDisplay) {
             // Calculate number of (hours then minutes then seconds)
-            Long hms = (this.cumulativeMilliseconds / (Long) timeToDisplay[0]);
-            // Add the hours to the string builder, if the it is not 0
+            Long hms = (remainingTime / (Long) timeToDisplay[0]);
+            // Add the hours to the string builder, if it is not 0
             if (hms != 0) {
-                builder.append(hms).append(" ").append(timeToDisplay[1]).append(" ");
+                builder.append(hms).append(" ").append(timeToDisplay[1]).append(" "); //hvorfor [1]
+				System.out.println("Hours,Minutes,Seconds" + hms);
             }
             // Store the remaining time after division
             remainingTime = remainingTime % (Long) timeToDisplay[0];

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 
 public class LoginServerConn extends Server{
-    private static final String DATABASE_URL = "jdbc:mysql:/db.course.hst.aau.dk:3306/hst_2021_21gr6401";
+    private static final String DATABASE_URL = "jdbc:mysql://db.course.hst.aau.dk:3306/hst_2021_21gr6401";
     private static final String DATABASE_USERNAME = "hst_2021_21gr6401";
     private static final String DATABASE_PASSWORD = "uowuteiwaiphaxaekeeb";
     private static final String SELECT_QUERY = "SELECT * FROM loginserver WHERE id = ? and password = ?";

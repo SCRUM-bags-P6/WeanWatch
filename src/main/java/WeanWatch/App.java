@@ -187,15 +187,15 @@ public class App extends Application {
 
         //perdicateOnDataExample();
 
-        testUsingIndicatorAlgorithm();
+        //testUsingIndicatorAlgorithm();
 
 
-        // // Store the primary stage
-        // this.weanStage = primaryStage;
+         //Store the primary stage;
+         this.weanStage = primaryStage;
         // // Show the login screen
-        // this.userLogOutCallback();
+         this.userLogOutCallback();
         // // Show the stage
-        // primaryStage.show();
+         primaryStage.show();
     }
 
     protected void userLoginCallback(Personnel user) {
