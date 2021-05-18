@@ -13,6 +13,10 @@ public class TimeInterval implements Serializable {
     private LocalDateTime newestTime;
     private LocalDateTime oldestTime;
 
+
+	public TimeInterval(){
+		
+	}
     // Constructor
     public TimeInterval(LocalDateTime newestTime, LocalDateTime oldestTime) {
         this.newestTime = newestTime;

@@ -34,7 +34,7 @@ public class IndicatorAlgorithm implements DetectionAlgorithm {
 	public TimeInterval evaluate(Row patientDataRow) {
 		// Store the result of all evaluation
 		boolean allIndicatorsTrue = true;
-		// Evaluate each perdicate
+		// Evaluate each predicate
 		for (Indicator indicator : this.characteristics) {
 			// Perform the test, and it with allIndicatorsTrue
 			try {

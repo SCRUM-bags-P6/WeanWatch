@@ -1,9 +1,11 @@
 package WeanWatch.model;
 
+import java.io.Serializable;
+
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
-public class Patient {
+public class Patient implements Serializable{
     // Parameters
     private Dataset<Row> patientData; // Patient dataset
     private DetectedCaseHandler patientCaseHandler = null; // Case handler

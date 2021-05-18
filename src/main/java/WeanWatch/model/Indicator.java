@@ -14,7 +14,7 @@ public class Indicator implements Serializable {
     // Constructor
     public Indicator(Integer duration, Predicate<Row> predicate) {
         this.duration = duration;
-        // Cast the perdicate to a serialisable and store it
+        // Cast the predicate to a serialisable and store it
         this.predicate = (Predicate<Row> & Serializable) predicate;
     }
 
