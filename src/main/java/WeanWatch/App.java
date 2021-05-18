@@ -7,6 +7,9 @@ import java.awt.Dimension;
 
 import WeanWatch.controller.LoginCtrl;
 import WeanWatch.controller.RootCtrl;
+import WeanWatch.model.Case;
+import WeanWatch.model.CaseDetectorThread;
+import WeanWatch.model.CaseHandler;
 import WeanWatch.model.DetectionAlgorithm;
 import WeanWatch.model.Indicator;
 import WeanWatch.model.IndicatorAlgorithm;
@@ -14,6 +17,7 @@ import WeanWatch.model.PDMSConn;
 import WeanWatch.model.PatientHandler;
 import WeanWatch.model.Personnel;
 import WeanWatch.model.TimeInterval;
+import WeanWatch.model.Case.Severity;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -52,6 +56,7 @@ public class App extends Application {
         LocalDateTime newestTime = LocalDateTime.of(2021, 05, 16, 23, 00, 00);
         LocalDateTime oldestTime = LocalDateTime.of(2021, 05, 17, 23, 00, 00);
 
+		//Henter timestamp fra stud1.csv første kolonne. Tjekker om timestamp er mellem de to createde LocalDateTime's 
         System.out.println("Filtering for dates...");
         Dataset<Row> caseData = patientData.filter((Row row) -> {    
             LocalDateTime localDateTime = LocalDateTime.parse(row.getString(0));
@@ -67,12 +72,16 @@ public class App extends Application {
     }
 
     public void perdicateOnDataExample() {
+		//Henter data for første patient i patienthandler
         Dataset<Row> patientData = PatientHandler.getInstance().getPatients()[0].getData();
 
         String paramName = "SpO2";
 
         Double paramValue = 0.9D;
         // Define test
+
+		//Kører en predicatetest. Sammenligner paramValue med den værdi der ligger i "SpO2" kolonnen i vores Row.
+		//Returner true hvis SpO2 er mindre end paramValue.
         Predicate<Row> noiceTest = (Predicate<Row>)(Row x) -> {
             int compareResult = Double.compare(x.getDouble(x.fieldIndex(paramName)), paramValue);
             if (compareResult == 0) {
@@ -94,7 +103,10 @@ public class App extends Application {
     public static int trueCount = 0;
     public static boolean lastWasTrue = false;
 
+
+	
     public void performTestOnData(Dataset<Row> patientData, Predicate<Row> test) {
+		//Hver row i patientData testes. Hvis conditions er opfyldt, returner predicate true.
         patientData.foreach((Row x) -> {
             boolean testResult = test.test(x);
             if (testResult) {
@@ -102,7 +114,7 @@ public class App extends Application {
                 trueCount++;
                 // Mark this occurrence as true
                 lastWasTrue = true;
-            } else {
+            } else { //Køres kun hvis conditions ikke længere er opfyldt
                 if (lastWasTrue) {
                     // Printout
                     System.out.println("Test no longer true. Number of consequetive trues: " + trueCount);
@@ -120,7 +132,9 @@ public class App extends Application {
         // Define indicators
         ArrayList<Indicator> indicators = new ArrayList<Indicator>();
 
-        
+        //Ny indicator laves og lægges i ArrayList'en
+		//Hver indicator's constructor kræver en Predicate. Predicate er et functional interface, der indeholder test() metoden.
+		//Test() funktionen for hver predicate defineres med en lambda funktion.
         indicators.add(new Indicator(250, (Predicate<Row> & Serializable)(Row x) -> {
             return Double.compare(x.getDouble(x.fieldIndex("PEEPSet")), 12D) == 0; 
         }));
@@ -129,6 +143,10 @@ public class App extends Application {
         indicators.add(new Indicator(250, (Predicate<Row> & Serializable)(Row x) -> {
             return Double.compare(x.getDouble(x.fieldIndex("SpO2")), 0.9D) > 0; 
         }));
+
+		
+
+
 
         // indicators.add(new Indicator(30, (Predicate<Row> & Serializable)(Row x) -> {
         //     int compareResult = Double.compare(x.getDouble(x.fieldIndex("SpO2")), 0.8D);
@@ -160,6 +178,8 @@ public class App extends Application {
 
         // Define a indicator algorithm
         DetectionAlgorithm algo = new IndicatorAlgorithm(indicators);
+
+	
         
         patientData.foreach((Row x) -> {
             TimeInterval output = algo.evaluate(x);
@@ -182,6 +202,35 @@ public class App extends Application {
         //perdicateOnDataExample();
 
         //testUsingIndicatorAlgorithm();
+
+		// Define indicators
+		ArrayList<Indicator> indicators = new ArrayList<Indicator>();
+
+		indicators.add(new Indicator(150, (Predicate<Row> & Serializable)(Row x) -> {
+            return Double.compare(x.getDouble(x.fieldIndex("PEEPSet")), 12D) == 0; 
+        }));
+
+                
+        indicators.add(new Indicator(150, (Predicate<Row> & Serializable)(Row x) -> {
+            return Double.compare(x.getDouble(x.fieldIndex("SpO2")), 0.9D) > 0; 
+        }));
+		
+
+		DetectionAlgorithm algo = new IndicatorAlgorithm(indicators);
+
+		// Create case from indicator algorithm, add to caseHandler
+		CaseHandler caseHandler = CaseHandler.getInstance();
+		caseHandler.addCaseAlgo("Rigor Mortis", "Hvis patienten har dette her, er det nok på tide at ekstubere", Severity.SEVERE, algo);
+
+
+
+		//Instantierer vores thread
+		CaseDetectorThread detectorGadget = CaseDetectorThread.getInstance();
+		//Initialiserer threaden og kører dens run() metode
+		detectorGadget.initialize();
+		detectorGadget.start();
+
+		
 
 
         // Store the primary stage

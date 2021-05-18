@@ -1,6 +1,9 @@
 package WeanWatch.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+import org.apache.spark.sql.Row;
 
 public class Case {
     // Store the case name and description
@@ -12,6 +15,7 @@ public class Case {
     // Store the case indicators
     private ArrayList<Indicator> characteristics;
 
+
     // Severity
     public enum Severity {
         MILD,
@@ -19,13 +23,24 @@ public class Case {
         SEVERE
     }
 
-    // Constructor
+    // Constructor 
     public Case(String name, String description, Case.Severity severity, ArrayList<Indicator> characteristics) {
         this.name = name;
         this.description = description;
 		this.severity = severity;
         this.characteristics = characteristics;
     }
+
+	public Case(String name, String description, Case.Severity severity, DetectionAlgorithm algo) {
+        this.name = name;
+        this.description = description;
+		this.severity = severity;
+        this.algorithm= algo;
+    }
+
+	
+
+	
 
     // Getters
     public String getName() {
