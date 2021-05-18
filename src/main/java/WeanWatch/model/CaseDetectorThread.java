@@ -2,6 +2,8 @@ package WeanWatch.model;
 
 import java.io.Serializable;
 import java.lang.Thread;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -16,7 +18,9 @@ public class CaseDetectorThread extends Thread implements Serializable{
     private ArrayList<DetectionSubscriber> subscribers = new ArrayList<DetectionSubscriber>();
     private Patient patientOfPriority;
 
+	private boolean doRun = true;
 
+	private static LocalDateTime newestProcessedTime;
 	
 	private CaseDetectorThread() {
 	}
@@ -30,58 +34,51 @@ public class CaseDetectorThread extends Thread implements Serializable{
         return CaseDetectorThread.instance;
 	}
 
+	/**
+	 * TODO:
+	 * Missing: Handle interruption (using priotitize patient)
+	 * Missing: Store progress on interrupt.
+	 * Missing: Start from prioritized patient
+	 */
     public void run() {
-		//Følger Sekvensdiagrammet
-		//Loop gennem qeued detectorTasks.		
-		for(int i = 0; i<queuedTasks.size(); i++){
-			//Få nuværende task
-			DetectorTask curTask = this.queuedTasks.get(i);
-			Patient curPatient = curTask.getPatient();			
-			//For patienten i den i'te DetectorCask køres foreach på hver række af Dataset'et
-			if(curPatient.getData() != null){			
-				curPatient.getData().foreach((ForeachFunction<Row>) row -> {
-					
-					//For each kører et for-loop igennem for hver række, der scanner hver række igennem for hver case
-					for(int z = 0; z<curTask.getCasesToScan().size(); z++){	
-						
-						//System.out.println("Number of cases to scan = " + curTask.getCasesToScan().size());					
-						TimeInterval detectedTime = curTask.getCasesToScan().get(z).getAlgorithm().evaluate(row);
-						
-						//long test2 = 100;
-						//long test = 
-						
-						
-
-						if(detectedTime != null){							
-							//Hvis en case algoritme returnerer !null, altså TimeInterval, creates en ny case
-							DetectedCase newCase = new DetectedCase(curPatient, 
-							curTask.getCasesToScan().get(z),
-							detectedTime);
-							//System.out.println("Tidsintervallet er:" + detectedTime.getIntervalTime());		
-							//Denne case addes til den nuværende patient's DetectedCaseHandler
-							curPatient.getDetectedCaseHandler().addCase(newCase);
-
-							//NotifySubscribers
-							notifySubscribers(curPatient);
-
-							System.out.println("number of detected cases =" + curPatient.getDetectedCaseHandler().getDetectedCases().size());
+		// Loop through each detector task
+		for (int task = 0; task < queuedTasks.size(); task++) {
+			// Get the current task and patient
+			DetectorTask currentTask = this.queuedTasks.get(task);
+			Patient currentPatient = currentTask.getPatient();	
+			// Create a placeholder for the timestamp of the latest processed row
+			CaseDetectorThread.newestProcessedTime = currentTask.getNewestTime();
+			// Process the patient data, and apply the detection algorithm for each data row
+			if (currentPatient.getData() != null) {
+				currentPatient.getData().foreach((ForeachFunction<Row>) row -> {
+					// Get the time of the row to process
+					LocalDateTime rowTime = LocalDateTime.parse(row.getString(0));
+					// Only processe the data if the timestamp is after the newest processed time
+					if (newestProcessedTime == null || rowTime.isAfter(newestProcessedTime)) {
+						// Get each event and run the respective detection algorithm
+						for (Case event : currentTask.getCasesToScan()) {
+							// Compute the algorithm for the patient data row				
+							TimeInterval detectedTime = event.getAlgorithm().evaluate(row);
+							// Validate if a case was found
+							if (detectedTime != null) {							
+								// Create a new detected case
+								DetectedCase detectedEvent = new DetectedCase(currentPatient, event, detectedTime);
+								// Store the detected in the patients detected event handler
+								currentPatient.getDetectedCaseHandler().addCase(detectedEvent);
+								// Notify subscribers to allow updating views
+								this.notifySubscribers(currentPatient);
 							}
 						}
-					});			
-		
-				}
+						// Update the newest processed time
+						CaseDetectorThread.newestProcessedTime = rowTime;
+					}
+				});
+				// Store progress in detector task
+				currentTask.updateInterval(CaseDetectorThread.newestProcessedTime, currentTask.getOldestTime());
 			}
 		}
-		
+	}
 
-		
-		
-		
-
-
-
-    
-    
     public void initialize() {
         for (Patient patient : PatientHandler.getInstance().getPatients()) {
             this.queuedTasks.add(new DetectorTask(patient));
