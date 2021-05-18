@@ -26,7 +26,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-
+import javafx.scene.text.Font;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
@@ -42,6 +42,9 @@ public class OverviewCtrl extends NavigatableCtrl {
 
     public void initialize() {
         CaseHandler.getInstance().addCase("Apnea", "Apnea", Case.Severity.INTERMEDIATE, null);
+        CaseHandler.getInstance().addCase("Too little O2", "Too little O2", Case.Severity.SEVERE, null);
+        CaseHandler.getInstance().addCase("Too much O2", "Too much O2", Case.Severity.MILD, null);
+        CaseHandler.getInstance().addCase("Too much CO2", "Too much CO2", Case.Severity.MILD, null);
 
         PatientHandler.getInstance().getPatients()[0].getDetectedCaseHandler().addCase(
             new DetectedCase(
@@ -51,8 +54,39 @@ public class OverviewCtrl extends NavigatableCtrl {
                 new TimeInterval(
                     LocalDateTime.of(2021, 05, 16, 9, 00, 00),
                     LocalDateTime.of(2021, 05, 16, 9, 50, 00)
-                    //new Date(2021, 05, 14, 10, 00), 
-                    //new Date(2021, 05, 14, 9, 50)
+                    ))
+        );
+
+        PatientHandler.getInstance().getPatients()[0].getDetectedCaseHandler().addCase(
+            new DetectedCase(
+            PatientHandler.getInstance().getPatients()[0], 
+                CaseHandler.getInstance().getCase("Too little O2"),
+                //Ændre til LocalDateTime
+                new TimeInterval(
+                    LocalDateTime.of(2021, 05, 18, 9, 00, 00),
+                    LocalDateTime.of(2021, 05, 18, 10, 20, 00)
+                    ))
+        );
+
+        PatientHandler.getInstance().getPatients()[0].getDetectedCaseHandler().addCase(
+            new DetectedCase(
+            PatientHandler.getInstance().getPatients()[0], 
+                CaseHandler.getInstance().getCase("Too much O2"),
+                //Ændre til LocalDateTime
+                new TimeInterval(
+                    LocalDateTime.of(2021, 05, 19, 9, 00, 00),
+                    LocalDateTime.of(2021, 05, 19, 10, 20, 00)
+                    ))
+        );
+
+        PatientHandler.getInstance().getPatients()[0].getDetectedCaseHandler().addCase(
+            new DetectedCase(
+            PatientHandler.getInstance().getPatients()[0], 
+                CaseHandler.getInstance().getCase("Too much CO2"),
+                //Ændre til LocalDateTime
+                new TimeInterval(
+                    LocalDateTime.of(2021, 05, 20, 9, 00, 00),
+                    LocalDateTime.of(2021, 05, 20, 10, 20, 00)
                     ))
         );
     }
@@ -109,17 +143,30 @@ public class OverviewCtrl extends NavigatableCtrl {
                     this.rowsBox.getChildren().add(hbox);
                 }
 				// Create a hbox for each three cases
-				hbox = new HBox();
+				hbox = new HBox(200D);
             } 	
 			// Create a vbox for the cases
-			VBox vbox = new VBox();
+			VBox vbox = new VBox(200D);
+            vbox.setAlignment(Pos.CENTER);
        	    // Add a metaforic figure to the vbox
 			Pane metaphoricFigure = metaphoricFactory.create(casesToDisplay.get(i).getCaseToDisplay());
         	// Create labels to caption for occurrences and time
-            Label labelOccurrences = new Label(casesToDisplay.get(i).getOccurrences().toString());
-            Label labelCumulativeTime = new Label(casesToDisplay.get(i).getCumulativeTime());
+            VBox labelsPane = new VBox(10D);
+            
+            Label labelOccurrences = new Label("Occurences: " + casesToDisplay.get(i).getOccurrences().toString() + "  ");
+            Label labelCumulativeTime = new Label("Duration: " + casesToDisplay.get(i).getCumulativeTime());    
+            //Set font size and font type
+            labelOccurrences.setFont(new Font("Arial",15));
+            labelCumulativeTime.setFont(new Font("Arial",15));
+            //position labelsPane in vbox 
+            labelsPane.setAlignment(Pos.TOP_RIGHT);
+            //labelCumulativeTime.setAlignment(Pos.CENTER);
+            
+            labelsPane.getChildren().addAll(labelOccurrences,labelCumulativeTime);
             // Add metaphoricalfigure, number of occurrences and time duration to the Vbox
-            vbox.getChildren().addAll(metaphoricFigure,labelOccurrences,labelCumulativeTime);
+            vbox.getChildren().addAll(metaphoricFigure,labelsPane);
+
+
             // Store a reference to the vbox
             figureLookup.put(vbox, casesToDisplay.get(i).getCaseToDisplay().getCase());
             // Create a click handler for each

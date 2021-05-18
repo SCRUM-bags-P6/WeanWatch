@@ -44,7 +44,8 @@ public class TimeInterval implements Serializable {
 	public String toString(){
 		SimpleDateFormat formatter = new SimpleDateFormat("dd hh:mm");  
 		String strDate = formatter.format(this.newestTime);  
-		
+	
+
         return new String("Not yet implemented");
 	}
 
@@ -52,8 +53,8 @@ public class TimeInterval implements Serializable {
 
     // Method to calculate occurrens duration - by finding time between newestTime and oldestTime
     public long getIntervalTime(){
-        LocalDateTime fromDateTime = this.oldestTime;
-        LocalDateTime toDateTime = this.newestTime;
+        LocalDateTime fromDateTime = this.newestTime;
+        LocalDateTime toDateTime = this.oldestTime;
 
         long timeInterval = ChronoUnit.MILLIS.between(fromDateTime, toDateTime);
         return timeInterval;

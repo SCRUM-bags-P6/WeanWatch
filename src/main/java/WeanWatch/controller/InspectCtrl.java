@@ -12,6 +12,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 
 public class InspectCtrl extends NavigatableCtrl {
 
@@ -51,11 +52,17 @@ public class InspectCtrl extends NavigatableCtrl {
                     hbox = new HBox();
                 }	
                 // Create a vbox for the cases
-                VBox vbox = new VBox();
+                VBox vbox = new VBox(200D);
                 // Add a metaforic figure to the vbox
                 Pane metaphoricFigure = metaphoricFactory.create(casesToDisplay.get(i));
                 // Create labels to caption time
-                Label labelCaseInterval = new Label(casesToDisplay.get(i).getCaseInterval().toString());
+                // The year is removed and labels are split at the "T"
+                    Label labelCaseInterval = new Label("From " + casesToDisplay.get(i).getCaseInterval().getNewestTime().toString().split("T", 2)[1] 
+                + "  " + casesToDisplay.get(i).getCaseInterval().getNewestTime().toString().substring(5, 16).split("T", 2)[0] 
+                + "  to  " + casesToDisplay.get(i).getCaseInterval().getOldestTime().toString().split("T", 2)[1] 
+                + "  " + casesToDisplay.get(i).getCaseInterval().getOldestTime().toString().substring(5, 16).split("T", 2)[0]);
+                // Set font size and type for label
+                labelCaseInterval.setFont(new Font("Arial",15));
                 // Add metaphoricalfigure, number of occurrences and time duration to the Vbox
                 vbox.getChildren().addAll(metaphoricFigure,labelCaseInterval);
                 // Add the vbox to the hbox

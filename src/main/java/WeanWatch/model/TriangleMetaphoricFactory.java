@@ -1,6 +1,8 @@
 package WeanWatch.model;
 
 import javafx.scene.Group;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -32,19 +34,51 @@ import javafx.geometry.Pos;
 public class TriangleMetaphoricFactory extends MetaphoricFactory {
 
     private final static Double figureMaxWidth = 300D;
-    private final static Double figureMaxHeight = 300D;
+    private final static Double figureMaxHeight = 200D;
 
     public BorderPane create(DetectedCase detectedCase) {
+    //public VBox create(DetectedCase detectedCase) {
         // Figure root pane, hvor alle dele af figuren skal være i
         BorderPane figureRoot = new BorderPane();
+        //VBox figureRoot = new VBox();
         // Create a figure vbox
-        VBox figureVBox = new VBox();
+        //VBox figureVBox = new VBox(20D);
+        //VBox figureVBoxRoot = new VBox();
+        VBox figureVBoxTop = new VBox(20D); //Spacing set to 20D
+        VBox figureVBoxBot = new VBox(220D);
+
+        VBox figureVBoxGrid = new VBox(220D);
+
+        StackPane figureStacker = new StackPane();
+
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        LineChart<Number, Number> figureAxisTop = new LineChart<Number, Number>(xAxis, yAxis);
+        LineChart<Number, Number> figureAxisBot = new LineChart<Number, Number>(xAxis, yAxis);
+        figureAxisTop.setHorizontalGridLinesVisible(false);
+        figureAxisBot.setHorizontalGridLinesVisible(false);
+        figureAxisTop.setVerticalGridLinesVisible(false);
+        figureAxisBot.setVerticalGridLinesVisible(false);
+        figureAxisTop.setPrefHeight(200D);
+        figureAxisTop.setPrefWidth(200D);
+        figureAxisBot.setPrefHeight(200D);
+        figureAxisBot.setPrefWidth(200D);
+
         // Set padding
         //figureVBox.setPadding(new Insets(0,0,0,100D)); //Rykker figurerne 100pixels til højre
         // Set the figure spacing
-        figureVBox.setSpacing(150D);
-        figureVBox.setAlignment(Pos.CENTER);
-        figureVBox.prefWidth(TriangleMetaphoricFactory.figureMaxWidth);
+        /*
+        figureVBoxRoot.setSpacing(1D);
+        
+        figureVBoxTop.setSpacing(10D);
+        figureVBoxTop.setAlignment(Pos.CENTER);
+        figureVBoxTop.prefWidth(TriangleMetaphoricFactory.figureMaxWidth);
+
+        figureVBoxBot.setSpacing(100D);
+        figureVBoxBot.setAlignment(Pos.CENTER);
+        figureVBoxBot.prefWidth(TriangleMetaphoricFactory.figureMaxWidth);
+        */
+
         // Load the case label
         Label caseLabel = this.loadCaseLabel(detectedCase.getCase().getName());
         // Load the figure head
@@ -52,7 +86,7 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         // Get the case data
         Dataset<Row> caseData = this.getCaseDataset(detectedCase.getPatient().getData(), detectedCase.getCaseInterval());
         // Calcualte case average values
-        Dataset<Row> averageValeus = caseData.select(
+        Dataset<Row> averageValues = caseData.select(
             avg("SpO2"),
             avg("FiO2Set"),
             avg("Rf"),
@@ -62,21 +96,29 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         );
         // Get the top triangle
         BorderPane topTriag = this.loadTopTriangle(
-            averageValeus.first().getDouble(0), 
-            averageValeus.first().getDouble(1)
+            averageValues.first().getDouble(0), 
+            averageValues.first().getDouble(1)
         );
         
         // Get the bottom triangle
         BorderPane butTriag = this.loadButTriangle(
-            averageValeus.first().getDouble(2), 
-            averageValeus.first().getDouble(3), 
-            averageValeus.first().getDouble(4),
-            averageValeus.first().getDouble(5)
+            averageValues.first().getDouble(2), 
+            averageValues.first().getDouble(3), 
+            averageValues.first().getDouble(4),
+            averageValues.first().getDouble(5)
         );
+        //figureVBox.getChildren().addAll(caseLabel, figureHead, topTriag, butTriag);
+        figureVBoxTop.getChildren().addAll(caseLabel, figureHead);
+        figureVBoxBot.getChildren().addAll(topTriag, butTriag);
 
-        
+        //figureVBoxGrid.getChildren().addAll(figureAxisTop, figureAxisBot);
+        //put the bottom vbox and line chart into the stackPane
+        //figureStacker.getChildren().addAll(figureVBoxGrid, figureVBoxBot);
+        figureStacker.getChildren().addAll(figureAxisTop, figureAxisBot, figureVBoxBot);
 
-        figureVBox.getChildren().addAll(caseLabel, figureHead, topTriag, butTriag);
+       // figureVBoxRoot.getChildren().addAll(figureVBoxTop, figureVBoxTop);
+        //figure
+
         //figureVBox.setCenter(caseLabel);
 
         Double labelWidth = caseLabel.getBoundsInLocal().getWidth(); //Bruges til at centrere figurerne dynamisk
@@ -84,18 +126,25 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         caseLabel.setPadding(new Insets(0,0,0,(TriangleMetaphoricFactory.figureMaxWidth / 2D) - 50/*(labelWidth)*/));
         figureHead.setPadding(new Insets(0,0,0,(TriangleMetaphoricFactory.figureMaxWidth / 2D) - 50 /*(headWidth)*/));
 
+        /*
         System.out.println("First Spot = " + figureVBox.getChildren().get(0).getClass().getSimpleName());
         System.out.println("Second Spot = " +figureVBox.getChildren().get(1).getClass().getSimpleName());
         System.out.println("Third Spot = " +figureVBox.getChildren().get(2).getClass().getSimpleName());
         System.out.println("Fourth Spot = " +figureVBox.getChildren().get(3).getClass().getSimpleName());
-
+        */
        // System.out.println("First Spot = " + figureVBox.getChildren().get(0).getClass().getFields().getSimpleName());
-       
-        
         
         //Set figurVBox in figureRoots center
-        figureRoot.setCenter(figureVBox);
+        //figureRoot.setCenter(figureVBoxTop);
+        //figureRoot.setCenter(figureVBoxRoot);
+        
+        figureRoot.setCenter(figureVBoxTop);
+        figureRoot.setBottom(figureStacker);
+        
         // Return the figure
+
+
+
         return figureRoot;
     }
 
@@ -185,14 +234,20 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         Double rightWidthSpO2 = (middle + (middle - leftWidthSpO2));
         // Width coordinates SpO2
         Double X1 = leftWidthSpO2; 
-        //Double Y1 = TriangleMetaphoricFactory.figureMaxHeight; 
+        Double Y1 = TriangleMetaphoricFactory.figureMaxHeight;
+        //Double Y1 = heightFiO2; 
         Double X2 = rightWidthSpO2; 
-        //Double Y2 = TriangleMetaphoricFactory.figureMaxHeight;
+        Double Y2 = TriangleMetaphoricFactory.figureMaxHeight;
+        //Double Y2 = heightFiO2;
         // Height coordinates FiO2
-        Double X3 = middle; Double Y3 = 0D - heightFiO2;
+        Double X3 = middle; 
+        //Double Y3 = 0D - heightFiO2;
+        //Double Y3 = 0D;
+        Double Y3 = heightFiO2;
+
         // Draw top triangle
-        Double Y1 = 0D;
-        Double Y2 = 0D;
+        //Double Y1 = 0D;
+        //Double Y2 = 0D;
 
         Polygon topPolygon = new Polygon();
         topPolygon.getPoints().addAll(new Double[] {
