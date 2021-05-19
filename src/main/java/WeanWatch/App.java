@@ -220,7 +220,7 @@ public class App extends Application {
 
 		// Create case from indicator algorithm, add to caseHandler
 		CaseHandler caseHandler = CaseHandler.getInstance();
-		caseHandler.addCaseAlgo("Rigor Mortis", "Hvis patienten har dette her, er det nok på tide at ekstubere", Severity.SEVERE, algo);
+		//caseHandler.addCaseAlgo("Rigor Mortis", "Hvis patienten har dette her, er det nok på tide at ekstubere", Severity.SEVERE, algo);
 
 
 

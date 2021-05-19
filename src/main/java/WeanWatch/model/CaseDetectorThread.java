@@ -40,6 +40,7 @@ public class CaseDetectorThread extends Thread implements Serializable{
 	 * Missing: Store progress on interrupt.
 	 * Missing: Start from prioritized patient
 	 */
+	
     public void run() {
 		// Loop through each detector task
 		for (int task = 0; task < queuedTasks.size(); task++) {
@@ -77,7 +78,7 @@ public class CaseDetectorThread extends Thread implements Serializable{
 				currentTask.updateInterval(CaseDetectorThread.newestProcessedTime, currentTask.getOldestTime());
 			}
 		}
-	}
+	} 
 
     public void initialize() {
         for (Patient patient : PatientHandler.getInstance().getPatients()) {
