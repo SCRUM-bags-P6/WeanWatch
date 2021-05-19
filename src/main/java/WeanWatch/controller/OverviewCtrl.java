@@ -163,7 +163,7 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
                     this.rowsBox.getChildren().add(hbox);
                 }
 				// Create a hbox for each three cases
-				hbox = new HBox(200D);
+				hbox = new HBox(15D);
             } 	
 			// Create a vbox for the cases
 			VBox vbox = new VBox(200D);

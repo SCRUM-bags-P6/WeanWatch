@@ -1,6 +1,7 @@
 package WeanWatch.model;
 
 import javafx.scene.Group;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Label;
@@ -13,6 +14,7 @@ import javafx.scene.text.Font;
 
 import java.io.FileInputStream;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Formatter;
 
@@ -27,8 +29,10 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.connector.catalog.TableChange.After;
 import org.junit.Before;
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Side;
 
 
 public class TriangleMetaphoricFactory extends MetaphoricFactory {
@@ -37,47 +41,104 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
     private final static Double figureMaxHeight = 200D;
 
     public BorderPane create(DetectedCase detectedCase) {
-    //public VBox create(DetectedCase detectedCase) {
+    
         // Figure root pane, hvor alle dele af figuren skal være i
         BorderPane figureRoot = new BorderPane();
-        //VBox figureRoot = new VBox();
-        // Create a figure vbox
-        //VBox figureVBox = new VBox(20D);
-        //VBox figureVBoxRoot = new VBox();
+        
+        //VBoxes til at sætte Label og hoved i den øverste og stackPanes med trekanter i den nederste
         VBox figureVBoxTop = new VBox(20D); //Spacing set to 20D
-        VBox figureVBoxBot = new VBox(220D);
+        VBox figureVBoxBot = new VBox();
 
-        VBox figureVBoxGrid = new VBox(220D);
+        //Til at stacke linechart og metaforisk figur
+        StackPane figureStackerBotTop = new StackPane();
+        StackPane figureStackerBotBot = new StackPane();
+        
 
-        StackPane figureStacker = new StackPane();
+		//Sætter akser for top figuren
+		String[] CategoriesXTop = {"100 ", "95 ", "90 ", "85 ", "80 ", "75 ", " ", "75", "80", "85", "90", "95", "100"};        
+		String[] CategoriesYTop = {"0.21", "0.25", "0.28", "0.32", "0.35", "0.40","0.50", "0.60", "0.80", "1"};
+            
+        CategoryAxis xAxisTop = new CategoryAxis();
+        CategoryAxis yAxisTop = new CategoryAxis();
 
-        NumberAxis xAxis = new NumberAxis();
-        NumberAxis yAxis = new NumberAxis();
-        LineChart<Number, Number> figureAxisTop = new LineChart<Number, Number>(xAxis, yAxis);
-        LineChart<Number, Number> figureAxisBot = new LineChart<Number, Number>(xAxis, yAxis);
+        //Indsætter ticklabels på top figuren
+		xAxisTop.setCategories(FXCollections.<String>observableArrayList(Arrays.asList(CategoriesXTop)));
+		yAxisTop.setCategories(FXCollections.<String>observableArrayList(Arrays.asList(CategoriesYTop)));
+
+		//Sætter akser for bund figuren
+		String[] CategoriesXBot = {"Very good ", "Good ", "Medium ", "Weak ", "Very Weak ", " ", "Very Weak", "Weak", "Medium", "Good", "Very Good"};        
+        String[] CategoriesYBot = {"68", "61", "54", "47", "40", "33", "26", "19", "12", "5"};
+            
+        CategoryAxis xAxisBot = new CategoryAxis();
+        CategoryAxis yAxisBot = new CategoryAxis();
+
+        //Indsætter ticklabels på bundfiguren, og sætter x-aksen i toppen af linechart
+		xAxisBot.setCategories(FXCollections.<String>observableArrayList(Arrays.asList(CategoriesXBot)));
+        xAxisBot.setSide(Side.TOP);
+		yAxisBot.setCategories(FXCollections.<String>observableArrayList(Arrays.asList(CategoriesYBot)));
+
+        //Skaber vores LineCharts og indsætter akserne
+        LineChart<String, String> figureAxisTop = new LineChart<String, String>(xAxisTop, yAxisTop);
+        LineChart<String, String> figureAxisBot = new LineChart<String, String>(xAxisBot, yAxisBot);
+
+        //Fjerner grid i LineCharts
         figureAxisTop.setHorizontalGridLinesVisible(false);
         figureAxisBot.setHorizontalGridLinesVisible(false);
         figureAxisTop.setVerticalGridLinesVisible(false);
         figureAxisBot.setVerticalGridLinesVisible(false);
-        figureAxisTop.setPrefHeight(200D);
-        figureAxisTop.setPrefWidth(200D);
-        figureAxisBot.setPrefHeight(200D);
-        figureAxisBot.setPrefWidth(200D);
-
-        // Set padding
-        //figureVBox.setPadding(new Insets(0,0,0,100D)); //Rykker figurerne 100pixels til højre
-        // Set the figure spacing
-        /*
-        figureVBoxRoot.setSpacing(1D);
+      
+      
+       // figureAxisTop.resize(figureMaxWidth, figureMaxHeight);
+       // figureAxisBot.resize(figureMaxWidth, figureMaxHeight);
         
-        figureVBoxTop.setSpacing(10D);
-        figureVBoxTop.setAlignment(Pos.CENTER);
-        figureVBoxTop.prefWidth(TriangleMetaphoricFactory.figureMaxWidth);
+        //Sætte højden og bredden af LineCharts
+        
 
-        figureVBoxBot.setSpacing(100D);
-        figureVBoxBot.setAlignment(Pos.CENTER);
-        figureVBoxBot.prefWidth(TriangleMetaphoricFactory.figureMaxWidth);
+        /*
+        figureAxisTop.setWidth(figureMaxWidth);
+        figureAxisTop.setHeight(figureMaxHeight);
+
+        figureAxisBot.setHeight(figureMaxHeight);
+        figureAxisBot.setWidth(figureMaxWidth);
         */
+        /*
+        figureAxisTop.setPrefWidth(figureMaxWidth);
+        figureAxisTop.setPrefHeight(figureMaxHeight);
+
+        figureAxisBot.setPrefHeight(figureMaxHeight);
+        figureAxisBot.setPrefWidth(figureMaxWidth);
+        */
+        
+        
+        System.out.println("Bund figur bredde = " + figureAxisBot.getWidth());
+        System.out.println("Bund figur højde = " + figureAxisBot.getHeight());
+        System.out.println("Top figur bredde = " + figureAxisTop.getWidth());
+        System.out.println("Top figur højde = " + figureAxisTop.getHeight());
+        System.out.println("SE HER");System.out.println("SE HER");
+        System.out.println("SE HER");
+        System.out.println("SE HER");
+        System.out.println("SE HER");
+        System.out.println("SE HER");System.out.println("SE HER");
+        System.out.println("SE HER");
+        System.out.println("SE HER");
+        System.out.println("SE HER");
+        
+
+        /*
+        figureAxisTop.setMaxHeight(figureMaxHeight);
+        figureAxisTop.setMinHeight(figureMaxHeight);
+
+        //SE HER
+        figureAxisTop.setMaxWidth(figureMaxWidth);
+        figureAxisTop.setMinWidth(figureMaxWidth);
+
+        figureAxisBot.setMaxHeight(figureMaxHeight);
+        figureAxisBot.setMinHeight(figureMaxHeight);
+
+        figureAxisBot.setMaxWidth(figureMaxWidth);
+        figureAxisBot.setMinWidth(figureMaxWidth);
+        */
+        
 
         // Load the case label
         Label caseLabel = this.loadCaseLabel(detectedCase.getCase().getName());
@@ -85,7 +146,7 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         BorderPane figureHead = this.loadHead(detectedCase.getCase().getSeverity()); //loadHead metoden er i bunden
         // Get the case data
         Dataset<Row> caseData = this.getCaseDataset(detectedCase.getPatient().getData(), detectedCase.getCaseInterval());
-        // Calcualte case average values
+        // Calculate case average values
         Dataset<Row> averageValues = caseData.select(
             avg("SpO2"),
             avg("FiO2Set"),
@@ -107,44 +168,50 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
             averageValues.first().getDouble(4),
             averageValues.first().getDouble(5)
         );
-        //figureVBox.getChildren().addAll(caseLabel, figureHead, topTriag, butTriag);
+        
+        //Tilføjer Label og Hoved i top VBox
         figureVBoxTop.getChildren().addAll(caseLabel, figureHead);
-        figureVBoxBot.getChildren().addAll(topTriag, butTriag);
 
-        //figureVBoxGrid.getChildren().addAll(figureAxisTop, figureAxisBot);
-        //put the bottom vbox and line chart into the stackPane
-        //figureStacker.getChildren().addAll(figureVBoxGrid, figureVBoxBot);
-        figureStacker.getChildren().addAll(figureAxisTop, figureAxisBot, figureVBoxBot);
+        //Tilføjer trekanter og tilhørende akser til StackPanes
+        figureStackerBotTop.getChildren().addAll(figureAxisTop,topTriag);
+        figureStackerBotBot.getChildren().addAll(figureAxisBot,butTriag);
+        /*      
+        System.out.println("Stackpane højde = " + figureStackerBotTop.getHeight());
+        System.out.println("Stackpane bredde = " + figureStackerBotTop.getWidth());
+        System.out.println("SE HER");System.out.println("SE HER");
+        System.out.println("SE HER");
+        System.out.println("SE HER");
+        System.out.println("SE HER");
+        */
 
-       // figureVBoxRoot.getChildren().addAll(figureVBoxTop, figureVBoxTop);
-        //figure
+        //Justere indryk af trekanter, så de passer med akser
+        figureStackerBotTop.setMargin(topTriag, new Insets(160D,0,0,110D));
+		figureStackerBotBot.setMargin(butTriag, new Insets(80D,0,0,110D));
 
-        //figureVBox.setCenter(caseLabel);
+        /*
+        figureStackerBotBot.setPrefHeight(figureMaxHeight);
+        figureStackerBotBot.setPrefWidth(figureMaxWidth);
+        figureStackerBotTop.setPrefHeight(figureMaxHeight);
+        figureStackerBotTop.setPrefWidth(figureMaxWidth);
+        */
+        //Tilføjer StackPanes til nederste VBox
+        figureVBoxBot.getChildren().addAll(figureStackerBotTop, figureStackerBotBot);
 
+        
+        /* Beholdes da det måske skal bruges senere til at justere Label og Hoved ift. resten af figuren
         Double labelWidth = caseLabel.getBoundsInLocal().getWidth(); //Bruges til at centrere figurerne dynamisk
         Double headWidth = figureHead.getBoundsInLocal().getWidth();
+        */
+        
         caseLabel.setPadding(new Insets(0,0,0,(TriangleMetaphoricFactory.figureMaxWidth / 2D) - 50/*(labelWidth)*/));
         figureHead.setPadding(new Insets(0,0,0,(TriangleMetaphoricFactory.figureMaxWidth / 2D) - 50 /*(headWidth)*/));
 
-        /*
-        System.out.println("First Spot = " + figureVBox.getChildren().get(0).getClass().getSimpleName());
-        System.out.println("Second Spot = " +figureVBox.getChildren().get(1).getClass().getSimpleName());
-        System.out.println("Third Spot = " +figureVBox.getChildren().get(2).getClass().getSimpleName());
-        System.out.println("Fourth Spot = " +figureVBox.getChildren().get(3).getClass().getSimpleName());
-        */
-       // System.out.println("First Spot = " + figureVBox.getChildren().get(0).getClass().getFields().getSimpleName());
         
-        //Set figurVBox in figureRoots center
-        //figureRoot.setCenter(figureVBoxTop);
-        //figureRoot.setCenter(figureVBoxRoot);
-        
+        //Set figurVBoxTop in center and figureVBoxBot in Bottom of figureRoot
         figureRoot.setCenter(figureVBoxTop);
-        figureRoot.setBottom(figureStacker);
+        figureRoot.setBottom(figureVBoxBot);
         
         // Return the figure
-
-
-
         return figureRoot;
     }
 
