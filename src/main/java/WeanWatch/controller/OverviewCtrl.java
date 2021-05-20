@@ -47,10 +47,10 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
     private HashMap<VBox, Case> figureLookup = new HashMap<VBox, Case>();
 
     public void initialize() {
-        CaseHandler.getInstance().addCase("Apnea", "Apnea", Case.Severity.INTERMEDIATE, null);
+        CaseHandler.getInstance().addCase("     Apnea   ", "Apnea", Case.Severity.INTERMEDIATE, null);
         CaseHandler.getInstance().addCase("Too little O2", "Too little O2", Case.Severity.SEVERE, null);
-        CaseHandler.getInstance().addCase("Too much O2", "Too much O2", Case.Severity.MILD, null);
-        CaseHandler.getInstance().addCase("Too much CO2", "Too much CO2", Case.Severity.MILD, null);
+        CaseHandler.getInstance().addCase("Too much O2 ", "Too much O2", Case.Severity.MILD, null);
+        CaseHandler.getInstance().addCase("Too much CO2 ", "Too much CO2", Case.Severity.MILD, null);
 		//For test purposes, it is neccesary to create some indicators to pass to the casehandler
 		/*
         ArrayList<Indicator> indicators = new ArrayList<Indicator>();
@@ -69,7 +69,7 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
         PatientHandler.getInstance().getPatients()[0].getDetectedCaseHandler().addCase(
             new DetectedCase(
                 PatientHandler.getInstance().getPatients()[0], 
-                CaseHandler.getInstance().getCase("Apnea"),
+                CaseHandler.getInstance().getCase("     Apnea   "),
                 //Ændre til LocalDateTime
                 new TimeInterval(
                     LocalDateTime.of(2021, 05, 16, 9, 00, 00),
@@ -83,15 +83,15 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
                 CaseHandler.getInstance().getCase("Too little O2"),
                 //Ændre til LocalDateTime
                 new TimeInterval(
-                    LocalDateTime.of(2021, 05, 18, 9, 00, 00),
-                    LocalDateTime.of(2021, 05, 18, 10, 20, 00)
+                    LocalDateTime.of(2021, 05, 16, 7, 50, 00),
+                    LocalDateTime.of(2021, 05, 16, 8, 20, 00)
                     ))
         );
 
         PatientHandler.getInstance().getPatients()[0].getDetectedCaseHandler().addCase(
             new DetectedCase(
             PatientHandler.getInstance().getPatients()[0], 
-                CaseHandler.getInstance().getCase("Too much O2"),
+                CaseHandler.getInstance().getCase("Too much O2 "),
                 //Ændre til LocalDateTime
                 new TimeInterval(
                     LocalDateTime.of(2021, 05, 19, 9, 00, 00),
@@ -102,7 +102,7 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
         PatientHandler.getInstance().getPatients()[0].getDetectedCaseHandler().addCase(
             new DetectedCase(
             PatientHandler.getInstance().getPatients()[0], 
-                CaseHandler.getInstance().getCase("Too much CO2"),
+                CaseHandler.getInstance().getCase("Too much CO2 "),
                 //Ændre til LocalDateTime
                 new TimeInterval(
                     LocalDateTime.of(2021, 05, 20, 9, 00, 00),
@@ -163,23 +163,26 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
                     this.rowsBox.getChildren().add(hbox);
                 }
 				// Create a hbox for each three cases
-				hbox = new HBox(15D);
+				hbox = new HBox(50D);
+                hbox.setPadding(new Insets(0D,0D,0D,350D));
             } 	
 			// Create a vbox for the cases
-			VBox vbox = new VBox(200D);
+			VBox vbox = new VBox(10D);
             vbox.setAlignment(Pos.CENTER);
        	    // Add a metaforic figure to the vbox
 			Pane metaphoricFigure = metaphoricFactory.create(casesToDisplay.get(i).getCaseToDisplay());
         	// Create labels to caption for occurrences and time
             VBox labelsPane = new VBox(10D);
-            
+            rowsBox.setSpacing(100D);
+
             Label labelOccurrences = new Label("Occurences: " + casesToDisplay.get(i).getOccurrences().toString() + "  ");
             Label labelCumulativeTime = new Label("Duration: " + casesToDisplay.get(i).getCumulativeTime());    
             //Set font size and font type
             labelOccurrences.setFont(new Font("Arial",15));
             labelCumulativeTime.setFont(new Font("Arial",15));
             //position labelsPane in vbox 
-            labelsPane.setAlignment(Pos.TOP_RIGHT);
+            labelsPane.setPadding(new Insets(0D, 0D, 0D, 130D));
+            //labelsPane.setAlignment(Pos.TOP_RIGHT);
             //labelCumulativeTime.setAlignment(Pos.CENTER);
             
             labelsPane.getChildren().addAll(labelOccurrences,labelCumulativeTime);

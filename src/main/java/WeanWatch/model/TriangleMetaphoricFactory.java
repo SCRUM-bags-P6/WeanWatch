@@ -38,7 +38,7 @@ import javafx.geometry.Side;
 public class TriangleMetaphoricFactory extends MetaphoricFactory {
 
     private final static Double figureMaxWidth = 300D;
-    private final static Double figureMaxHeight = 200D;
+    private final static Double figureMaxHeight = 300D;
 
     public BorderPane create(DetectedCase detectedCase) {
     
@@ -46,8 +46,8 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         BorderPane figureRoot = new BorderPane();
         
         //VBoxes til at sætte Label og hoved i den øverste og stackPanes med trekanter i den nederste
-        VBox figureVBoxTop = new VBox(20D); //Spacing set to 20D
-        VBox figureVBoxBot = new VBox();
+        VBox figureVBoxTop = new VBox(10D); //Spacing set to 20D
+        VBox figureVBoxBot = new VBox(1D);
 
         //Til at stacke linechart og metaforisk figur
         StackPane figureStackerBotTop = new StackPane();
@@ -64,6 +64,8 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         //Indsætter ticklabels på top figuren
 		xAxisTop.setCategories(FXCollections.<String>observableArrayList(Arrays.asList(CategoriesXTop)));
 		yAxisTop.setCategories(FXCollections.<String>observableArrayList(Arrays.asList(CategoriesYTop)));
+		//xAxisTop.setLabel("SpO2");
+		//yAxisTop.setLabel("FiO2");
 
 		//Sætter akser for bund figuren
 		String[] CategoriesXBot = {"Very good ", "Good ", "Medium ", "Weak ", "Very Weak ", " ", "Very Weak", "Weak", "Medium", "Good", "Very Good"};        
@@ -76,6 +78,8 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
 		xAxisBot.setCategories(FXCollections.<String>observableArrayList(Arrays.asList(CategoriesXBot)));
         xAxisBot.setSide(Side.TOP);
 		yAxisBot.setCategories(FXCollections.<String>observableArrayList(Arrays.asList(CategoriesYBot)));
+		//xAxisBot.setLabel("Diaphragm Strength");
+		//yAxisBot.setLabel("RR");
 
         //Skaber vores LineCharts og indsætter akserne
         LineChart<String, String> figureAxisTop = new LineChart<String, String>(xAxisTop, yAxisTop);
@@ -88,57 +92,7 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         figureAxisBot.setVerticalGridLinesVisible(false);
       
       
-       // figureAxisTop.resize(figureMaxWidth, figureMaxHeight);
-       // figureAxisBot.resize(figureMaxWidth, figureMaxHeight);
-        
-        //Sætte højden og bredden af LineCharts
-        
-
-        /*
-        figureAxisTop.setWidth(figureMaxWidth);
-        figureAxisTop.setHeight(figureMaxHeight);
-
-        figureAxisBot.setHeight(figureMaxHeight);
-        figureAxisBot.setWidth(figureMaxWidth);
-        */
-        /*
-        figureAxisTop.setPrefWidth(figureMaxWidth);
-        figureAxisTop.setPrefHeight(figureMaxHeight);
-
-        figureAxisBot.setPrefHeight(figureMaxHeight);
-        figureAxisBot.setPrefWidth(figureMaxWidth);
-        */
-        
-        
-        System.out.println("Bund figur bredde = " + figureAxisBot.getWidth());
-        System.out.println("Bund figur højde = " + figureAxisBot.getHeight());
-        System.out.println("Top figur bredde = " + figureAxisTop.getWidth());
-        System.out.println("Top figur højde = " + figureAxisTop.getHeight());
-        System.out.println("SE HER");System.out.println("SE HER");
-        System.out.println("SE HER");
-        System.out.println("SE HER");
-        System.out.println("SE HER");
-        System.out.println("SE HER");System.out.println("SE HER");
-        System.out.println("SE HER");
-        System.out.println("SE HER");
-        System.out.println("SE HER");
-        
-
-        /*
-        figureAxisTop.setMaxHeight(figureMaxHeight);
-        figureAxisTop.setMinHeight(figureMaxHeight);
-
-        //SE HER
-        figureAxisTop.setMaxWidth(figureMaxWidth);
-        figureAxisTop.setMinWidth(figureMaxWidth);
-
-        figureAxisBot.setMaxHeight(figureMaxHeight);
-        figureAxisBot.setMinHeight(figureMaxHeight);
-
-        figureAxisBot.setMaxWidth(figureMaxWidth);
-        figureAxisBot.setMinWidth(figureMaxWidth);
-        */
-        
+      
 
         // Load the case label
         Label caseLabel = this.loadCaseLabel(detectedCase.getCase().getName());
@@ -160,6 +114,10 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
             averageValues.first().getDouble(0), 
             averageValues.first().getDouble(1)
         );
+
+System.out.println("SpO2 er =" + averageValues.first().getDouble(0));
+System.out.println("FiO2 er =" + averageValues.first().getDouble(1));
+
         
         // Get the bottom triangle
         BorderPane butTriag = this.loadButTriangle(
@@ -168,32 +126,68 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
             averageValues.first().getDouble(4),
             averageValues.first().getDouble(5)
         );
+
+		System.out.println("RR er =" + averageValues.first().getDouble(2));
+		System.out.println("Comp er =" + averageValues.first().getDouble(3));
+		System.out.println("RSBI er =" + averageValues.first().getDouble(4));
+		System.out.println("EE er =" + averageValues.first().getDouble(5));
+		System.out.println("SE HER");System.out.println("SE HER");
+        System.out.println("SE HER");
+        System.out.println("SE HER");
+        System.out.println("SE HER");
+		System.out.println("SE HER");System.out.println("SE HER");
+        System.out.println("SE HER");
+        System.out.println("SE HER");
+        System.out.println("SE HER");
+		
         
         //Tilføjer Label og Hoved i top VBox
         figureVBoxTop.getChildren().addAll(caseLabel, figureHead);
 
+		//Laver Labels til akserne		
+		Label xAxisLabelTop = new Label("FiO2");
+		Label yAxisLabelTop = new Label("SpO2");
+		Label xAxisLabelBot = new Label("Diaphragm Strength");
+		Label yAxisLabelBot = new Label("RR");
+
+		//Roterer y aksernes labels, så de står vertikalt på akserne
+		yAxisLabelTop.setStyle("vertical");
+		yAxisLabelBot.setStyle("vertical");
+
+
         //Tilføjer trekanter og tilhørende akser til StackPanes
-        figureStackerBotTop.getChildren().addAll(figureAxisTop,topTriag);
-        figureStackerBotBot.getChildren().addAll(figureAxisBot,butTriag);
-        /*      
-        System.out.println("Stackpane højde = " + figureStackerBotTop.getHeight());
-        System.out.println("Stackpane bredde = " + figureStackerBotTop.getWidth());
-        System.out.println("SE HER");System.out.println("SE HER");
-        System.out.println("SE HER");
-        System.out.println("SE HER");
-        System.out.println("SE HER");
-        */
+		
+        figureStackerBotTop.getChildren().addAll(figureAxisTop,topTriag,xAxisLabelTop,yAxisLabelTop);
+        figureStackerBotBot.getChildren().addAll(figureAxisBot,butTriag,xAxisLabelBot, yAxisLabelBot);
 
-        //Justere indryk af trekanter, så de passer med akser
-        figureStackerBotTop.setMargin(topTriag, new Insets(160D,0,0,110D));
-		figureStackerBotBot.setMargin(butTriag, new Insets(80D,0,0,110D));
+		
 
-        /*
-        figureStackerBotBot.setPrefHeight(figureMaxHeight);
-        figureStackerBotBot.setPrefWidth(figureMaxWidth);
-        figureStackerBotTop.setPrefHeight(figureMaxHeight);
-        figureStackerBotTop.setPrefWidth(figureMaxWidth);
-        */
+        //Justere indryk af trekanter, så de passer til akser
+        figureStackerBotTop.setMargin(topTriag, new Insets(23D,0,0,41D));
+		figureStackerBotBot.setMargin(butTriag, new Insets(77D,0,0,37D));
+
+		//Justerer indryk af labels, så de passer til akserne		
+		figureStackerBotBot.setMargin(xAxisLabelTop, new Insets(0,300,350,0));/* FiO2 */
+		figureStackerBotBot.setMargin(yAxisLabelTop, new Insets(350,0,0,40));/* SpO2 */
+		figureStackerBotBot.setMargin(xAxisLabelBot, new Insets(0,0,270,50));/* Diaphragm */
+		figureStackerBotBot.setMargin(yAxisLabelBot, new Insets(330,310,0,0));/* RR */
+
+        
+
+		
+        figureStackerBotBot.setMaxHeight(figureMaxHeight+50D);
+        figureStackerBotBot.setMaxWidth(figureMaxWidth+50D);
+        figureStackerBotTop.setMaxHeight(figureMaxHeight+50D);
+        figureStackerBotTop.setMaxWidth(figureMaxWidth+50D);
+		
+		
+		/*
+		figureStackerBotBot.setMaxHeight(figureMaxHeight);
+        figureStackerBotBot.setMaxWidth(figureMaxWidth);
+        figureStackerBotTop.setMaxHeight(figureMaxHeight);
+        figureStackerBotTop.setMaxWidth(figureMaxWidth);
+		*/
+        
         //Tilføjer StackPanes til nederste VBox
         figureVBoxBot.getChildren().addAll(figureStackerBotTop, figureStackerBotBot);
 
@@ -203,8 +197,8 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         Double headWidth = figureHead.getBoundsInLocal().getWidth();
         */
         
-        caseLabel.setPadding(new Insets(0,0,0,(TriangleMetaphoricFactory.figureMaxWidth / 2D) - 50/*(labelWidth)*/));
-        figureHead.setPadding(new Insets(0,0,0,(TriangleMetaphoricFactory.figureMaxWidth / 2D) - 50 /*(headWidth)*/));
+        caseLabel.setPadding(new Insets(0,0,0,(figureMaxWidth / 2D) - 45/*(labelWidth)*/));
+        figureHead.setPadding(new Insets(0,0,0,(figureMaxWidth / 2D) - 120 /*(headWidth)*/));
 
         
         //Set figurVBoxTop in center and figureVBoxBot in Bottom of figureRoot
@@ -355,11 +349,13 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         // Calculate the width of diaphragmaStrenght Triag baseline
         // y = -5*10^16*x^4 + 2*10^-11*x^3 - 2E-07x^2 + 0,001x - 0,526
         //Double widthDiagStrength = (middle + (Math.pow(-5, -16) * Math.pow(diagStrenght, 4) + Math.pow(2, -11D) * Math.pow(diagStrength, 3) - Math.pow(2, -0.7D) * Math.pow(diagStrength, 2) + 0.001D * diagStrength - 0.526D))
-        Double x4 = (-5D) * Math.pow(10D, (-16D)) * Math.pow(diagStrength, 4D);
-        Double x3 = 2D * Math.pow(10D, (-11D)) * Math.pow(diagStrength, 3D);
-        Double x2 = 2D * Math.pow(10D, (-7D)) * Math.pow(diagStrength, 2D);
-        Double x1 = 0.001D * diagStrength;
-        Double offset = 0.526D;
+        Double x6 = (-8D) * Math.pow(10D, (-25D)) * Math.pow(diagStrength, 6D);
+        Double x5 = 7D * Math.pow(10D, (-20D)) * Math.pow(diagStrength, 5D);
+        Double x4 = (-2D) * Math.pow(10D, (-15D)) * Math.pow(diagStrength, 4D);
+        Double x3 = 4D * Math.pow(10D, (-11D)) * Math.pow(diagStrength, 3D);
+        Double x2 = (-3D) * Math.pow(10D, (-7D)) * Math.pow(diagStrength, 2D);
+        Double x1 = 0.0011D * diagStrength;
+        Double offset = (-0.5837D);
         /*
         System.out.println(x4 +" x4");
         System.out.println(x3 +" x3");
@@ -367,7 +363,7 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         System.out.println(x1 +" x1");
         System.out.println(offset + " offset");
         */
-        Double regressionDiagStrength = x4 + x3 - x2 + x1 - offset;
+        Double regressionDiagStrength = x6 + x5 + x4 + x3 - x2 + x1 - offset;
         
         //Double regressionDiagStrength = (( + ((2D*Math.pow(10D, (-11D)) * Math.pow(diagStrength, 3D)) - ((2D*Math.pow(10D, (-0.7D))) * Math.pow(diagStrength, 2D)) + (0.001D * diagStrength) );
         //System.out.println(regressionDiagStrength+ "SE MIG HER");
@@ -380,6 +376,13 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         Double X2 = rightWidthDS; Double Y2 = 0D;
         // Height coordinates FiO2
         Double X3 = middle; Double Y3 = heightRR;
+
+		if(X1 < figureMaxWidth || X2 < figureMaxWidth){
+			X1 = 0D+18D;
+			X2 = figureMaxWidth-18D;
+		}
+
+
         // Draw top triangle
         Polygon butPolygon = new Polygon();
         butPolygon.getPoints().addAll(new Double[] {
