@@ -12,8 +12,8 @@ public class DetectorTask implements Serializable{
         this.patient = patient;
     }
     
-    protected ArrayList<Case> getCasesToScan() {
-        return CaseHandler.getInstance().getCases();
+    protected ArrayList<Event> getEventsToScan() {
+        return EventHandler.getInstance().getEvents();
     }
 
     protected void updateInterval(LocalDateTime newestTime, LocalDateTime oldestTime) {

@@ -9,34 +9,34 @@ import java.time.LocalDateTime;
 
 public class DailyOccurrence {
     
-    private DetectedCase caseToDisplay = null;
+    private DetectedEvent eventToDisplay = null;
     private Integer occurrences = 0;
     private Long cumulativeMilliseconds = 0L;
 
-    public DailyOccurrence(DetectedCase detectedCase) {
-        // Store the detected case
-        this.caseToDisplay = detectedCase;
+    public DailyOccurrence(DetectedEvent detectedEvent) {
+        // Store the detected Event
+        this.eventToDisplay = detectedEvent;
         // Set the number of occurrences to one
         this.occurrences = 1;
         // Get the difference in time
-        this.cumulativeMilliseconds = DailyOccurrence.getOccurrenceTime(this.caseToDisplay.getCaseInterval());
+        this.cumulativeMilliseconds = DailyOccurrence.getOccurrenceTime(this.eventToDisplay.getEventInterval());
     }
 
-    public void addOccurrence(DetectedCase detectedCase) throws InvalidParameterException {
-        // Validate that the new case is of the same type as the stored case to display
-        if (!caseToDisplay.getCase().equals(detectedCase.getCase())) {
-            throw new InvalidParameterException("Case reference of input DetectedCase, does not match Case reference of previously added DetectedCase");
+    public void addOccurrence(DetectedEvent detectedEvent) throws InvalidParameterException {
+        // Validate that the new Event is of the same type as the stored Event to display
+        if (!eventToDisplay.getEvent().equals(detectedEvent.getEvent())) {
+            throw new InvalidParameterException("Event reference of input DetectedEvent, does not match Event reference of previously added DetectedEvent");
         }
         // Increment number of occurrences
         this.occurrences++;
-        // Get the time interval of the newly added detected case
-        TimeInterval occurrenceTimeInterval = caseToDisplay.getCaseInterval();
+        // Get the time interval of the newly added detected Event
+        TimeInterval occurrenceTimeInterval = eventToDisplay.getEventInterval();
         // Add the occurrence time to the cumulative time
         this.cumulativeMilliseconds = DailyOccurrence.getOccurrenceTime(occurrenceTimeInterval);
-        // Compare the recency of the caseToDisplay with that of the detectedCase
+        // Compare the recency of the EventToDisplay with that of the detectedEvent
         if (occurrenceTimeInterval.getOldestTime().isBefore(occurrenceTimeInterval.getOldestTime())) {
-            // The newly added DetectedCase occured more recendly then the caseToDisplay, use the new insted
-            this.caseToDisplay = detectedCase;
+            // The newly added DetectedEvent occured more recendly then the EventToDisplay, use the new insted
+            this.eventToDisplay = detectedEvent;
         }
     }
     
@@ -48,8 +48,8 @@ public class DailyOccurrence {
     }
     
 
-    public DetectedCase getCaseToDisplay() {
-        return this.caseToDisplay;
+    public DetectedEvent getEventToDisplay() {
+        return this.eventToDisplay;
     }
 
     public Integer getOccurrences() {

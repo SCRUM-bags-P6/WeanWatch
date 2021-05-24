@@ -8,7 +8,7 @@ import org.apache.spark.sql.Row;
 public class Patient implements Serializable{
     // Parameters
     private Dataset<Row> patientData; // Patient dataset
-    private DetectedCaseHandler patientCaseHandler = null; // Case handler
+    private DetectedEventHandler patientEventHandler = null; // Event handler
     
     // Patient information
     private String cpr;
@@ -37,13 +37,13 @@ public class Patient implements Serializable{
         return this.name;
     }
 
-    public DetectedCaseHandler getDetectedCaseHandler() {
-        // If the patient has no case handler, create one
-        if (this.patientCaseHandler == null) {
-            this.patientCaseHandler = new DetectedCaseHandler();
+    public DetectedEventHandler getDetectedEventHandler() {
+        // If the patient has no Event handler, create one
+        if (this.patientEventHandler == null) {
+            this.patientEventHandler = new DetectedEventHandler();
         }
-        // Return the case handler
-        return this.patientCaseHandler;
+        // Return the Event handler
+        return this.patientEventHandler;
     }
 
     public Dataset<Row> getData() {

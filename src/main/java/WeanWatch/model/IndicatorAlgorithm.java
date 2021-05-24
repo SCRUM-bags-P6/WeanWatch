@@ -13,8 +13,8 @@ public class IndicatorAlgorithm implements DetectionAlgorithm {
 	private LocalDateTime startPointer;
 	private LocalDateTime endPointer;
 
-	// Minimum duration of the case (in minutes)
-	private Integer minimumCaseDuration = 0;
+	// Minimum duration of the Event (in minutes)
+	private Integer minimumEventDuration = 0;
 
 	private ArrayList<Indicator> characteristics;
 
@@ -24,8 +24,8 @@ public class IndicatorAlgorithm implements DetectionAlgorithm {
 		// Find the longes duration of among the indicators
 		for (Indicator indicator : this.characteristics) {
 			// Compare times
-			if (indicator.getDuration() > this.minimumCaseDuration) {
-				this.minimumCaseDuration = indicator.getDuration();
+			if (indicator.getDuration() > this.minimumEventDuration) {
+				this.minimumEventDuration = indicator.getDuration();
 			}
 		}
 	}
@@ -53,15 +53,15 @@ public class IndicatorAlgorithm implements DetectionAlgorithm {
 			} else {
 				this.endPointer = currentRowTimestamp;
 			}
-			// Wait for the next row to evaluate if a case was found
+			// Wait for the next row to evaluate if a Event was found
 			return null;
 		} else {
 			/**
 			 * If the difference between the start and end pointer is longer than the minimum duration,
-			 *  a case has been detected, so create a time interval and return it 
+			 *  a Event has been detected, so create a time interval and return it 
 			 */
-			if (this.startPointer != null && this.endPointer != null && this.startPointer.until(this.endPointer, ChronoUnit.MINUTES) > this.minimumCaseDuration) {
-				// A case was found! Create the time interval
+			if (this.startPointer != null && this.endPointer != null && this.startPointer.until(this.endPointer, ChronoUnit.MINUTES) > this.minimumEventDuration) {
+				// A Event was found! Create the time interval
 				
 				return new TimeInterval(this.startPointer, this.endPointer);
 
@@ -103,6 +103,6 @@ public class IndicatorAlgorithm implements DetectionAlgorithm {
 
 	@Override
 	public Integer getMinDuration() {
-		return this.minimumCaseDuration;
+		return this.minimumEventDuration;
 	}
 }

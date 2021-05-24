@@ -40,7 +40,7 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
     private final static Double figureMaxWidth = 300D;
     private final static Double figureMaxHeight = 300D;
 
-    public BorderPane create(DetectedCase detectedCase) {
+    public BorderPane create(DetectedEvent detectedEvent) {
     
         // Figure root pane, hvor alle dele af figuren skal være i
         BorderPane figureRoot = new BorderPane();
@@ -94,14 +94,14 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
       
       
 
-        // Load the case label
-        Label caseLabel = this.loadCaseLabel(detectedCase.getCase().getName());
+        // Load the Event label
+        Label eventLabel = this.loadEventLabel(detectedEvent.getEvent().getName());
         // Load the figure head
-        BorderPane figureHead = this.loadHead(detectedCase.getCase().getSeverity()); //loadHead metoden er i bunden
-        // Get the case data
-        Dataset<Row> caseData = this.getCaseDataset(detectedCase.getPatient().getData(), detectedCase.getCaseInterval());
-        // Calculate case average values
-        Dataset<Row> averageValues = caseData.select(
+        BorderPane figureHead = this.loadHead(detectedEvent.getEvent().getSeverity()); //loadHead metoden er i bunden
+        // Get the Event data
+        Dataset<Row> eventData = this.getEventDataset(detectedEvent.getPatient().getData(), detectedEvent.getEventInterval());
+        // Calculate Event average values
+        Dataset<Row> averageValues = eventData.select(
             avg("SpO2"),
             avg("FiO2Set"),
             avg("Rf"),
@@ -142,7 +142,7 @@ System.out.println("FiO2 er =" + averageValues.first().getDouble(1));
 		
         
         //Tilføjer Label og Hoved i top VBox
-        figureVBoxTop.getChildren().addAll(caseLabel, figureHead);
+        figureVBoxTop.getChildren().addAll(eventLabel, figureHead);
 
 		//Laver Labels til akserne		
 		Label xAxisLabelTop = new Label("FiO2");
@@ -193,11 +193,11 @@ System.out.println("FiO2 er =" + averageValues.first().getDouble(1));
 
         
         /* Beholdes da det måske skal bruges senere til at justere Label og Hoved ift. resten af figuren
-        Double labelWidth = caseLabel.getBoundsInLocal().getWidth(); //Bruges til at centrere figurerne dynamisk
+        Double labelWidth = EventLabel.getBoundsInLocal().getWidth(); //Bruges til at centrere figurerne dynamisk
         Double headWidth = figureHead.getBoundsInLocal().getWidth();
         */
         
-        caseLabel.setPadding(new Insets(0,0,0,(figureMaxWidth / 2D) - 45/*(labelWidth)*/));
+        eventLabel.setPadding(new Insets(0,0,0,(figureMaxWidth / 2D) - 45/*(labelWidth)*/));
         figureHead.setPadding(new Insets(0,0,0,(figureMaxWidth / 2D) - 120 /*(headWidth)*/));
 
         
@@ -209,17 +209,17 @@ System.out.println("FiO2 er =" + averageValues.first().getDouble(1));
         return figureRoot;
     }
 
-    private Label loadCaseLabel(String labelText) {
-        // Label til casenavn + detaljer
-        Label caseLabel = new Label(labelText);
-        caseLabel.setFont(new Font("Arial",30));
-        caseLabel.setMaxWidth(Double.MAX_VALUE);
-        //caseLabel.setAlignment(Pos.CENTER);
+    private Label loadEventLabel(String labelText) {
+        // Label til Eventnavn + detaljer
+        Label eventLabel = new Label(labelText);
+        eventLabel.setFont(new Font("Arial",30));
+        eventLabel.setMaxWidth(Double.MAX_VALUE);
+        //eventLabel.setAlignment(Pos.CENTER);
         System.out.println("LABEL!!!!");
-        return caseLabel;
+        return eventLabel;
     }
 
-    private BorderPane loadHead(Case.Severity severity) {
+    private BorderPane loadHead(Event.Severity severity) {
         // Pane til hovedet på trekanten
         BorderPane headPane = new BorderPane();
         // Prepare a container for the image
@@ -230,10 +230,10 @@ System.out.println("FiO2 er =" + averageValues.first().getDouble(1));
                 case MILD:
                     image = new Image(getClass().getResource("/image/Good.png").toString());
                     break;
-                case INTERMEDIATE:
+				case INTERMEDIATE:
                     image = new Image(getClass().getResource("/image/NotGood.png").toString());
                     break;
-                case SEVERE:
+				case SEVERE:
                     image = new Image(getClass().getResource("/image/Bad.png").toString());
                     break;
             }
@@ -259,10 +259,10 @@ System.out.println("FiO2 er =" + averageValues.first().getDouble(1));
 
     }
     
-    private Dataset<Row> getCaseDataset(Dataset<Row> patientData, TimeInterval caseInterval) {
+    private Dataset<Row> getEventDataset(Dataset<Row> patientData, TimeInterval eventInterval) {
         return patientData.filter((Row row) -> {    
             LocalDateTime localDateTime = LocalDateTime.parse(row.getString(0));
-            if(localDateTime.isAfter(caseInterval.getNewestTime()) && localDateTime.isBefore(caseInterval.getOldestTime())){
+            if(localDateTime.isAfter(eventInterval.getNewestTime()) && localDateTime.isBefore(eventInterval.getOldestTime())){
                 return true;
             } else {
                 return false;
