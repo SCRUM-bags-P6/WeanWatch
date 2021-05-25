@@ -21,17 +21,7 @@ public class EventHandler {
         return EventHandler.instance;
 	}
 
-	public void addEvent(String name, String description, Severity severity, ArrayList<Indicator> characteristics){
-		Event patientEvent = new Event(name, description, severity, characteristics);
-		this.events.add(patientEvent);
-	}
-
-	public void addEventIndicator(String name, String description, Severity severity, ArrayList<Indicator> characteristics) {
-		Event patientEvent = new Event(name, description, severity, characteristics);
-		this.events.add(patientEvent);
-	}
-
-	public void addEventAlgo(String name, String description, Severity severity, DetectionAlgorithm algo) {
+	public void addEvent(String name, String description, Severity severity, DetectionAlgorithm algo){
 		Event patientEvent = new Event(name, description, severity, algo);
 		this.events.add(patientEvent);
 	}

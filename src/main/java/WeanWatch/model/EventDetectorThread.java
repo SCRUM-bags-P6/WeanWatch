@@ -6,23 +6,26 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.spark.api.java.function.ForeachFunction;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
-public class EventDetectorThread extends Thread implements Serializable{
+public class EventDetectorThread implements Serializable{
     private static EventDetectorThread instance = null;
 
     private ArrayList<DetectorTask> queuedTasks = new ArrayList<DetectorTask>();
     private ArrayList<DetectionSubscriber> subscribers = new ArrayList<DetectionSubscriber>();
-    private Patient patientOfPriority;
+    private static Patient patientOfPriority;
 
 	private boolean doRun = true;
 
 	private static LocalDateTime newestProcessedTime;
 	
 	private EventDetectorThread() {
+		//this.setDaemon(true);
 	}
 
 	public static EventDetectorThread getInstance() {
@@ -46,11 +49,14 @@ public class EventDetectorThread extends Thread implements Serializable{
 		for (int task = 0; task < queuedTasks.size(); task++) {
 			// Get the current task and patient
 			DetectorTask currentTask = this.queuedTasks.get(task);
-			Patient currentPatient = currentTask.getPatient();	
+			EventDetectorThread.patientOfPriority = currentTask.getPatient();
+			Patient currentPatient = EventDetectorThread.patientOfPriority;
+			System.out.println("Running task for patient with CPR: " + currentTask.getPatient().getCPR());	
 			// Create a placeholder for the timestamp of the latest processed row
 			EventDetectorThread.newestProcessedTime = currentTask.getNewestTime();
 			// Process the patient data, and apply the detection algorithm for each data row
 			if (currentPatient.getData() != null) {
+				System.out.println("Data found for patient with CPR: " + currentPatient.getCPR());
 				currentPatient.getData().foreach((ForeachFunction<Row>) row -> {
 					// Get the time of the row to process
 					LocalDateTime rowTime = LocalDateTime.parse(row.getString(0));
@@ -62,10 +68,9 @@ public class EventDetectorThread extends Thread implements Serializable{
 							TimeInterval detectedTime = event.getAlgorithm().evaluate(row);
 							// Validate if a Event was found
 							if (detectedTime != null) {							
-								// Create a new detected Event
-								DetectedEvent detectedEvent = new DetectedEvent(currentPatient, event, detectedTime);
+								System.out.println("Found event of type: " + event.getName() + " for patient with CPR: " + currentPatient.getCPR());
 								// Store the detected in the patients detected event handler
-								currentPatient.getDetectedEventHandler().addEvent(detectedEvent);
+								EventDetectorThread.patientOfPriority.addEvent(event, detectedTime);
 								// Notify subscribers to allow updating views
 								this.notifySubscribers(currentPatient);
 							}
@@ -83,7 +88,9 @@ public class EventDetectorThread extends Thread implements Serializable{
     public void initialize() {
         for (Patient patient : PatientHandler.getInstance().getPatients()) {
             this.queuedTasks.add(new DetectorTask(patient));
+			System.out.println("Created detector task for patient with CPR " + patient.getCPR());
         }
+		run();
     }
     
     public void prioritizePatient(Patient patient) {

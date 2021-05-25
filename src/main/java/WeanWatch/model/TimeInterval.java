@@ -24,17 +24,17 @@ public class TimeInterval implements Serializable {
     }
 
     // Return the start time
-    public LocalDateTime getNewestTime() {
+    public synchronized LocalDateTime getNewestTime() {
         return this.newestTime;
     }
 
     // Return the end time
-    public LocalDateTime getOldestTime() {
+    public synchronized LocalDateTime getOldestTime() {
         return this.oldestTime;
     }
 
     // Static method to test if a timeinterval is inside another time interval
-    public boolean contains(TimeInterval intervalToCompare) {
+    public synchronized boolean contains(TimeInterval intervalToCompare) {
         // Check if the newestTime is newer than  before the comparedStartTime
         boolean isNewerThanCompare = this.newestTime.isAfter(intervalToCompare.getNewestTime()) || this.newestTime.equals(intervalToCompare.getNewestTime());
         // Check if the oldestTime is older than the comparedOldestTime
@@ -45,7 +45,7 @@ public class TimeInterval implements Serializable {
     }
 
 	//method to convert time to string
-	public String toString(){
+	public synchronized String toString(){
 		SimpleDateFormat formatter = new SimpleDateFormat("dd hh:mm");  
 		String strDate = formatter.format(this.newestTime);  
 	
@@ -56,7 +56,7 @@ public class TimeInterval implements Serializable {
 
 
     // Method to calculate occurrens duration - by finding time between newestTime and oldestTime
-    public long getIntervalTime(){
+    public synchronized long getIntervalTime(){
         LocalDateTime fromDateTime = this.newestTime;
         LocalDateTime toDateTime = this.oldestTime;
 

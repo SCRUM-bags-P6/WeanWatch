@@ -46,197 +46,18 @@ public class App extends Application {
         // Initialize patient cases
         initialze();
 
+        //Instantierer vores thread
+		EventDetectorThread detectorGadget = EventDetectorThread.getInstance();
+		//Initialiserer threaden og kører dens run() metode
+		detectorGadget.initialize();
+		//detectorGadget.start();
+
         // Launch JavaFX
         launch(args); 
     }
 
-
-
-    public void getDateForEventExample() {
-        Dataset<Row> patientData = PatientHandler.getInstance().getPatients()[0].getData();
-        System.out.println("Showing first 20 of all data: ");
-        patientData.show();
-
-        LocalDateTime newestTime = LocalDateTime.of(2021, 05, 16, 23, 00, 00);
-        LocalDateTime oldestTime = LocalDateTime.of(2021, 05, 17, 23, 00, 00);
-
-		//Henter timestamp fra stud1.csv første kolonne. Tjekker om timestamp er mellem de to createde LocalDateTime's 
-        System.out.println("Filtering for dates...");
-        Dataset<Row> eventData = patientData.filter((Row row) -> {    
-            LocalDateTime localDateTime = LocalDateTime.parse(row.getString(0));
-            if(localDateTime.isAfter(newestTime) && localDateTime.isBefore(oldestTime)){
-                return true;
-            } else {
-                return false;
-            }
-        });
-
-        System.out.println("Showing first 20 of filtered data: ");
-        eventData.show();
-    }
-
-    public void perdicateOnDataExample() {
-		//Henter data for første patient i patienthandler
-        Dataset<Row> patientData = PatientHandler.getInstance().getPatients()[0].getData();
-
-        String paramName = "SpO2";
-
-        Double paramValue = 0.9D;
-        // Define test
-
-		//Kører en predicatetest. Sammenligner paramValue med den værdi der ligger i "SpO2" kolonnen i vores Row.
-		//Returner true hvis SpO2 er mindre end paramValue.
-        Predicate<Row> noiceTest = (Predicate<Row>)(Row x) -> {
-            int compareResult = Double.compare(x.getDouble(x.fieldIndex(paramName)), paramValue);
-            if (compareResult == 0) {
-                //System.out.println("SpO2 at 0.9");
-                return false;
-            } else if (compareResult < 0) {
-                System.out.println("SpO2 above 0.9");
-                return false;
-            } else {
-                //System.out.println("SpO2 below 0.9");
-                return true;
-            }
-        };
-        
-        System.out.println("Performing test on data: ");
-        performTestOnData(patientData, noiceTest);
-    }
-
-    public static int trueCount = 0;
-    public static boolean lastWasTrue = false;
-
-
-	
-    public void performTestOnData(Dataset<Row> patientData, Predicate<Row> test) {
-		//Hver row i patientData testes. Hvis conditions er opfyldt, returner predicate true.
-        patientData.foreach((Row x) -> {
-            boolean testResult = test.test(x);
-            if (testResult) {
-                // Increment true count
-                trueCount++;
-                // Mark this occurrence as true
-                lastWasTrue = true;
-            } else { //Køres kun hvis conditions ikke længere er opfyldt
-                if (lastWasTrue) {
-                    // Printout
-                    System.out.println("Test no longer true. Number of consequetive trues: " + trueCount);
-                    // Reset
-                    trueCount = 0;
-                    lastWasTrue = false;
-                }
-            }
-        });
-    }
-
-    public void testUsingIndicatorAlgorithm() {
-        Dataset<Row> patientData = PatientHandler.getInstance().getPatients()[0].getData();
-
-        // Define indicators
-        ArrayList<Indicator> indicators = new ArrayList<Indicator>();
-
-        //Ny indicator laves og lægges i ArrayList'en
-		//Hver indicator's constructor kræver en Predicate. Predicate er et functional interface, der indeholder test() metoden.
-		//Test() funktionen for hver predicate defineres med en lambda funktion.
-        indicators.add(new Indicator(250, (Predicate<Row> & Serializable)(Row x) -> {
-            return Double.compare(x.getDouble(x.fieldIndex("PEEPSet")), 12D) == 0; 
-        }));
-
-                
-        indicators.add(new Indicator(250, (Predicate<Row> & Serializable)(Row x) -> {
-            return Double.compare(x.getDouble(x.fieldIndex("SpO2")), 0.9D) > 0; 
-        }));
-
-		
-
-
-
-        // indicators.add(new Indicator(30, (Predicate<Row> & Serializable)(Row x) -> {
-        //     int compareResult = Double.compare(x.getDouble(x.fieldIndex("SpO2")), 0.8D);
-        //     if (compareResult == 0) {
-        //         //System.out.println("SpO2 at 0.9");
-        //         return false;
-        //     } else if (compareResult < 0) {
-        //         //System.out.println("SpO2 above 0.9");
-        //         return false;
-        //     } else {
-        //         //System.out.println("SpO2 below 0.9");
-        //         return true;
-        //     }
-        // }));
-
-        // indicators.add(new Indicator(30, (Predicate<Row> & Serializable)(Row x) -> {
-        //     int compareResult = Double.compare(x.getDouble(x.fieldIndex("SvO2")), 0.9D);
-        //     if (compareResult == 0) {
-        //         //System.out.println("SpO2 at 0.9");
-        //         return false;
-        //     } else if (compareResult < 0) {
-        //         //System.out.println("SpO2 above 0.9");
-        //         return false;
-        //     } else {
-        //         //System.out.println("SpO2 below 0.9");
-        //         return true;
-        //     }
-        // }));
-
-        // Define a indicator algorithm
-        DetectionAlgorithm algo = new IndicatorAlgorithm(indicators);
-
-	
-        
-        patientData.foreach((Row x) -> {
-            TimeInterval output = algo.evaluate(x);
-            if (output != null) {
-                System.out.println("A event was detected!");
-            }
-        });
-
-
-    }
-
-
-
-
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-        //getDateForEventExample();
-
-        //perdicateOnDataExample();
-
-        //testUsingIndicatorAlgorithm();
-
-		// Define indicators
-		ArrayList<Indicator> indicators = new ArrayList<Indicator>();
-
-		indicators.add(new Indicator(150, (Predicate<Row> & Serializable)(Row x) -> {
-            return Double.compare(x.getDouble(x.fieldIndex("PEEPSet")), 12D) == 0; 
-        }));
-
-                
-        indicators.add(new Indicator(150, (Predicate<Row> & Serializable)(Row x) -> {
-            return Double.compare(x.getDouble(x.fieldIndex("SpO2")), 0.9D) > 0; 
-        }));
-		
-
-		DetectionAlgorithm algo = new IndicatorAlgorithm(indicators);
-
-		// Create Event from indicator algorithm, add to EventHandler
-		EventHandler eventHandler = EventHandler.getInstance();
-		//EventHandler.addEventAlgo("Rigor Mortis", "Hvis patienten har dette her, er det nok på tide at ekstubere", Severity.SEVERE, algo);
-
-
-
-		//Instantierer vores thread
-		EventDetectorThread detectorGadget = EventDetectorThread.getInstance();
-		//Initialiserer threaden og kører dens run() metode
-		detectorGadget.initialize();
-		detectorGadget.start();
-
-		
-
-
         // Store the primary stage
         this.weanStage = primaryStage;
         // Show the login screen
@@ -324,7 +145,7 @@ public class App extends Application {
         // Define apnea detection algorithm
         DetectionAlgorithm apneaAlgo = new IndicatorAlgorithm(apneaChar);
         // Define apnea event
-        CaseHandler.getInstance().addCaseAlgo("Apnea", "Apnea event", Severity.SEVERE, apneaAlgo);
+        EventHandler.getInstance().addEvent("Apnea", "Apnea event", Severity.SEVERE, apneaAlgo);
 
 
 
@@ -348,7 +169,7 @@ public class App extends Application {
         // Define muscle fatigue detection algorithm
         DetectionAlgorithm muscleFatigueAlgo = new IndicatorAlgorithm(muscleFatigueChar);
         // Define muscle fatigue event
-        CaseHandler.getInstance().addCaseAlgo("Muscle fatigue", "Muscle fatigue event", Severity.SEVERE, muscleFatigueAlgo);
+        EventHandler.getInstance().addEvent("Muscle fatigue", "Muscle fatigue event", Severity.SEVERE, muscleFatigueAlgo);
 
 
 
@@ -372,7 +193,7 @@ public class App extends Application {
         // Define lung health detection algorithm
         DetectionAlgorithm lungHealthAlgo = new IndicatorAlgorithm(lungHealthChar);
         // Define lung health event
-        CaseHandler.getInstance().addCaseAlgo("Reduced lung health", "Reduced lung health event", Severity.SEVERE, lungHealthAlgo);
+        EventHandler.getInstance().addEvent("Reduced lung health", "Reduced lung health event", Severity.SEVERE, lungHealthAlgo);
 
 
 
@@ -387,7 +208,7 @@ public class App extends Application {
         // Define high oxygen detection algorithm
         DetectionAlgorithm highOxygenAlgo = new IndicatorAlgorithm(highOxygenChar);
         // Define high oxygen event
-        CaseHandler.getInstance().addCaseAlgo("Too high oxygen", "Too high oxygen event", Severity.INTERMEDIATE, highOxygenAlgo);
+        EventHandler.getInstance().addEvent("Too high oxygen", "Too high oxygen event", Severity.INTERMEDIATE, highOxygenAlgo);
     }
 
 }

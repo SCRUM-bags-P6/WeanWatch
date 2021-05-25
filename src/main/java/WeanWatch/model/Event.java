@@ -1,10 +1,6 @@
 package WeanWatch.model;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-
-import org.apache.spark.sql.Row;
-
 public class Event {
     // Store the Event name and description
     private String name;
@@ -15,7 +11,6 @@ public class Event {
     // Store the Event indicators
     private ArrayList<Indicator> characteristics;
 
-
     // Severity
     public enum Severity {
         MILD,
@@ -24,23 +19,12 @@ public class Event {
     }
 
     // Constructor 
-    public Event(String name, String description, Event.Severity severity, ArrayList<Indicator> characteristics) {
-        this.name = name;
-        this.description = description;
-		this.severity = severity;
-        this.characteristics = characteristics;
-    }
-
 	public Event(String name, String description, Event.Severity severity, DetectionAlgorithm algo) {
         this.name = name;
         this.description = description;
 		this.severity = severity;
         this.algorithm= algo;
     }
-
-	
-
-	
 
     // Getters
     public String getName() {

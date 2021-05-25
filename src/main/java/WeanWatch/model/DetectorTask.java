@@ -21,11 +21,19 @@ public class DetectorTask implements Serializable{
     }
 
     protected LocalDateTime getNewestTime() {
-        return this.scannedInterval.getNewestTime();
+        if (scannedInterval == null) {
+            return null;
+        } else {
+            return this.scannedInterval.getNewestTime();
+        }
     }
 
     protected LocalDateTime getOldestTime() {
-        return this.scannedInterval.getOldestTime();
+        if (scannedInterval == null) {
+            return null;
+        } else {
+            return this.scannedInterval.getOldestTime();
+        }
     }
 
     protected Patient getPatient() {
