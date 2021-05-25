@@ -110,28 +110,36 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
             avg("RSBI"),
             avg("EE")
         );
+
+        Double spo2 = getValueAtIndexNotNull(averageValues, 0, 0D);
+        Double fio2 = getValueAtIndexNotNull(averageValues, 1, 0D);
+        Double rf = getValueAtIndexNotNull(averageValues, 2, 0D);
+        Double comp = getValueAtIndexNotNull(averageValues, 3, 0D);
+        Double rsbi = getValueAtIndexNotNull(averageValues, 4, 0D);
+        Double ee = getValueAtIndexNotNull(averageValues, 5, 0D);
+
         // Get the top triangle
         BorderPane topTriag = this.loadTopTriangle(
-            averageValues.first().getDouble(0), 
-            averageValues.first().getDouble(1)
+            spo2, 
+            fio2
         );
 
-System.out.println("SpO2 er =" + averageValues.first().getDouble(0));
-System.out.println("FiO2 er =" + averageValues.first().getDouble(1));
+        System.out.println("SpO2 er =" + spo2);
+        System.out.println("FiO2 er =" + fio2);
 
         
         // Get the bottom triangle
         BorderPane butTriag = this.loadButTriangle(
-            averageValues.first().getDouble(2), 
-            averageValues.first().getDouble(3), 
-            averageValues.first().getDouble(4),
-            averageValues.first().getDouble(5)
+            rf, 
+            comp, 
+            rsbi,
+            ee
         );
 
-		System.out.println("RR er =" + averageValues.first().getDouble(2));
-		System.out.println("Comp er =" + averageValues.first().getDouble(3));
-		System.out.println("RSBI er =" + averageValues.first().getDouble(4));
-		System.out.println("EE er =" + averageValues.first().getDouble(5));
+		System.out.println("RR er =" + rf);
+		System.out.println("Comp er =" + comp);
+		System.out.println("RSBI er =" + rsbi);
+		System.out.println("EE er =" + ee);
 		System.out.println("SE HER");System.out.println("SE HER");
         System.out.println("SE HER");
         System.out.println("SE HER");
@@ -208,6 +216,18 @@ System.out.println("FiO2 er =" + averageValues.first().getDouble(1));
         
         // Return the figure
         return figureRoot;
+    }
+
+    private static Double getValueAtIndexNotNull(Dataset<Row> dataset, int index) {
+        return getValueAtIndexNotNull(dataset, index, null);
+    }
+
+    private static Double getValueAtIndexNotNull(Dataset<Row> dataset, int index, Double defaultTo) {
+        try {
+            return dataset.first().getDouble(index);
+        } catch (NullPointerException e) {
+            return defaultTo;
+        }
     }
 
     private Label loadEventLabel(String labelText) {

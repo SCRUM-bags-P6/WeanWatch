@@ -8,6 +8,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.apache.commons.collections4.map.MultiKeyMap;
@@ -47,76 +48,19 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
     private HashMap<VBox, Event> figureLookup = new HashMap<VBox, Event>();
 
     public void initialize() {
-        EventHandler.getInstance().addEvent("     Apnea   ", "Apnea", Event.Severity.INTERMEDIATE, null);
-        EventHandler.getInstance().addEvent("Too little O2", "Too little O2", Event.Severity.SEVERE, null);
-        EventHandler.getInstance().addEvent("Too much O2 ", "Too much O2", Event.Severity.MILD, null);
-        EventHandler.getInstance().addEvent("Too much CO2 ", "Too much CO2", Event.Severity.MILD, null);
-		//For test purposes, it is neccesary to create some indicators to pass to the eventhandler
-		/*
-        ArrayList<Indicator> indicators = new ArrayList<Indicator>();
-		indicators.add(new Indicator(250, (Predicate<Row> & Serializable)(Row x) -> {
-            return Double.compare(x.getDouble(x.fieldIndex("PEEPSet")), 12D) == 0; 
-        }));
-                
-        indicators.add(new Indicator(250, (Predicate<Row> & Serializable)(Row x) -> {
-            return Double.compare(x.getDouble(x.fieldIndex("SpO2")), 0.9D) > 0; 
-        }));
-		DetectionAlgorithm algo = new IndicatorAlgorithm(indicators);
-		//For test purposes, it is neccesary to create some indicators to pass to the Eventhandler
-
-        EventHandler.getInstance().addEventAlgo("Apnea", "Apnea", Event.Severity.INTERMEDIATE, algo);
-        */
-        PatientHandler.getInstance().getPatients()[0].getDetectedEventHandler().addEvent(
-            new DetectedEvent(
-                PatientHandler.getInstance().getPatients()[0], 
-                EventHandler.getInstance().getEvent("     Apnea   "),
-                //Ændre til LocalDateTime
-                new TimeInterval(
-                    LocalDateTime.of(2021, 05, 16, 9, 00, 00),
-                    LocalDateTime.of(2021, 05, 16, 9, 50, 00)
-                    ))
-        );
-
-        PatientHandler.getInstance().getPatients()[0].getDetectedEventHandler().addEvent(
-            new DetectedEvent(
-            PatientHandler.getInstance().getPatients()[0], 
-                EventHandler.getInstance().getEvent("Too little O2"),
-                //Ændre til LocalDateTime
-                new TimeInterval(
-                    LocalDateTime.of(2021, 05, 16, 7, 50, 00),
-                    LocalDateTime.of(2021, 05, 16, 8, 20, 00)
-                    ))
-        );
-
-        PatientHandler.getInstance().getPatients()[0].getDetectedEventHandler().addEvent(
-            new DetectedEvent(
-            PatientHandler.getInstance().getPatients()[0], 
-                EventHandler.getInstance().getEvent("Too much O2 "),
-                //Ændre til LocalDateTime
-                new TimeInterval(
-                    LocalDateTime.of(2021, 05, 19, 9, 00, 00),
-                    LocalDateTime.of(2021, 05, 19, 10, 20, 00)
-                    ))
-        );
-
-        PatientHandler.getInstance().getPatients()[0].getDetectedEventHandler().addEvent(
-            new DetectedEvent(
-            PatientHandler.getInstance().getPatients()[0], 
-                EventHandler.getInstance().getEvent("Too much CO2 "),
-                //Ændre til LocalDateTime
-                new TimeInterval(
-                    LocalDateTime.of(2021, 05, 20, 9, 00, 00),
-                    LocalDateTime.of(2021, 05, 20, 10, 20, 00)
-                    ))
-        );
+        
     }
 
-    private ArrayList<DailyOccurrence> getDailyEventOccurrencesToDisplay() {
+    private ArrayList<DailyOccurrence> getDailyEventOccurrencesToDisplay(Patient context) {
         // Get the all patients detected Events
-        ArrayList<DetectedEvent> detectedEvents = this.parentNode.getPatient().getDetectedEventHandler().getDetectedEvents();
+        List<DetectedEvent> detectedEvents = context.getDetectedEvents();
         /* Create a MultiKeyMap to store Events to be displayed. MultiKeyMap is used as there should be one
         *  DetectedEvent to be displayed, for each Event and day
         */
+
+        System.out.println("Events to display:");
+        System.out.println(detectedEvents);
+
         MultiKeyMap<Object, DailyOccurrence> dailyOccurrencesMap = MultiKeyMap.multiKeyMap(new LinkedMap());
         // Loop through each Event
         for (DetectedEvent detectedEvent : detectedEvents) {
@@ -147,14 +91,20 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
 
     @Override
     public void update(Patient context) {
+        // Don't update if the patient is not the selected patient
+        if (context != this.parentNode.getPatient()) {
+            System.out.println("Skipping update for unselected patient");
+            return;
+        }
         // Clear the rowsBox
         this.rowsBox.getChildren().clear();
         // Get the most recent daily occurrences of each event to display
-        ArrayList<DailyOccurrence> eventsToDisplay = this.getDailyEventOccurrencesToDisplay();
+        ArrayList<DailyOccurrence> eventsToDisplay = this.getDailyEventOccurrencesToDisplay(context);
 		// Prepare a figure factory
         TriangleMetaphoricFactory metaphoricFactory = new TriangleMetaphoricFactory();
         // Prepare a placeholder for the hbox 
         HBox hbox = null;
+        System.out.println("Number of daily occurrences to display: " + eventsToDisplay.size());
         // Loop through all Events
         for (int i = 0; i < eventsToDisplay.size(); i++) {
 			if (i % 3 == 0) {
@@ -202,7 +152,11 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
         	hbox.getChildren().add(vbox);
 		}
         // Add the last hbox created to the rowsBox
-        this.rowsBox.getChildren().add(hbox);
+        if (hbox != null) {
+            this.rowsBox.getChildren().add(hbox);
+        } else {
+            this.rowsBox.getChildren().add(new Label("No events to display"));
+        }
     }
 	
 	public void handleGridClick(Event eventToFocus) {

@@ -1,18 +1,23 @@
 package WeanWatch.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-public class DetectedEventHandler {
+public class DetectedEventHandler implements Serializable {
     // Store the detected Events
-    private ArrayList<DetectedEvent> detectedEvents;
+    private CopyOnWriteArrayList<DetectedEvent> detectedEvents;
 
     public DetectedEventHandler() {
+		System.out.println("Creating new detected event handler");
         // Prepare the detected Event array
-        this.detectedEvents = new ArrayList<DetectedEvent>();
+        this.detectedEvents = new CopyOnWriteArrayList<DetectedEvent>();
     }
 
-	public ArrayList<DetectedEvent> getDetectedEvents() {
+	public synchronized List<DetectedEvent> getDetectedEvents() {
+		System.out.println("Getting detected events");
 		// Return the matching Events
         return this.detectedEvents;
 	}
@@ -22,23 +27,23 @@ public class DetectedEventHandler {
 	 * @param EventName Name of Event to retuen detected Events for
 	 * @return Array of detected Events of type Event with Event name
 	 */
-	public ArrayList<DetectedEvent> getDetectedEvents(String eventName) {
+	public synchronized List<DetectedEvent> getDetectedEvents(String eventName) {
 		// Return the matching Events
         return this.getDetectedEvents(detectedEvent -> detectedEvent.getEvent().getName().equals(eventName));
 	}
 
-	public ArrayList<DetectedEvent> getDetectedEvents(TimeInterval between) {
+	public synchronized List<DetectedEvent> getDetectedEvents(TimeInterval between) {
 		// Return the matching Events
         return this.getDetectedEvents(detectedEvent -> between.contains(detectedEvent.getEventInterval()));
 	}
 
-	public ArrayList<DetectedEvent> getDetectedEvents(TimeInterval between, String eventName) {
+	public synchronized List<DetectedEvent> getDetectedEvents(TimeInterval between, String eventName) {
 		// Return the matching Events
         return this.getDetectedEvents(detectedEvent -> detectedEvent.getEvent().getName().equals(eventName) && between.contains(detectedEvent.getEventInterval()));
 	}
 
-	private ArrayList<DetectedEvent> getDetectedEvents(Predicate<DetectedEvent> predicate) {
-		ArrayList<DetectedEvent> foundEvents = new ArrayList<DetectedEvent>();
+	private synchronized List<DetectedEvent> getDetectedEvents(Predicate<DetectedEvent> predicate) {
+		List<DetectedEvent> foundEvents = new ArrayList<DetectedEvent>();
 		for (DetectedEvent detectedEvent : this.detectedEvents) {
 			if (predicate.test(detectedEvent)) {
 				foundEvents.add(detectedEvent);
@@ -48,11 +53,11 @@ public class DetectedEventHandler {
         return foundEvents;
 	}
 
-	public void addEvent(DetectedEvent detectedEvent) {
+	public synchronized void addEvent(DetectedEvent detectedEvent) {
 		this.detectedEvents.add(detectedEvent);
 	}
 
-	public void removeEvent(DetectedEvent detectedEvent) {
+	public synchronized void removeEvent(DetectedEvent detectedEvent) {
 		this.detectedEvents.remove(detectedEvent);
 	}
 }

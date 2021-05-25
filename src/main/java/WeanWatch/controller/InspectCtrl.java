@@ -1,6 +1,7 @@
 package WeanWatch.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import WeanWatch.model.Event;
 import WeanWatch.model.DetectedEvent;
@@ -38,7 +39,7 @@ public class InspectCtrl extends NavigatableCtrl {
             // Clear the rowsBox
             this.rowsBox.getChildren().clear();
             // Get the most recent daily occurrences of each event to display
-            ArrayList<DetectedEvent> eventsToDisplay = this.parentNode.getPatient().getDetectedEventHandler().getDetectedEvents(this.eventTypeToDisplay.getName());
+            List<DetectedEvent> eventsToDisplay = this.parentNode.getPatient().getDetectedEvents(this.eventTypeToDisplay.getName());
             // Prepare a figure factory
             TriangleMetaphoricFactory metaphoricFactory = new TriangleMetaphoricFactory();
             // Prepare a placeholder for the hbox 

@@ -22,7 +22,7 @@ public class PatientHandler {
     }
 
     // Return a single patient
-    public Patient getPatient(String cpr) {
+    public synchronized Patient getPatient(String cpr) {
         // Search through the list of patients, and return the first patient that matches the CPR or null
         for (Patient patient : this.patients) {
             if (cpr.equals(patient.getCPR())) {
@@ -34,7 +34,7 @@ public class PatientHandler {
     }
 
     // Return the patients
-    public Patient[] getPatients() {
+    public synchronized Patient[] getPatients() {
         // If the patients have not yet been downloaded from the PDMSConn, get them
         if (this.patients == null) {
             // Try getting the patients

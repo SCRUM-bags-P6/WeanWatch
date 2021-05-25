@@ -16,15 +16,15 @@ public class DetectedEvent {
 	}
 	
 	// Getters
-	public Patient getPatient() {
+	public synchronized Patient getPatient() {
 		return this.patient;
 	}
 
-	public Event getEvent() {
+	public synchronized Event getEvent() {
 		return this.eventType;
 	}
 
-	public TimeInterval getEventInterval() {
+	public synchronized TimeInterval getEventInterval() {
 		return this.eventInterval;
 	}
 }
