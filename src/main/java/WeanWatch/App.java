@@ -42,6 +42,10 @@ public class App extends Application {
     public static void main(String[] args) {
         // Start loading the patients form the PDMS
         PatientHandler.getInstance().getPatients();
+        
+        // Initialize patient cases
+        initialze();
+
         // Launch JavaFX
         launch(args); 
     }
@@ -298,4 +302,92 @@ public class App extends Application {
             e.printStackTrace();
         }
     }
+
+    private static void initialze() {
+        // Initialize apnea characteristics array
+        ArrayList<Indicator> apneaChar = new ArrayList<Indicator>();
+
+        //Add indicators to array
+        apneaChar.add(new Indicator(1, (Predicate<Row> & Serializable)(Row x) -> {
+            return Double.compare(x.getDouble(x.fieldIndex("Rf")), 8D)  <= 0; 
+        }));
+        apneaChar.add(new Indicator(1, (Predicate<Row> & Serializable)(Row x) -> {
+            return Double.compare(x.getDouble(x.fieldIndex("FetCO2")), 0.045D) <= 0; 
+        }));
+        apneaChar.add(new Indicator(1, (Predicate<Row> & Serializable)(Row x) -> {
+            return Double.compare(x.getDouble(x.fieldIndex("EE")), 1000D) <= 0; 
+        }));
+        apneaChar.add(new Indicator(3, (Predicate<Row> & Serializable)(Row x) -> {
+            return Double.compare(x.getDouble(x.fieldIndex("Comp")), 0.015D) <= 0; 
+        }));
+
+        // Define apnea detection algorithm
+        DetectionAlgorithm apneaAlgo = new IndicatorAlgorithm(apneaChar);
+        // Define apnea event
+        CaseHandler.getInstance().addCaseAlgo("Apnea", "Apnea event", Severity.SEVERE, apneaAlgo);
+
+
+
+        // Initialize respiratory muscle fatigue characteristics array
+        ArrayList<Indicator> muscleFatigueChar = new ArrayList<Indicator>();
+
+        //Add indicators to array
+        muscleFatigueChar.add(new Indicator(15, (Predicate<Row> & Serializable)(Row x) -> {
+            return Double.compare(x.getDouble(x.fieldIndex("EE")), 2400D)  >= 0; 
+        }));
+        muscleFatigueChar.add(new Indicator(15, (Predicate<Row> & Serializable)(Row x) -> {
+            return Double.compare(x.getDouble(x.fieldIndex("FetCO2")), 0.05D) >= 0; 
+        }));
+        muscleFatigueChar.add(new Indicator(15, (Predicate<Row> & Serializable)(Row x) -> {
+            return Double.compare(x.getDouble(x.fieldIndex("RSBI")), 105D) >= 0; 
+        }));
+        muscleFatigueChar.add(new Indicator(30, (Predicate<Row> & Serializable)(Row x) -> {
+            return Double.compare(x.getDouble(x.fieldIndex("Rf")), 25D) >= 0; 
+        }));
+
+        // Define muscle fatigue detection algorithm
+        DetectionAlgorithm muscleFatigueAlgo = new IndicatorAlgorithm(muscleFatigueChar);
+        // Define muscle fatigue event
+        CaseHandler.getInstance().addCaseAlgo("Muscle fatigue", "Muscle fatigue event", Severity.SEVERE, muscleFatigueAlgo);
+
+
+
+        // Initialize reduced lung health characteristics array
+        ArrayList<Indicator> lungHealthChar = new ArrayList<Indicator>();
+
+        //Add indicators to array
+        lungHealthChar.add(new Indicator(60, (Predicate<Row> & Serializable)(Row x) -> {
+            double SpO2 = x.getDouble(x.fieldIndex("SpO2"));
+            double FiO2set = x.getDouble(x.fieldIndex("FiO2Set"));
+
+            double a = 11700D*Math.pow((Math.pow(SpO2,-1D)-1D),-1D);
+            double b = Math.pow(Math.pow(50D,3D)+Math.pow(a,2D),0.5D);
+            double PaO2 = Math.pow(b+a,1D/3D) - Math.pow(b-a,1D/3D);
+            
+            double SpPaO2 = SpO2/PaO2;
+
+            return Double.compare(SpPaO2, 200D)  >= 0; 
+        }));
+
+        // Define lung health detection algorithm
+        DetectionAlgorithm lungHealthAlgo = new IndicatorAlgorithm(lungHealthChar);
+        // Define lung health event
+        CaseHandler.getInstance().addCaseAlgo("Reduced lung health", "Reduced lung health event", Severity.SEVERE, lungHealthAlgo);
+
+
+
+        // Initialize too high oxygen characteristics array
+        ArrayList<Indicator> highOxygenChar = new ArrayList<Indicator>();
+
+        //Add indicators to array
+        highOxygenChar.add(new Indicator(120, (Predicate<Row> & Serializable)(Row x) -> {
+            return Double.compare(x.getDouble(x.fieldIndex("FiO2Set")), 0.9D)  <= 0; 
+        }));
+
+        // Define high oxygen detection algorithm
+        DetectionAlgorithm highOxygenAlgo = new IndicatorAlgorithm(highOxygenChar);
+        // Define high oxygen event
+        CaseHandler.getInstance().addCaseAlgo("Too high oxygen", "Too high oxygen event", Severity.INTERMEDIATE, highOxygenAlgo);
+    }
+
 }

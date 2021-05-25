@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
@@ -282,12 +283,12 @@ System.out.println("FiO2 er =" + averageValues.first().getDouble(1));
         
         Double heightFiO2 = (1 - meanFiO2) * TriangleMetaphoricFactory.figureMaxHeight;
         // Calcualte the width of the SpO2
-        // Prevent negative fractions, by enforcing meanFiO2 above 0.75
-        if (meanFiO2.compareTo(0.75D) > 0) {
-            meanFiO2 = 0.75D;
+        // Prevent negative fractions, by enforcing meanSpO2 above 0.75
+        if (meanSpO2.compareTo(0.75D) > 0) {
+            meanSpO2 = 0.75D;
         }
-        // Calcuate fraction of range for meanFiO2
-        Double fraction = (meanFiO2 - 0.75D) / (0.98D - 0.75D);
+        // Calcuate fraction of range for meanSpO2
+        Double fraction = (meanSpO2 - 0.75D) / (0.98D - 0.75D);
         // Get the middle point
         Double middle = (TriangleMetaphoricFactory.figureMaxWidth / 2D);
         // Calculate the coordinates
@@ -321,6 +322,35 @@ System.out.println("FiO2 er =" + averageValues.first().getDouble(1));
         //System.out.println(" 1. " + X1 + Y1 + " 2. " + X2 + Y2 + " 3. " + X3 + Y3);
         
         System.out.println(" 1. " + "X = " + X1 + "Y = " + Y1 + " 2. " + "X = " +X2 + "Y = " + Y2 + " 3. " + "X = " + X3 + "Y = " +Y3);
+
+
+        // Set color of topPolygon
+        if (leftWidthSpO2 <= Spo2ToPX(0.75)){
+            topPolygon.setFill(javafx.scene.paint.Color.MAROON);
+        } else if (leftWidthSpO2 > Spo2ToPX(0.75) && leftWidthSpO2 <= Spo2ToPX(0.85)) {
+            if (heightFiO2 > (1 - 0.6) * figureMaxHeight) {
+                topPolygon.setFill(javafx.scene.paint.Color.MAROON);
+            } else {
+                topPolygon.setFill(javafx.scene.paint.Color.RED);
+            }
+        } else if (leftWidthSpO2 > Spo2ToPX(0.85) && leftWidthSpO2 <= Spo2ToPX(0.92)) {
+            if (heightFiO2 > (1 - 0.6) * figureMaxHeight) {
+                topPolygon.setFill(javafx.scene.paint.Color.RED);
+            } else if (heightFiO2 > (1 - 0.4) * figureMaxHeight && heightFiO2 <= (1 - 0.6) * figureMaxHeight) {
+                topPolygon.setFill(javafx.scene.paint.Color.GREEN);
+            } else {
+                topPolygon.setFill(javafx.scene.paint.Color.YELLOW);
+            }
+        } else {
+            if (heightFiO2 > (1 - 0.6) * figureMaxHeight) {
+                topPolygon.setFill(javafx.scene.paint.Color.RED);
+            } else if (heightFiO2 > (1 - 0.21) * figureMaxHeight && heightFiO2 <= (1 - 0.6) * figureMaxHeight) {
+                topPolygon.setFill(javafx.scene.paint.Color.YELLOW);
+            } else {
+                topPolygon.setFill(javafx.scene.paint.Color.GREEN);
+            }
+        }
+
 
         // Add the prolygon the the pane
         topTriagPane.getChildren().add(topPolygon);
@@ -383,7 +413,7 @@ System.out.println("FiO2 er =" + averageValues.first().getDouble(1));
 		}
 
 
-        // Draw top triangle
+        // Draw buttom triangle
         Polygon butPolygon = new Polygon();
         butPolygon.getPoints().addAll(new Double[] {
             X1, Y1,
@@ -392,12 +422,46 @@ System.out.println("FiO2 er =" + averageValues.first().getDouble(1));
         });
         System.out.println("NEDERSTE");
         System.out.println(" 1. " + "X = " + X1 + "Y = " + Y1 + " 2. " + "X = " + X2 + "Y = " + Y2 + " 3. " + "X = " + X3 + "Y = " +Y3);
+        
+
+        // Set color of butPolygon
+        if (heightRR <= (9*0.0143D)* figureMaxHeight) {
+            butPolygon.setFill(javafx.scene.paint.Color.RED);
+        } else if (heightRR > (9*0.0143D)* figureMaxHeight && heightRR <= (18*0.0143D)* figureMaxHeight) {
+            if (leftWidthDS >= (figureMaxWidth/2)*0.3) {
+                butPolygon.setFill(javafx.scene.paint.Color.YELLOW);
+            } else {
+                butPolygon.setFill(javafx.scene.paint.Color.GREEN);
+            }
+        } else if (heightRR > (18*0.0143D)* figureMaxHeight && heightRR <= (40*0.0143D)* figureMaxHeight) {
+            if (leftWidthDS <= (figureMaxWidth/2)*0.3) {
+                butPolygon.setFill(javafx.scene.paint.Color.RED);
+            } else {
+                butPolygon.setFill(javafx.scene.paint.Color.YELLOW);
+            }
+        } else {
+            if (leftWidthDS > (figureMaxWidth/2)*0.6) {
+                butPolygon.setFill(javafx.scene.paint.Color.YELLOW);
+            } else {
+                butPolygon.setFill(javafx.scene.paint.Color.RED);
+            }
+        }
+        
+        
         // Add the polygon the the pane
         butTriagPane.getChildren().add(butPolygon);
         butTriagPane.setAlignment(butPolygon, Pos.BOTTOM_CENTER);
         // return the pane
+        butTriagPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         return butTriagPane;
     }
 
+
+    public static double Spo2ToPX(double Spo2) {
+        Double middle = (figureMaxWidth / 2D);
+        Double fraction = (Spo2 - 0.75D) / (0.98D - 0.75D);
+        Double pxSpo2 = ((middle - (middle * 0.2D)) - (middle - (middle * 0.2D)) * fraction);
+        return pxSpo2;
+    }
 
 }
