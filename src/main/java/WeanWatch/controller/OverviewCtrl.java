@@ -14,11 +14,11 @@ import org.apache.commons.collections4.map.MultiKeyMap;
 import org.apache.spark.sql.Row;
 import org.apache.commons.collections4.map.LinkedMap;
 
-import WeanWatch.model.Case;
-import WeanWatch.model.CaseDetectorThread;
-import WeanWatch.model.CaseHandler;
+import WeanWatch.model.Event;
+import WeanWatch.model.EventDetectorThread;
+import WeanWatch.model.EventHandler;
 import WeanWatch.model.DailyOccurrence;
-import WeanWatch.model.DetectedCase;
+import WeanWatch.model.DetectedEvent;
 import WeanWatch.model.DetectionAlgorithm;
 import WeanWatch.model.Indicator;
 import WeanWatch.model.IndicatorAlgorithm;
@@ -44,14 +44,14 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
     @FXML
     private VBox rowsBox;
 
-    private HashMap<VBox, Case> figureLookup = new HashMap<VBox, Case>();
+    private HashMap<VBox, Event> figureLookup = new HashMap<VBox, Event>();
 
     public void initialize() {
-        CaseHandler.getInstance().addCase("     Apnea   ", "Apnea", Case.Severity.INTERMEDIATE, null);
-        CaseHandler.getInstance().addCase("Too little O2", "Too little O2", Case.Severity.SEVERE, null);
-        CaseHandler.getInstance().addCase("Too much O2 ", "Too much O2", Case.Severity.MILD, null);
-        CaseHandler.getInstance().addCase("Too much CO2 ", "Too much CO2", Case.Severity.MILD, null);
-		//For test purposes, it is neccesary to create some indicators to pass to the casehandler
+        EventHandler.getInstance().addEvent("     Apnea   ", "Apnea", Event.Severity.INTERMEDIATE, null);
+        EventHandler.getInstance().addEvent("Too little O2", "Too little O2", Event.Severity.SEVERE, null);
+        EventHandler.getInstance().addEvent("Too much O2 ", "Too much O2", Event.Severity.MILD, null);
+        EventHandler.getInstance().addEvent("Too much CO2 ", "Too much CO2", Event.Severity.MILD, null);
+		//For test purposes, it is neccesary to create some indicators to pass to the eventhandler
 		/*
         ArrayList<Indicator> indicators = new ArrayList<Indicator>();
 		indicators.add(new Indicator(250, (Predicate<Row> & Serializable)(Row x) -> {
@@ -62,14 +62,14 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
             return Double.compare(x.getDouble(x.fieldIndex("SpO2")), 0.9D) > 0; 
         }));
 		DetectionAlgorithm algo = new IndicatorAlgorithm(indicators);
-		//For test purposes, it is neccesary to create some indicators to pass to the casehandler
+		//For test purposes, it is neccesary to create some indicators to pass to the Eventhandler
 
-        CaseHandler.getInstance().addCaseAlgo("Apnea", "Apnea", Case.Severity.INTERMEDIATE, algo);
+        EventHandler.getInstance().addEventAlgo("Apnea", "Apnea", Event.Severity.INTERMEDIATE, algo);
         */
-        PatientHandler.getInstance().getPatients()[0].getDetectedCaseHandler().addCase(
-            new DetectedCase(
+        PatientHandler.getInstance().getPatients()[0].getDetectedEventHandler().addEvent(
+            new DetectedEvent(
                 PatientHandler.getInstance().getPatients()[0], 
-                CaseHandler.getInstance().getCase("     Apnea   "),
+                EventHandler.getInstance().getEvent("     Apnea   "),
                 //Ændre til LocalDateTime
                 new TimeInterval(
                     LocalDateTime.of(2021, 05, 16, 9, 00, 00),
@@ -77,10 +77,10 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
                     ))
         );
 
-        PatientHandler.getInstance().getPatients()[0].getDetectedCaseHandler().addCase(
-            new DetectedCase(
+        PatientHandler.getInstance().getPatients()[0].getDetectedEventHandler().addEvent(
+            new DetectedEvent(
             PatientHandler.getInstance().getPatients()[0], 
-                CaseHandler.getInstance().getCase("Too little O2"),
+                EventHandler.getInstance().getEvent("Too little O2"),
                 //Ændre til LocalDateTime
                 new TimeInterval(
                     LocalDateTime.of(2021, 05, 16, 7, 50, 00),
@@ -88,10 +88,10 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
                     ))
         );
 
-        PatientHandler.getInstance().getPatients()[0].getDetectedCaseHandler().addCase(
-            new DetectedCase(
+        PatientHandler.getInstance().getPatients()[0].getDetectedEventHandler().addEvent(
+            new DetectedEvent(
             PatientHandler.getInstance().getPatients()[0], 
-                CaseHandler.getInstance().getCase("Too much O2 "),
+                EventHandler.getInstance().getEvent("Too much O2 "),
                 //Ændre til LocalDateTime
                 new TimeInterval(
                     LocalDateTime.of(2021, 05, 19, 9, 00, 00),
@@ -99,10 +99,10 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
                     ))
         );
 
-        PatientHandler.getInstance().getPatients()[0].getDetectedCaseHandler().addCase(
-            new DetectedCase(
+        PatientHandler.getInstance().getPatients()[0].getDetectedEventHandler().addEvent(
+            new DetectedEvent(
             PatientHandler.getInstance().getPatients()[0], 
-                CaseHandler.getInstance().getCase("Too much CO2 "),
+                EventHandler.getInstance().getEvent("Too much CO2 "),
                 //Ændre til LocalDateTime
                 new TimeInterval(
                     LocalDateTime.of(2021, 05, 20, 9, 00, 00),
@@ -111,72 +111,72 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
         );
     }
 
-    private ArrayList<DailyOccurrence> getDailyCaseOccurrencesToDisplay() {
-        // Get the all patients detected cases
-        ArrayList<DetectedCase> detectedCases = this.parentNode.getPatient().getDetectedCaseHandler().getDetectedCases();
-        /* Create a MultiKeyMap to store cases to be displayed. MultiKeyMap is used as there should be one
-        *  DetectedCase to be displayed, for each case and day
+    private ArrayList<DailyOccurrence> getDailyEventOccurrencesToDisplay() {
+        // Get the all patients detected Events
+        ArrayList<DetectedEvent> detectedEvents = this.parentNode.getPatient().getDetectedEventHandler().getDetectedEvents();
+        /* Create a MultiKeyMap to store Events to be displayed. MultiKeyMap is used as there should be one
+        *  DetectedEvent to be displayed, for each Event and day
         */
         MultiKeyMap<Object, DailyOccurrence> dailyOccurrencesMap = MultiKeyMap.multiKeyMap(new LinkedMap());
-        // Loop through each case
-        for (DetectedCase detectedCase : detectedCases) {
-            // Get the start time of the case
-            LocalDateTime caseStartTime = detectedCase.getCaseInterval().getOldestTime();
-            // Get the date at which the case occured
-            LocalDate caseDate = caseStartTime.toLocalDate();
-            // Get the case type of the detected case
-            Case caseType = detectedCase.getCase();
-            // Create a new daily case occurrence if it is the first occurrence of the day
-            if (!dailyOccurrencesMap.containsKey(caseDate, caseType)) {
-                dailyOccurrencesMap.put(caseDate, caseType, new DailyOccurrence(detectedCase));
+        // Loop through each Event
+        for (DetectedEvent detectedEvent : detectedEvents) {
+            // Get the start time of the Event
+            LocalDateTime eventStartTime = detectedEvent.getEventInterval().getOldestTime();
+            // Get the date at which the Event occured
+            LocalDate eventDate = eventStartTime.toLocalDate();
+            // Get the Event type of the detected Event
+            Event eventType = detectedEvent.getEvent();
+            // Create a new daily Event occurrence if it is the first occurrence of the day
+            if (!dailyOccurrencesMap.containsKey(eventDate, eventType)) {
+                dailyOccurrencesMap.put(eventDate, eventType, new DailyOccurrence(detectedEvent));
             } else {
                 // Update the DailyOccurrence with the new occurrence
-                dailyOccurrencesMap.get(caseDate, caseType).addOccurrence(detectedCase);
+                dailyOccurrencesMap.get(eventDate, eventType).addOccurrence(detectedEvent);
             }
         }
         // Create a placeholder for all of the daily occurrences to display
-        ArrayList<DailyOccurrence> casesToDisplay = new ArrayList<DailyOccurrence>();
+        ArrayList<DailyOccurrence> eventsToDisplay = new ArrayList<DailyOccurrence>();
         // Convert the MultiKeyMap to an arraylist
         dailyOccurrencesMap.forEach((keys, dailyOccurrence) -> {
-            // Add the daily occurrence to the casesToDisplay
-            casesToDisplay.add(dailyOccurrence);
+            // Add the daily occurrence to the EventsToDisplay
+            eventsToDisplay.add(dailyOccurrence);
         });
         // Return the occurrences
-        return casesToDisplay;
+        return eventsToDisplay;
     }
 
     @Override
     public void update(Patient context) {
         // Clear the rowsBox
         this.rowsBox.getChildren().clear();
-        // Get the most recent daily occurrences of each case to display
-        ArrayList<DailyOccurrence> casesToDisplay = this.getDailyCaseOccurrencesToDisplay();
+        // Get the most recent daily occurrences of each event to display
+        ArrayList<DailyOccurrence> eventsToDisplay = this.getDailyEventOccurrencesToDisplay();
 		// Prepare a figure factory
         TriangleMetaphoricFactory metaphoricFactory = new TriangleMetaphoricFactory();
         // Prepare a placeholder for the hbox 
         HBox hbox = null;
-        // Loop through all cases
-        for (int i = 0; i < casesToDisplay.size(); i++) {
+        // Loop through all Events
+        for (int i = 0; i < eventsToDisplay.size(); i++) {
 			if (i % 3 == 0) {
                 // Add the hbox, if it has been filled with figures
                 if (hbox != null) {
                     this.rowsBox.getChildren().add(hbox);
                 }
-				// Create a hbox for each three cases
+				// Create a hbox for each three Events
 				hbox = new HBox(50D);
                 hbox.setPadding(new Insets(0D,0D,0D,350D));
             } 	
-			// Create a vbox for the cases
+			// Create a vbox for the Events
 			VBox vbox = new VBox(10D);
             vbox.setAlignment(Pos.CENTER);
        	    // Add a metaforic figure to the vbox
-			Pane metaphoricFigure = metaphoricFactory.create(casesToDisplay.get(i).getCaseToDisplay());
+			Pane metaphoricFigure = metaphoricFactory.create(eventsToDisplay.get(i).getEventToDisplay());
         	// Create labels to caption for occurrences and time
             VBox labelsPane = new VBox(10D);
             rowsBox.setSpacing(100D);
 
-            Label labelOccurrences = new Label("Occurences: " + casesToDisplay.get(i).getOccurrences().toString() + "  ");
-            Label labelCumulativeTime = new Label("Duration: " + casesToDisplay.get(i).getCumulativeTime());    
+            Label labelOccurrences = new Label("Occurences: " + eventsToDisplay.get(i).getOccurrences().toString() + "  ");
+            Label labelCumulativeTime = new Label("Duration: " + eventsToDisplay.get(i).getCumulativeTime());    
             //Set font size and font type
             labelOccurrences.setFont(new Font("Arial",15));
             labelCumulativeTime.setFont(new Font("Arial",15));
@@ -191,7 +191,7 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
 
 
             // Store a reference to the vbox
-            figureLookup.put(vbox, casesToDisplay.get(i).getCaseToDisplay().getCase());
+            figureLookup.put(vbox, eventsToDisplay.get(i).getEventToDisplay().getEvent());
             // Create a click handler for each
             vbox.setOnMouseClicked((e) -> {
                 // Lookup the vbox, and execute the handleGridClick
@@ -205,8 +205,8 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
         this.rowsBox.getChildren().add(hbox);
     }
 	
-	public void handleGridClick(Case caseToFocus) {
+	public void handleGridClick(Event eventToFocus) {
         // Trigger the view to change
-        this.parentNode.handleShowInspectClick(caseToFocus);
+        this.parentNode.handleShowInspectClick(eventToFocus);
 	}
 }

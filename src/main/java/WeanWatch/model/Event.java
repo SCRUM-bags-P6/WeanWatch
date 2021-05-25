@@ -5,14 +5,14 @@ import java.util.ArrayList;
 
 import org.apache.spark.sql.Row;
 
-public class Case {
-    // Store the case name and description
+public class Event {
+    // Store the Event name and description
     private String name;
     private String description;
-	private Case.Severity severity;
+	private Event.Severity severity;
     private DetectionAlgorithm algorithm;
 
-    // Store the case indicators
+    // Store the Event indicators
     private ArrayList<Indicator> characteristics;
 
 
@@ -24,14 +24,14 @@ public class Case {
     }
 
     // Constructor 
-    public Case(String name, String description, Case.Severity severity, ArrayList<Indicator> characteristics) {
+    public Event(String name, String description, Event.Severity severity, ArrayList<Indicator> characteristics) {
         this.name = name;
         this.description = description;
 		this.severity = severity;
         this.characteristics = characteristics;
     }
 
-	public Case(String name, String description, Case.Severity severity, DetectionAlgorithm algo) {
+	public Event(String name, String description, Event.Severity severity, DetectionAlgorithm algo) {
         this.name = name;
         this.description = description;
 		this.severity = severity;

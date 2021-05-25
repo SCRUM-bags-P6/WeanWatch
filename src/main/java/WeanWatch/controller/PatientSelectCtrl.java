@@ -3,7 +3,7 @@ package WeanWatch.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import WeanWatch.model.CaseDetectorThread;
+import WeanWatch.model.EventDetectorThread;
 import WeanWatch.model.Patient;
 import WeanWatch.model.PatientHandler;
 import javafx.collections.FXCollections;

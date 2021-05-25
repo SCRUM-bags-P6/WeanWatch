@@ -2,8 +2,8 @@ package WeanWatch.controller;
 
 import java.io.IOException;
 
-import WeanWatch.model.Case;
-import WeanWatch.model.CaseDetectorThread;
+import WeanWatch.model.Event;
+import WeanWatch.model.EventDetectorThread;
 import WeanWatch.model.Patient;
 import WeanWatch.model.Personnel;
 import javafx.fxml.FXML;
@@ -50,10 +50,10 @@ public class RootCtrl {
     } 
 
     @FXML
-    public void handleShowInspectClick(Case caseTypeToDisplay) {
+    public void handleShowInspectClick(Event eventTypeToDisplay) {
         try {
             InspectCtrl inspectCtrl = (InspectCtrl) changeView("/view/InspectView.fxml");
-            inspectCtrl.setCase(caseTypeToDisplay);
+            inspectCtrl.setEvent(eventTypeToDisplay);
         } catch (Exception e) {
             System.out.println("Failed to display the the inspect screen, with error:");
             e.printStackTrace();
@@ -116,7 +116,7 @@ public class RootCtrl {
         // Update the view
         this.patientID.setText(patient.getCPR());
         // Change the patient of priotiry in the thread
-        CaseDetectorThread.getInstance().prioritizePatient(patient);
+        EventDetectorThread.getInstance().prioritizePatient(patient);
     }
 
     public void setPersonnel(Personnel personnel) {

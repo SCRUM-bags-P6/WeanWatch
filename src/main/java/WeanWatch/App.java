@@ -7,9 +7,9 @@ import java.awt.Dimension;
 
 import WeanWatch.controller.LoginCtrl;
 import WeanWatch.controller.RootCtrl;
-import WeanWatch.model.Case;
-import WeanWatch.model.CaseDetectorThread;
-import WeanWatch.model.CaseHandler;
+import WeanWatch.model.Event;
+import WeanWatch.model.EventDetectorThread;
+import WeanWatch.model.EventHandler;
 import WeanWatch.model.DetectionAlgorithm;
 import WeanWatch.model.Indicator;
 import WeanWatch.model.IndicatorAlgorithm;
@@ -17,7 +17,7 @@ import WeanWatch.model.PDMSConn;
 import WeanWatch.model.PatientHandler;
 import WeanWatch.model.Personnel;
 import WeanWatch.model.TimeInterval;
-import WeanWatch.model.Case.Severity;
+import WeanWatch.model.Event.Severity;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -52,7 +52,7 @@ public class App extends Application {
 
 
 
-    public void getDateForCaseExample() {
+    public void getDateForEventExample() {
         Dataset<Row> patientData = PatientHandler.getInstance().getPatients()[0].getData();
         System.out.println("Showing first 20 of all data: ");
         patientData.show();
@@ -62,7 +62,7 @@ public class App extends Application {
 
 		//Henter timestamp fra stud1.csv første kolonne. Tjekker om timestamp er mellem de to createde LocalDateTime's 
         System.out.println("Filtering for dates...");
-        Dataset<Row> caseData = patientData.filter((Row row) -> {    
+        Dataset<Row> eventData = patientData.filter((Row row) -> {    
             LocalDateTime localDateTime = LocalDateTime.parse(row.getString(0));
             if(localDateTime.isAfter(newestTime) && localDateTime.isBefore(oldestTime)){
                 return true;
@@ -72,7 +72,7 @@ public class App extends Application {
         });
 
         System.out.println("Showing first 20 of filtered data: ");
-        caseData.show();
+        eventData.show();
     }
 
     public void perdicateOnDataExample() {
@@ -188,7 +188,7 @@ public class App extends Application {
         patientData.foreach((Row x) -> {
             TimeInterval output = algo.evaluate(x);
             if (output != null) {
-                System.out.println("A case was detected!");
+                System.out.println("A event was detected!");
             }
         });
 
@@ -201,7 +201,7 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        //getDateForCaseExample();
+        //getDateForEventExample();
 
         //perdicateOnDataExample();
 
@@ -222,14 +222,14 @@ public class App extends Application {
 
 		DetectionAlgorithm algo = new IndicatorAlgorithm(indicators);
 
-		// Create case from indicator algorithm, add to caseHandler
-		CaseHandler caseHandler = CaseHandler.getInstance();
-		//caseHandler.addCaseAlgo("Rigor Mortis", "Hvis patienten har dette her, er det nok på tide at ekstubere", Severity.SEVERE, algo);
+		// Create Event from indicator algorithm, add to EventHandler
+		EventHandler eventHandler = EventHandler.getInstance();
+		//EventHandler.addEventAlgo("Rigor Mortis", "Hvis patienten har dette her, er det nok på tide at ekstubere", Severity.SEVERE, algo);
 
 
 
 		//Instantierer vores thread
-		CaseDetectorThread detectorGadget = CaseDetectorThread.getInstance();
+		EventDetectorThread detectorGadget = EventDetectorThread.getInstance();
 		//Initialiserer threaden og kører dens run() metode
 		detectorGadget.initialize();
 		detectorGadget.start();

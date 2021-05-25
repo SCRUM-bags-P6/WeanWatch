@@ -11,8 +11,8 @@ import org.apache.spark.api.java.function.ForeachFunction;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
-public class CaseDetectorThread extends Thread implements Serializable{
-    private static CaseDetectorThread instance = null;
+public class EventDetectorThread extends Thread implements Serializable{
+    private static EventDetectorThread instance = null;
 
     private ArrayList<DetectorTask> queuedTasks = new ArrayList<DetectorTask>();
     private ArrayList<DetectionSubscriber> subscribers = new ArrayList<DetectionSubscriber>();
@@ -22,16 +22,16 @@ public class CaseDetectorThread extends Thread implements Serializable{
 
 	private static LocalDateTime newestProcessedTime;
 	
-	private CaseDetectorThread() {
+	private EventDetectorThread() {
 	}
 
-	public static CaseDetectorThread getInstance() {
-		if (CaseDetectorThread.instance == null) {
+	public static EventDetectorThread getInstance() {
+		if (EventDetectorThread.instance == null) {
             // Create an instance and store it
-            CaseDetectorThread.instance = new CaseDetectorThread();
+            EventDetectorThread.instance = new EventDetectorThread();
         }
         // Return the stored instance
-        return CaseDetectorThread.instance;
+        return EventDetectorThread.instance;
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class CaseDetectorThread extends Thread implements Serializable{
 			DetectorTask currentTask = this.queuedTasks.get(task);
 			Patient currentPatient = currentTask.getPatient();	
 			// Create a placeholder for the timestamp of the latest processed row
-			CaseDetectorThread.newestProcessedTime = currentTask.getNewestTime();
+			EventDetectorThread.newestProcessedTime = currentTask.getNewestTime();
 			// Process the patient data, and apply the detection algorithm for each data row
 			if (currentPatient.getData() != null) {
 				currentPatient.getData().foreach((ForeachFunction<Row>) row -> {
@@ -57,25 +57,25 @@ public class CaseDetectorThread extends Thread implements Serializable{
 					// Only processe the data if the timestamp is after the newest processed time
 					if (newestProcessedTime == null || rowTime.isAfter(newestProcessedTime)) {
 						// Get each event and run the respective detection algorithm
-						for (Case event : currentTask.getCasesToScan()) {
+						for (Event event : currentTask.getEventsToScan()) {
 							// Compute the algorithm for the patient data row				
 							TimeInterval detectedTime = event.getAlgorithm().evaluate(row);
-							// Validate if a case was found
+							// Validate if a Event was found
 							if (detectedTime != null) {							
-								// Create a new detected case
-								DetectedCase detectedEvent = new DetectedCase(currentPatient, event, detectedTime);
+								// Create a new detected Event
+								DetectedEvent detectedEvent = new DetectedEvent(currentPatient, event, detectedTime);
 								// Store the detected in the patients detected event handler
-								currentPatient.getDetectedCaseHandler().addCase(detectedEvent);
+								currentPatient.getDetectedEventHandler().addEvent(detectedEvent);
 								// Notify subscribers to allow updating views
 								this.notifySubscribers(currentPatient);
 							}
 						}
 						// Update the newest processed time
-						CaseDetectorThread.newestProcessedTime = rowTime;
+						EventDetectorThread.newestProcessedTime = rowTime;
 					}
 				});
 				// Store progress in detector task
-				currentTask.updateInterval(CaseDetectorThread.newestProcessedTime, currentTask.getOldestTime());
+				currentTask.updateInterval(EventDetectorThread.newestProcessedTime, currentTask.getOldestTime());
 			}
 		}
 	} 
