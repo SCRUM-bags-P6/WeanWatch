@@ -55,33 +55,41 @@ public class InspectCtrl extends NavigatableCtrl {
                     hbox = new HBox(50D);
                     hbox.setPadding(new Insets(0D,0D,0D,350D));
                 }	
-                // Create a vbox for the events
-                VBox vbox = new VBox();
-                rowsBox.setSpacing(100D);
-                // Add a metaforic figure to the vbox
-                Pane metaphoricFigure = metaphoricFactory.create(eventsToDisplay.get(i));
-                // Create labels to caption time
-                // The year is removed and labels are split at the "T"
-                Label labelEventInterval = new Label("From " + eventsToDisplay.get(i).getEventInterval().getNewestTime().toString()/*.substring(5, 16)*/.split("T", 2)[0] + "  " + 
-                eventsToDisplay.get(i).getEventInterval().getNewestTime().toString().split("T", 2)[1] +
-                "  to  " + eventsToDisplay.get(i).getEventInterval().getOldestTime().toString()/*.substring(5, 16)*/.split("T", 2)[0] + 
-                "  " + eventsToDisplay.get(i).getEventInterval().getOldestTime().toString().split("T", 2)[1]);
-                // Set font size and type for label
-                labelEventInterval.setFont(new Font("Arial",15));
 
-				//Laver BorderPane hvori label sættes, således at vi kan få den rigtige spacing mellem figurerne
-				//Pane labelsPane = new Pane();
-                //labelsPane.setPadding(new Insets(0D, 0D, 0D, 130D));
-               // labelsPane.getChildren().addAll(labelEventInterval);
+				if (eventsToDisplay.get(i).getInspectFigure() != null) {
+					// Add the vbox to the hbox
+					hbox.getChildren().add(eventsToDisplay.get(i).getInspectFigure());
+	
+				} else {
+					// Create a vbox for the events
+					VBox vbox = new VBox();
+					rowsBox.setSpacing(100D);
+					// Add a metaforic figure to the vbox
+					Pane metaphoricFigure = metaphoricFactory.create(eventsToDisplay.get(i));
+					// Create labels to caption time
+					// The year is removed and labels are split at the "T"
+					Label labelEventInterval = new Label("From " + eventsToDisplay.get(i).getEventInterval().getNewestTime().toString()/*.substring(5, 16)*/.split("T", 2)[0] + "  " + 
+					eventsToDisplay.get(i).getEventInterval().getNewestTime().toString().split("T", 2)[1] +
+					"  to  " + eventsToDisplay.get(i).getEventInterval().getOldestTime().toString()/*.substring(5, 16)*/.split("T", 2)[0] + 
+					"  " + eventsToDisplay.get(i).getEventInterval().getOldestTime().toString().split("T", 2)[1]);
+					// Set font size and type for label
+					labelEventInterval.setFont(new Font("Arial",15));
 
-                System.out.println(labelEventInterval.getText());
-                System.out.println("SE HER");
-                System.out.println("SE HER");System.out.println("SE HER");System.out.println("SE HER");System.out.println("SE HER");System.out.println("SE HER");System.out.println("SE HER");System.out.println("SE HER");System.out.println("SE HER");
-                // Add metaphoricalfigure, number of occurrences and time duration to the Vbox
-                vbox.getChildren().addAll(metaphoricFigure,labelEventInterval);
-				vbox.setMargin(labelEventInterval,new Insets(0,0,0,50D));
-                // Add the vbox to the hbox
-                hbox.getChildren().add(vbox);
+					//Laver BorderPane hvori label sættes, således at vi kan få den rigtige spacing mellem figurerne
+					//Pane labelsPane = new Pane();
+					//labelsPane.setPadding(new Insets(0D, 0D, 0D, 130D));
+				// labelsPane.getChildren().addAll(labelEventInterval);
+
+					System.out.println(labelEventInterval.getText());
+					System.out.println("SE HER");
+					System.out.println("SE HER");System.out.println("SE HER");System.out.println("SE HER");System.out.println("SE HER");System.out.println("SE HER");System.out.println("SE HER");System.out.println("SE HER");System.out.println("SE HER");
+					// Add metaphoricalfigure, number of occurrences and time duration to the Vbox
+					vbox.getChildren().addAll(metaphoricFigure,labelEventInterval);
+					vbox.setMargin(labelEventInterval,new Insets(0,0,0,50D));
+					// Add the vbox to the hbox
+					hbox.getChildren().add(vbox);
+					eventsToDisplay.get(i).setInspectFigure(vbox);
+				}
             }
             // Add the last hbox created to the rowsBox
             this.rowsBox.getChildren().add(hbox);

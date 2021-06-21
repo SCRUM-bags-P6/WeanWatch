@@ -1,5 +1,6 @@
 package WeanWatch.model;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.Thread;
 import java.time.LocalDate;
@@ -21,6 +22,10 @@ public class EventDetectorThread implements Serializable{
     private static Patient patientOfPriority;
 
 	private boolean doRun = true;
+
+	private static Integer apneaEvents = 0;
+
+	private Integer processedRows = 0;
 
 	private static LocalDateTime newestProcessedTime;
 	
@@ -49,38 +54,48 @@ public class EventDetectorThread implements Serializable{
 		for (int task = 0; task < queuedTasks.size(); task++) {
 			// Get the current task and patient
 			DetectorTask currentTask = this.queuedTasks.get(task);
-			EventDetectorThread.patientOfPriority = currentTask.getPatient();
-			Patient currentPatient = EventDetectorThread.patientOfPriority;
+			patientOfPriority = currentTask.getPatient();
+			Patient currentPatient = patientOfPriority;
 			System.out.println("Running task for patient with CPR: " + currentTask.getPatient().getCPR());	
 			// Create a placeholder for the timestamp of the latest processed row
-			EventDetectorThread.newestProcessedTime = currentTask.getNewestTime();
+			newestProcessedTime = currentTask.getNewestTime();
 			// Process the patient data, and apply the detection algorithm for each data row
 			if (currentPatient.getData() != null) {
-				System.out.println("Data found for patient with CPR: " + currentPatient.getCPR());
-				currentPatient.getData().foreach((ForeachFunction<Row>) row -> {
+
+				Row[] rows = (Row[]) currentPatient.getData().collect();
+
+				for (Row row : rows) {
 					// Get the time of the row to process
 					LocalDateTime rowTime = LocalDateTime.parse(row.getString(0));
 					// Only processe the data if the timestamp is after the newest processed time
 					if (newestProcessedTime == null || rowTime.isAfter(newestProcessedTime)) {
+
+						processedRows = processedRows + 1;
+						System.out.println("Have processed: " + processedRows + " number of rows");
+
 						// Get each event and run the respective detection algorithm
 						for (Event event : currentTask.getEventsToScan()) {
-							// Compute the algorithm for the patient data row				
+							// Compute the algorithm for the patient data row		
 							TimeInterval detectedTime = event.getAlgorithm().evaluate(row);
 							// Validate if a Event was found
 							if (detectedTime != null) {							
 								System.out.println("Found event of type: " + event.getName() + " for patient with CPR: " + currentPatient.getCPR());
 								// Store the detected in the patients detected event handler
-								EventDetectorThread.patientOfPriority.addEvent(event, detectedTime);
+								patientOfPriority.addEvent(event, detectedTime);
 								// Notify subscribers to allow updating views
 								this.notifySubscribers(currentPatient);
 							}
 						}
 						// Update the newest processed time
-						EventDetectorThread.newestProcessedTime = rowTime;
+						newestProcessedTime = rowTime;
 					}
-				});
+				}
+
+				// currentPatient.getData().foreach((ForeachFunction<Row>) row -> {
+					
+				// });
 				// Store progress in detector task
-				currentTask.updateInterval(EventDetectorThread.newestProcessedTime, currentTask.getOldestTime());
+				currentTask.updateInterval(newestProcessedTime, currentTask.getOldestTime());
 			}
 		}
 	} 

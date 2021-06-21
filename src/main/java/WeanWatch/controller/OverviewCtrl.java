@@ -41,7 +41,7 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
 
     @FXML
     private ScrollPane overviewScrolling;
-    
+
     @FXML
     private VBox rowsBox;
 
@@ -107,6 +107,7 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
         System.out.println("Number of daily occurrences to display: " + eventsToDisplay.size());
         // Loop through all Events
         for (int i = 0; i < eventsToDisplay.size(); i++) {
+			
 			if (i % 3 == 0) {
                 // Add the hbox, if it has been filled with figures
                 if (hbox != null) {
@@ -116,40 +117,52 @@ public class OverviewCtrl extends NavigatableCtrl implements Serializable{
 				hbox = new HBox(50D);
                 hbox.setPadding(new Insets(0D,0D,0D,350D));
             } 	
-			// Create a vbox for the Events
-			VBox vbox = new VBox(10D);
-            vbox.setAlignment(Pos.CENTER);
-       	    // Add a metaforic figure to the vbox
-			Pane metaphoricFigure = metaphoricFactory.create(eventsToDisplay.get(i).getEventToDisplay());
-        	// Create labels to caption for occurrences and time
-            VBox labelsPane = new VBox(10D);
-            rowsBox.setSpacing(100D);
+			
+			if (eventsToDisplay.get(i).getEventToDisplay().getOverviewFigure() != null) {
+				// Add the vbox to the hbox
+				hbox.getChildren().add(eventsToDisplay.get(i).getEventToDisplay().getOverviewFigure());
 
-            Label labelOccurrences = new Label("Occurences: " + eventsToDisplay.get(i).getOccurrences().toString() + "  ");
-            Label labelCumulativeTime = new Label("Duration: " + eventsToDisplay.get(i).getCumulativeTime());    
-            //Set font size and font type
-            labelOccurrences.setFont(new Font("Arial",15));
-            labelCumulativeTime.setFont(new Font("Arial",15));
-            //position labelsPane in vbox 
-            labelsPane.setPadding(new Insets(0D, 0D, 0D, 130D));
-            //labelsPane.setAlignment(Pos.TOP_RIGHT);
-            //labelCumulativeTime.setAlignment(Pos.CENTER);
-            
-            labelsPane.getChildren().addAll(labelOccurrences,labelCumulativeTime);
-            // Add metaphoricalfigure, number of occurrences and time duration to the Vbox
-            vbox.getChildren().addAll(metaphoricFigure,labelsPane);
+			} else {
+				
+				// Create a vbox for the Events
+				VBox vbox = new VBox(10D);
+				vbox.setAlignment(Pos.CENTER);
+				// Add a metaforic figure to the vbox
+				Pane metaphoricFigure = metaphoricFactory.create(eventsToDisplay.get(i).getEventToDisplay());
+				// Create labels to caption for occurrences and time
+				VBox labelsPane = new VBox(10D);
+				rowsBox.setSpacing(100D);
+
+				Label labelOccurrences = new Label("Occurences: " + eventsToDisplay.get(i).getOccurrences().toString() + "  ");
+				Label labelCumulativeTime = new Label("Duration: " + eventsToDisplay.get(i).getCumulativeTime());    
+				//Set font size and font type
+				labelOccurrences.setFont(new Font("Arial",15));
+				labelCumulativeTime.setFont(new Font("Arial",15));
+				//position labelsPane in vbox 
+				labelsPane.setPadding(new Insets(0D, 0D, 0D, 130D));
+				//labelsPane.setAlignment(Pos.TOP_RIGHT);
+				//labelCumulativeTime.setAlignment(Pos.CENTER);
+				
+				labelsPane.getChildren().addAll(labelOccurrences,labelCumulativeTime);
+				// Add metaphoricalfigure, number of occurrences and time duration to the Vbox
+				vbox.getChildren().addAll(metaphoricFigure,labelsPane);
 
 
-            // Store a reference to the vbox
-            figureLookup.put(vbox, eventsToDisplay.get(i).getEventToDisplay().getEvent());
-            // Create a click handler for each
-            vbox.setOnMouseClicked((e) -> {
-                // Lookup the vbox, and execute the handleGridClick
-                this.handleGridClick(this.figureLookup.get(e.getSource()));
-            });
-            //vbox.setAlignment(Pos.CENTER);
-            // Add the vbox to the hbox
-        	hbox.getChildren().add(vbox);
+				// Store a reference to the vbox
+				figureLookup.put(vbox, eventsToDisplay.get(i).getEventToDisplay().getEvent());
+				// Create a click handler for each
+				vbox.setOnMouseClicked((e) -> {
+					// Lookup the vbox, and execute the handleGridClick
+					this.handleGridClick(this.figureLookup.get(e.getSource()));
+				});
+				//vbox.setAlignment(Pos.CENTER);
+				// Add the vbox to the hbox
+				hbox.getChildren().add(vbox);
+				eventsToDisplay.get(i).getEventToDisplay().setOverviewFigure(vbox);
+
+			}
+
+
 		}
         // Add the last hbox created to the rowsBox
         if (hbox != null) {
