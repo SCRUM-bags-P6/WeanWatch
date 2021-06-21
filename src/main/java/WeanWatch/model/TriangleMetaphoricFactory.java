@@ -124,8 +124,8 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
             fio2
         );
 
-        System.out.println("SpO2 er =" + spo2);
-        System.out.println("FiO2 er =" + fio2);
+        //System.out.println("SpO2 er =" + spo2);
+        //System.out.println("FiO2 er =" + fio2);
 
         
         // Get the bottom triangle
@@ -134,21 +134,7 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
             comp, 
             rsbi,
             ee
-        );
-
-		System.out.println("RR er =" + rf);
-		System.out.println("Comp er =" + comp);
-		System.out.println("RSBI er =" + rsbi);
-		System.out.println("EE er =" + ee);
-		System.out.println("SE HER");System.out.println("SE HER");
-        System.out.println("SE HER");
-        System.out.println("SE HER");
-        System.out.println("SE HER");
-		System.out.println("SE HER");System.out.println("SE HER");
-        System.out.println("SE HER");
-        System.out.println("SE HER");
-        System.out.println("SE HER");
-		
+        );		
         
         //Tilføjer Label og Hoved i top VBox
         figureVBoxTop.getChildren().addAll(eventLabel, figureHead);
@@ -236,7 +222,6 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         eventLabel.setFont(new Font("Arial",30));
         eventLabel.setMaxWidth(Double.MAX_VALUE);
         //eventLabel.setAlignment(Pos.CENTER);
-        System.out.println("LABEL!!!!");
         return eventLabel;
     }
 
@@ -274,7 +259,6 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
             imageView.setPreserveRatio(true); 
             // Place the image in the headpane
             headPane.setCenter(imageView);             
-            System.out.println("HOVED");
         }
         return headPane;
 
@@ -304,7 +288,7 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         Double heightFiO2 = (1 - meanFiO2) * TriangleMetaphoricFactory.figureMaxHeight;
         // Calcualte the width of the SpO2
         // Prevent negative fractions, by enforcing meanSpO2 above 0.75
-        if (meanSpO2.compareTo(0.75D) > 0) {
+        if (meanSpO2.compareTo(0.75D) < 0) {
             meanSpO2 = 0.75D;
         }
         // Calcuate fraction of range for meanSpO2
@@ -338,10 +322,10 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
             X3, Y3,
         });
         
-        System.out.println("ØVERSTE TREKANT");
+        //System.out.println("ØVERSTE TREKANT");
         //System.out.println(" 1. " + X1 + Y1 + " 2. " + X2 + Y2 + " 3. " + X3 + Y3);
         
-        System.out.println(" 1. " + "X = " + X1 + "Y = " + Y1 + " 2. " + "X = " +X2 + "Y = " + Y2 + " 3. " + "X = " + X3 + "Y = " +Y3);
+        //System.out.println(" 1. " + "X = " + X1 + "Y = " + Y1 + " 2. " + "X = " +X2 + "Y = " + Y2 + " 3. " + "X = " + X3 + "Y = " +Y3);
 
 
         // Set color of topPolygon
@@ -387,7 +371,7 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         butTriagPane.prefWidth(TriangleMetaphoricFactory.figureMaxWidth);
         // y = 0,0143x
         //Height of RR
-        if (meanRR.compareTo(70D) > 0){
+        if (meanRR.compareTo(70D) > 0){ 
             meanRR = 70D;
         }
         //Y-value of the triag height
@@ -399,6 +383,7 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         // Calculate the width of diaphragmaStrenght Triag baseline
         // y = -5*10^16*x^4 + 2*10^-11*x^3 - 2E-07x^2 + 0,001x - 0,526
         //Double widthDiagStrength = (middle + (Math.pow(-5, -16) * Math.pow(diagStrenght, 4) + Math.pow(2, -11D) * Math.pow(diagStrength, 3) - Math.pow(2, -0.7D) * Math.pow(diagStrength, 2) + 0.001D * diagStrength - 0.526D))
+        /*
         Double x6 = (-8D) * Math.pow(10D, (-25D)) * Math.pow(diagStrength, 6D);
         Double x5 = 7D * Math.pow(10D, (-20D)) * Math.pow(diagStrength, 5D);
         Double x4 = (-2D) * Math.pow(10D, (-15D)) * Math.pow(diagStrength, 4D);
@@ -406,6 +391,23 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         Double x2 = (-3D) * Math.pow(10D, (-7D)) * Math.pow(diagStrength, 2D);
         Double x1 = 0.0011D * diagStrength;
         Double offset = (-0.5837D);
+        */
+        Double x6 = -2e-25 * Math.pow(diagStrength, 6D);
+        Double x5 = 3e-20 * Math.pow(diagStrength, 5D);
+        Double x4 = -1e-15 * Math.pow(diagStrength, 4D);
+        Double x3 = 2e-11 * Math.pow(diagStrength, 3D);
+        Double x2 = -2e-7 * Math.pow(diagStrength, 2D);
+        Double x1 = 0.0008D * diagStrength;
+        Double offset = (-0.2666D);
+        //y = -4E-25x6 + 4E-20x5 - 1E-15x4 + 3E-11x3 - 2E-07x2 + 0,0009x - 0,3283
+
+        System.out.println("x1 = "+ x1);
+        System.out.println("x2 = "+ x2);
+        System.out.println("x3 = "+ x3);
+        System.out.println("x4 = "+ x4);
+        System.out.println("x5 = "+ x5);
+        System.out.println("x6 = "+ x6);
+        System.out.println("offset = "+ offset);
         /*
         System.out.println(x4 +" x4");
         System.out.println(x3 +" x3");
@@ -413,11 +415,28 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         System.out.println(x1 +" x1");
         System.out.println(offset + " offset");
         */
-        Double regressionDiagStrength = x6 + x5 + x4 + x3 - x2 + x1 - offset;
+        Double regressionDiagStrength = x6 + x5 + x4 + x3 + x2 + x1 + offset;
         
         //Double regressionDiagStrength = (( + ((2D*Math.pow(10D, (-11D)) * Math.pow(diagStrength, 3D)) - ((2D*Math.pow(10D, (-0.7D))) * Math.pow(diagStrength, 2D)) + (0.001D * diagStrength) );
-        //System.out.println(regressionDiagStrength+ "SE MIG HER");
-        //System.out.println(diagStrength + "JEG ER DIAGSTRENGTH");
+       
+
+        System.out.println(regressionDiagStrength+ "SE MIG HER REGRESSION");
+        System.out.println(regressionDiagStrength+ "SE MIG HER REGRESSION");
+        System.out.println(regressionDiagStrength+ "SE MIG HER REGRESSION");
+        System.out.println(regressionDiagStrength+ "SE MIG HER REGRESSION");
+        System.out.println(regressionDiagStrength+ "SE MIG HER REGRESSION");
+        System.out.println(regressionDiagStrength+ "SE MIG HER REGRESSION");
+        System.out.println(regressionDiagStrength+ "SE MIG HER REGRESSION");
+        System.out.println(regressionDiagStrength+ "SE MIG HER REGRESSION");
+        System.out.println(regressionDiagStrength+ "SE MIG HER REGRESSION");
+        System.out.println(regressionDiagStrength+ "SE MIG HER REGRESSION");
+        System.out.println(diagStrength + "JEG ER DIAGSTRENGTH");
+        System.out.println(diagStrength + "JEG ER DIAGSTRENGTH");
+        System.out.println(diagStrength + "JEG ER DIAGSTRENGTH");
+        System.out.println(diagStrength + "JEG ER DIAGSTRENGTH");
+        System.out.println(diagStrength + "JEG ER DIAGSTRENGTH");
+        System.out.println(diagStrength + "JEG ER DIAGSTRENGTH");
+        System.out.println(diagStrength + "JEG ER DIAGSTRENGTH");
         // Calculate the coordinates
         Double leftWidthDS = middle - (regressionDiagStrength * middle);
         Double rightWidthDS = middle + (regressionDiagStrength * middle);
@@ -427,7 +446,7 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         // Height coordinates FiO2
         Double X3 = middle; Double Y3 = heightRR;
 
-		if(X1 < figureMaxWidth || X2 < figureMaxWidth){
+		if(X1 > figureMaxWidth || X2 > figureMaxWidth){  // krokodillenæb er vendt om ift. hvordan de var før
 			X1 = 0D+18D;
 			X2 = figureMaxWidth-18D;
 		}
@@ -440,8 +459,8 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
             X2, Y2,
             X3, Y3,
         });
-        System.out.println("NEDERSTE");
-        System.out.println(" 1. " + "X = " + X1 + "Y = " + Y1 + " 2. " + "X = " + X2 + "Y = " + Y2 + " 3. " + "X = " + X3 + "Y = " +Y3);
+        //System.out.println("NEDERSTE");
+        //System.out.println(" 1. " + "X = " + X1 + "Y = " + Y1 + " 2. " + "X = " + X2 + "Y = " + Y2 + " 3. " + "X = " + X3 + "Y = " +Y3);
         
 
         // Set color of butPolygon

@@ -156,9 +156,9 @@ public class App extends Application {
         muscleFatigueChar.add(new Indicator(15, (Predicate<Row> & Serializable)(Row x) -> {
             return Double.compare(x.getDouble(x.fieldIndex("EE")), 2400D)  >= 0; 
         }));
-        muscleFatigueChar.add(new Indicator(15, (Predicate<Row> & Serializable)(Row x) -> {
+        /*muscleFatigueChar.add(new Indicator(15, (Predicate<Row> & Serializable)(Row x) -> {
             return Double.compare(x.getDouble(x.fieldIndex("FetCO2")), 0.05D) >= 0; 
-        }));
+        })); */
         muscleFatigueChar.add(new Indicator(15, (Predicate<Row> & Serializable)(Row x) -> {
             return Double.compare(x.getDouble(x.fieldIndex("RSBI")), 105D) >= 0; 
         }));
@@ -185,9 +185,11 @@ public class App extends Application {
             double b = Math.pow(Math.pow(50D,3D)+Math.pow(a,2D),0.5D);
             double PaO2 = Math.pow(b+a,1D/3D) - Math.pow(b-a,1D/3D);
             
-            double SpPaO2 = SpO2/PaO2;
+            //double SpPaO2 = SpO2/PaO2;
+            double PaFiO2 = PaO2/FiO2set;
 
-            return Double.compare(SpPaO2, 200D)  >= 0; 
+            //return Double.compare(SpPaO2, 200D)  >= 0; 
+            return Double.compare(PaFiO2, 200D)  >= 0; 
         }));
 
         // Define lung health detection algorithm
