@@ -1,11 +1,6 @@
 package WeanWatch.model;
 
 import java.security.InvalidParameterException;
-import java.time.temporal.TemporalField;
-
-import org.apache.arrow.vector.types.pojo.ArrowType.Int;
-
-import java.time.LocalDateTime;
 
 public class DailyOccurrence {
     
@@ -27,6 +22,8 @@ public class DailyOccurrence {
         if (!eventToDisplay.getEvent().equals(detectedEvent.getEvent())) {
             throw new InvalidParameterException("Event reference of input DetectedEvent, does not match Event reference of previously added DetectedEvent");
         }
+		System.out.println(occurrences);
+		System.out.println(detectedEvent);
         // Increment number of occurrences
         this.occurrences++;
         // Get the time interval of the newly added detected Event

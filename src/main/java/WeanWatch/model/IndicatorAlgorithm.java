@@ -63,7 +63,12 @@ public class IndicatorAlgorithm implements DetectionAlgorithm {
 			if (this.startPointer != null && this.endPointer != null && this.startPointer.until(this.endPointer, ChronoUnit.MINUTES) > this.minimumEventDuration) {
 				// A Event was found! Create the time interval
 				
-				return new TimeInterval(this.startPointer, this.endPointer);
+				LocalDateTime tempStartPointer = this.startPointer;
+				LocalDateTime tempEndPointer = this.endPointer;
+
+				clear();
+
+				return new TimeInterval(tempStartPointer, tempEndPointer);
 
 
 			} else {
