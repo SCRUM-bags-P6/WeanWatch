@@ -145,7 +145,7 @@ public class App extends Application {
         // Define apnea detection algorithm
         DetectionAlgorithm apneaAlgo = new IndicatorAlgorithm(apneaChar);
         // Define apnea event
-        EventHandler.getInstance().addEvent("Apnea", "Apnea event", Severity.SEVERE, apneaAlgo);
+        EventHandler.getInstance().addEvent("    Apnea", "Apnea event", Severity.SEVERE, apneaAlgo);
 
 
 
@@ -181,15 +181,17 @@ public class App extends Application {
             double SpO2 = x.getDouble(x.fieldIndex("SpO2"));
             double FiO2set = x.getDouble(x.fieldIndex("FiO2Set"));
 
-            double a = 11700D*Math.pow((Math.pow(SpO2,-1D)-1D),-1D);
-            double b = Math.pow(Math.pow(50D,3D)+Math.pow(a,2D),0.5D);
-            double PaO2 = Math.pow(b+a,1D/3D) - Math.pow(b-a,1D/3D);
+            //double a = 11700D*Math.pow((Math.pow(SpO2,-1D)-1D),-1D);
+            //double b = Math.pow(Math.pow(50D,3D)+Math.pow(a,2D),0.5D);
+            //double PaO2 = Math.pow(b+a,1D/3D) - Math.pow(b-a,1D/3D);
             
             //double SpPaO2 = SpO2/PaO2;
-            double PaFiO2 = PaO2/FiO2set;
+            //double PaFiO2 = PaO2/FiO2set;
+            double SpFiO2 = SpO2/FiO2set;
 
             //return Double.compare(SpPaO2, 200D)  >= 0; 
-            return Double.compare(PaFiO2, 200D)  >= 0; 
+            //return Double.compare(PaFiO2, 200D)  >= 0;
+            return Double.compare(SpFiO2, 200D)  >= 0; 
         }));
 
         // Define lung health detection algorithm
@@ -204,7 +206,7 @@ public class App extends Application {
 
         //Add indicators to array
         highOxygenChar.add(new Indicator(120, (Predicate<Row> & Serializable)(Row x) -> {
-            return Double.compare(x.getDouble(x.fieldIndex("FiO2Set")), 0.9D)  <= 0; 
+            return Double.compare(x.getDouble(x.fieldIndex("FiO2Set")), 0.80D)  >= 0;  /// (> betyder større end tærskel) krokodillenæb skal vende om for at detektere korrekt
         }));
 
         // Define high oxygen detection algorithm

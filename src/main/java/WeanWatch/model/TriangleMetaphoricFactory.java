@@ -102,6 +102,9 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         // Get the Event data
         Dataset<Row> eventData = this.getEventDataset(detectedEvent.getPatient().getData(), detectedEvent.getEventInterval());
         // Calculate Event average values
+
+        eventData.show();
+
         Dataset<Row> averageValues = eventData.select(
             avg("SpO2"),
             avg("FiO2Set"),
@@ -110,6 +113,8 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
             avg("RSBI"),
             avg("EE")
         );
+
+        averageValues.show();
 
         Double spo2 = getValueAtIndexNotNull(averageValues, 0, 0D);
         Double fio2 = getValueAtIndexNotNull(averageValues, 1, 0D);
@@ -327,32 +332,45 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         
         //System.out.println(" 1. " + "X = " + X1 + "Y = " + Y1 + " 2. " + "X = " +X2 + "Y = " + Y2 + " 3. " + "X = " + X3 + "Y = " +Y3);
 
+        System.out.println(leftWidthSpO2 + "SSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE HEEEEEEEEEER");
+        System.out.println(leftWidthSpO2 + "SSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE HEEEEEEEEEER");
+        System.out.println(leftWidthSpO2 + "SSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE HEEEEEEEEEER");
+        System.out.println(leftWidthSpO2 + "SSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE HEEEEEEEEEER");
+        System.out.println(leftWidthSpO2 + "SSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE HEEEEEEEEEER");
+        System.out.println(leftWidthSpO2 + "SSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE HEEEEEEEEEER");
+        System.out.println(heightFiO2 + "Højde SSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE HEEEEEEEEEER");
 
         // Set color of topPolygon
-        if (leftWidthSpO2 <= Spo2ToPX(0.75)){
+        //if (leftWidthSpO2 <= Spo2ToPX(0.75)){
+        if (leftWidthSpO2 <= 5){
             topPolygon.setFill(javafx.scene.paint.Color.MAROON);
-        } else if (leftWidthSpO2 > Spo2ToPX(0.75) && leftWidthSpO2 <= Spo2ToPX(0.85)) {
-            if (heightFiO2 > (1 - 0.6) * figureMaxHeight) {
+        //} else if (leftWidthSpO2 > Spo2ToPX(0.75) && leftWidthSpO2 <= Spo2ToPX(0.8)) {
+        } else if (leftWidthSpO2 > 5 && heightFiO2 < 100D) {
+            if (heightFiO2 > 50D && heightFiO2 < 60D) {
                 topPolygon.setFill(javafx.scene.paint.Color.MAROON);
             } else {
                 topPolygon.setFill(javafx.scene.paint.Color.RED);
             }
+        //} else if (leftWidthSpO2 > Spo2ToPX(0.85) && leftWidthSpO2 <= Spo2ToPX(0.92)) {
         } else if (leftWidthSpO2 > Spo2ToPX(0.85) && leftWidthSpO2 <= Spo2ToPX(0.92)) {
-            if (heightFiO2 > (1 - 0.6) * figureMaxHeight) {
+            if (heightFiO2 > 60D && heightFiO2 < 100D) {
+            //if (heightFiO2 > (1 - 0.6) * figureMaxHeight) {    
                 topPolygon.setFill(javafx.scene.paint.Color.RED);
-            } else if (heightFiO2 > (1 - 0.4) * figureMaxHeight && heightFiO2 <= (1 - 0.6) * figureMaxHeight) {
+            //} else if (heightFiO2 > (1 - 0.4) * figureMaxHeight && heightFiO2 <= (1 - 0.6) * figureMaxHeight) {
+            } else if (heightFiO2 > 150) {
                 topPolygon.setFill(javafx.scene.paint.Color.GREEN);
             } else {
                 topPolygon.setFill(javafx.scene.paint.Color.YELLOW);
             }
         } else {
-            if (heightFiO2 > (1 - 0.6) * figureMaxHeight) {
+           /* if (heightFiO2 > (1 - 0.6) * figureMaxHeight) {
                 topPolygon.setFill(javafx.scene.paint.Color.RED);
             } else if (heightFiO2 > (1 - 0.21) * figureMaxHeight && heightFiO2 <= (1 - 0.6) * figureMaxHeight) {
                 topPolygon.setFill(javafx.scene.paint.Color.YELLOW);
             } else {
                 topPolygon.setFill(javafx.scene.paint.Color.GREEN);
-            }
+            }*/
+            topPolygon.setFill(javafx.scene.paint.Color.YELLOW);
         }
 
 
@@ -380,6 +398,9 @@ public class TriangleMetaphoricFactory extends MetaphoricFactory {
         // Get the middle point
         Double middle = (TriangleMetaphoricFactory.figureMaxWidth / 2);
         Double diagStrength = meanComp*meanEE*meanRSBI;
+        System.out.println(meanComp +" Comp");
+        System.out.println(meanEE +" EE");
+        System.out.println(meanRSBI+" RSBI");
         // Calculate the width of diaphragmaStrenght Triag baseline
         // y = -5*10^16*x^4 + 2*10^-11*x^3 - 2E-07x^2 + 0,001x - 0,526
         //Double widthDiagStrength = (middle + (Math.pow(-5, -16) * Math.pow(diagStrenght, 4) + Math.pow(2, -11D) * Math.pow(diagStrength, 3) - Math.pow(2, -0.7D) * Math.pow(diagStrength, 2) + 0.001D * diagStrength - 0.526D))
